@@ -146,7 +146,7 @@ export default function MainLayout({ children }: Props) {
           {mounted ? <ThemeIcon className="text-acc" /> : null}
         </button> */}
       </nav>
-      <main className="bg-pri dark:bg-pri-d h-auto flex-grow">
+      <main className="bg-pri dark:bg-pri-d h-full flex-grow">
         <NextAuthProvider>{children}</NextAuthProvider>
       </main>
     </>

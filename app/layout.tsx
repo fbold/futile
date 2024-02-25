@@ -27,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${josefin.variable} ${workSans.variable}`}>
-      <body className={" bg-pri min-h-screen block font-work-sans"}>
+      <body className={" bg-pri h-screen block font-work-sans"}>
         {children}
       </body>
     </html>

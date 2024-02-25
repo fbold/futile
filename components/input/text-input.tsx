@@ -51,7 +51,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, Props>(
           type={type}
           placeholder={placeholder}
           className={clsx(
-            `p-2 px-2 max-h-10 text-txt-pri dark:text-txt-pri-d ${className}`,
+            `p-2 px-2 max-h-10 text-txt-pri dark:text-txt-pri-d bg-pri ${className}`,
             !error && "focus:outline-acc dark:focus:outline-acc-d",
             error && (classNameOnError || "outline-1 outline outline-red-500"),
             outline

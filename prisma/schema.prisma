@@ -12,13 +12,13 @@ datasource db {
 }
 
 model User {
-  id            String       @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?      @unique
-  emailVerified DateTime?    @map("email_verified")
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
-  invites       Meditation[]
+  invites       Tile[]
 
   @@map("users")
 }
@@ -53,26 +53,14 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-model Template {
-  id             Int          @id @unique @default(autoincrement())
-  name           String       @unique
-  file_name      String       @unique
-  content_schema Json
-  invites        Meditation[]
-
-  @@map("templates")
-}
-
-model Meditation {
-  id         Int       @id @default(autoincrement())
-  name       String
-  category   String
-  user_id    String
-  user       User      @relation(references: [id], fields: [user_id], onDelete: Cascade)
-  content    Json
-  Template   Template? @relation(fields: [templateId], references: [id])
-  templateId Int?
+model Tile {
+  id       String @id @default(cuid())
+  title    String
+  category String // This will be a separating column. for example mcould be poem, thought, meditation or other sort of wiritng noun
+  user_id  String
+  user     User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  content  String
 
   @@index([user_id])
-  @@map("meditations")
+  @@map("tiles")
 }

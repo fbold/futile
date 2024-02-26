@@ -11,8 +11,8 @@ import {
   useState,
 } from "react"
 
-const ALPHA = 30 // The angle between each option
-export const R = 45 // The radius of the circle around which the options are
+const ALPHA = 22.5 // The angle between each option
+export const R = 50 // The radius of the circle around which the options are
 const SETTLE_DELAY = 1000 // Delay before the menu settles on an option
 const HIDE_DELAY = 1000 // Delay before the non active categories are set to hide
 
@@ -99,6 +99,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
       console.log("scrolling")
       // Translates element scroll to angular scroll
       if (!scrollRef.current) return
+      if (!shown) showCategories()
       if (settleTimeout) clearTimeout(settleTimeout) // Cancel any settling as we are still scrolling
       const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
       const scrollRatio = scrollTop / (scrollHeight - offsetHeight)
@@ -134,31 +135,9 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
 
   return (
     <>
-      <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2">
+      <div className="absolute h-0 w-full">
         <div
-          className={`relative top-0 left-0 aspect-square  outline outline-2 outline-red-400
-      overflow-hidden rounded-full w-20 peer`}
-          // style={{ width: `${5 * R}px` }}
-        >
-          <div
-            className="absolute overflow-auto top-0 bottom-0 left-0 -right-0 h-full scroll-auto"
-            ref={scrollRef}
-            onMouseEnter={showCategories}
-            onMouseLeave={hideCategories}
-          >
-            <div className="h-full" />
-            {categories.map((cat) => (
-              <Fragment key={cat}>
-                <div key={cat + "a"} className="h-full" />
-                <div key={cat + "b"} className="h-full" />
-              </Fragment>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center absolute">
-        <div
-          className=" relative transition-transform h-0 aspect-square origin-top-left"
+          className="top-3 left-3 absolute transition-transform aspect-square origin-center"
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
           }}
@@ -173,10 +152,11 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
               <div
                 key={category}
                 className={clsx(
-                  "absolute top-0 left-0 h-0 cursor-pointer transition-opacity duration-700",
+                  "absolute top-0 left-0 h-0 cursor-pointer transition-opacity duration-700 origin-left",
                   shown || i === activeCategory
                     ? "opacity-1"
-                    : "opacity-0 delay-200"
+                    : "opacity-0 delay-200",
+                  activeCategory === i && "text-red-400"
                 )}
                 style={{
                   opacity: shown || i === activeCategory ? 1 : 0,
@@ -184,18 +164,15 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
                   rotate: `${rotation}deg`,
                   translate: `${translationX}px ${translationY}px`,
                 }}
+                ref={categoriesRefs.current[i]}
               >
                 <p
                   className={clsx(
                     "-translate-y-1/2",
                     activeCategory === i && "text-red-400"
-                    // activeCategory === i || activeCategory
-                    //   ? "opacity-1"
-                    //   : "delay-1000 opacity-0"
                   )}
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}
-                  // {...refProps} // From above, allows us to move the ref so we can know the width as it changes
                 >
                   {category}
                 </p>
@@ -203,20 +180,55 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
             )
           })}
         </div>
-        <div
-          className="relative h-0 transition-transform duration-1000 w-full"
-          style={{
-            transform: `translateX(${
-              R +
-              (categoriesRefs.current[activeCategory].current?.clientWidth ||
-                30) +
-              4
-            }px)`,
-          }}
-        >
-          <p className="-translate-y-1/2">
-            of a futile kind; hailing from a troubled mind (fred)
+        <div className="absolute w-full origin-left flex flex-col">
+          <p
+            className="w-full transition-transform duration-1000 "
+            style={{
+              transform: `translateX(${
+                R +
+                (categoriesRefs.current[activeCategory].current?.clientWidth ||
+                  30) +
+                12 + // for the top-3 and left-3
+                4 // for the space
+              }px)`,
+            }}
+          >
+            of a futile kind;
           </p>
+          <p
+            className={clsx(
+              "w-full transition-opacity duration-700 text-gray-300 leading-none",
+              shown ? "opacity-0" : "opacity-100 delay-500"
+            )}
+            style={{
+              transform: `translateX(${R + 12}px)`,
+            }}
+          >
+            hailing from a troubled mind
+          </p>
+        </div>
+      </div>
+      <div className="absolute top-3 left-3 -translate-x-1/2 -translate-y-1/2">
+        <div
+          className={`relative top-0 left-0 aspect-square outline outline-1 outline-red-400
+      overflow-hidden rounded-full peer
+      transition-opacity duration-200  hover:opacity-100`}
+          style={{ width: `${2 * R - 10}px` }}
+        >
+          <div
+            className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"
+            ref={scrollRef}
+            onMouseEnter={showCategories}
+            onMouseLeave={hideCategories}
+          >
+            <div className="h-full" />
+            {categories.map((cat) => (
+              <Fragment key={cat}>
+                <div key={cat + "a"} className="h-full" />
+                <div key={cat + "b"} className="h-full" />
+              </Fragment>
+            ))}
+          </div>
         </div>
       </div>
     </>

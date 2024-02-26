@@ -136,7 +136,7 @@ export default function MainLayout({ children }: Props) {
           </div>
         </div>
       </div>
-      <nav className="sticky flex p-2 w-full h-12 z-50 bg-gradient-to-b">
+      <nav className="sticky flex w-full h-12 z-50 bg-gradient-to-b">
         <OrbitalMenu categories={categories} onSettle={handleNavSettle} />
         {/* <button
           className="h-full w-8"

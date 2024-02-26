@@ -1,9 +1,18 @@
 "use client"
+import OrbitalMenuAddendum from "@/components/nav/orbital-menu-addendum"
 import clsx from "clsx"
-import { Fragment, memo, useCallback, useEffect, useRef, useState } from "react"
+import {
+  Fragment,
+  createRef,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 
 const ALPHA = 30 // The angle between each option
-const R = 45 // The radius of the circle around which the options are
+export const R = 45 // The radius of the circle around which the options are
 const SETTLE_DELAY = 1000 // Delay before the menu settles on an option
 const HIDE_DELAY = 1000 // Delay before the non active categories are set to hide
 
@@ -17,6 +26,9 @@ type OrbitalMenuProps = {
 
 function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const categoriesRefs = useRef(
+    categories.map((c) => createRef<HTMLParagraphElement>())
+  )
   const [activeCategory, setActiveCategory] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
@@ -111,6 +123,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
   }, [settleScroll, categories])
 
   const showCategories = () => {
+    if (hideTimeout) clearTimeout(hideTimeout)
     setShown(true)
   }
   const hideCategories = () => {
@@ -154,6 +167,8 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
             const rotation = i * ALPHA
             const translationY = Math.sin((rotation * Math.PI) / 180) * R
             const translationX = Math.cos((rotation * Math.PI) / 180) * R
+            // const refProps =
+            //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
                 key={category}
@@ -179,6 +194,8 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
                     //   : "delay-1000 opacity-0"
                   )}
                   onClick={(e) => handleTileClick(i)}
+                  ref={categoriesRefs.current[i]}
+                  // {...refProps} // From above, allows us to move the ref so we can know the width as it changes
                 >
                   {category}
                 </p>
@@ -186,9 +203,19 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
             )
           })}
         </div>
-        <div className="h-0 pl-28">
+        <div
+          className="relative h-0 transition-transform duration-1000 w-full"
+          style={{
+            transform: `translateX(${
+              R +
+              (categoriesRefs.current[activeCategory].current?.clientWidth ||
+                30) +
+              4
+            }px)`,
+          }}
+        >
           <p className="-translate-y-1/2">
-            of a futile kind; hailing from a troubled mind
+            of a futile kind; hailing from a troubled mind (fred)
           </p>
         </div>
       </div>

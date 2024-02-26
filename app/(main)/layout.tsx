@@ -3,7 +3,7 @@ import clsx from "clsx"
 // import { useTheme } from 'next-themes'
 import Link from "next/link"
 import styles from "./MainLayout.module.css"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   IconHome,
   IconMenu2,
@@ -15,23 +15,45 @@ import {
 } from "@tabler/icons-react"
 import { usePathname, useRouter } from "next/navigation"
 import NextAuthProvider from "@/components/auth/next-auth-provider"
+import OrbitalMenu from "@/components/nav/orbital-menu"
 
 type Props = {
   children?: JSX.Element
 }
+
+const CATEGORIES = [
+  "poems",
+  "thoughts",
+  "essays",
+  "interviews",
+  "notes",
+  "journal",
+]
 
 export default function MainLayout({ children }: Props) {
   // const { theme, setTheme } = useTheme()
 
   // const ThemeIcon = theme === 'light' ? IconMoon : IconStar
   const [menuOpen, setMenuOpen] = useState(false)
+  const [categories, setCategories] = useState(CATEGORIES)
   const pathname = usePathname()
+  const router = useRouter()
   const asPath = pathname
   // const { } = useRouter()
 
   useEffect(() => {
     setMenuOpen(false)
   }, [pathname])
+
+  const handleNavSettle = useCallback(
+    (category: string) => {
+      router.push(`/read/${category}`)
+      // setCategories((cats) => {
+      //   return [category, ...cats.filter((c) => c !== category)]
+      // })
+    },
+    [router]
+  )
 
   return (
     <>
@@ -114,29 +136,23 @@ export default function MainLayout({ children }: Props) {
           </div>
         </div>
       </div>
-      <nav className="sticky flex p-2 bg-sec dark:bg-sec-d w-full h-12 z-50 bg-gradient-to-b">
-        <button
+      <nav className="sticky flex p-2 w-full h-12 z-50 bg-gradient-to-b">
+        <OrbitalMenu categories={categories} onSettle={handleNavSettle} />
+        {/* <button
           className="h-full w-8"
           // onClick={() => {
           //   setTheme(theme === 'light' ? 'dark' : 'light')
           // }}
         >
           <IconMenu2 className="h-full w-auto stroke-1" />
-        </button>
-        <div className="flex flex-1 justify-center">
-          <Link
-            href="/"
-            className="font-mono w-min text-center align-middle text-2xl p-0 font-bold"
-          >
-            Futile
-          </Link>
-        </div>
+        </button> */}
+        {/* <div className="flex flex-1 justify-center">of a futile kind</div>
         <Link
           href="/account"
           className="dark:bg-pri-d rounded-full w-8 h-8 justify-self-end"
         >
           <IconUserCircle className="h-full w-auto stroke-1" />
-        </Link>
+        </Link> */}
         {/* <button
           className="bg-sec border-2 border-acc dark:bg-pri-d rounded-full w-8 h-8 justify-self-end p-1"
           onClick={() => {

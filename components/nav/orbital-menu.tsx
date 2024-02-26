@@ -6,7 +6,7 @@ const ALPHA = 30 // The angle between each option
 const R = 45 // The radius of the circle around which the options are
 const SETTLE_DELAY = 1000 // Delay before the menu settles on an option
 
-let timeout: null | ReturnType<typeof setTimeout> = null
+let settleTimeout: null | ReturnType<typeof setTimeout> = null
 
 type OrbitalMenuProps = {
   categories: string[]
@@ -15,63 +15,93 @@ type OrbitalMenuProps = {
 
 function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [activeTile, setActiveTile] = useState(0)
+  const [activeCategory, setActiveCategory] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
 
-  const handleTileClick = (tileIdx: number) => {
+  const handleCategorySelect = (categoryIndex: number) => {
+    console.log("Setting category")
+    // Sets the active category and syncs scrolls to it
+    // Used by both methods of selection: settle and click
+    setActiveCategory(categoryIndex)
+    // SYNC scrolls to category
+    const { scrollHeight, offsetHeight } = scrollRef.current!
+    // set angular scroll
+    setAngularOffset(-categoryIndex * ALPHA)
+    // set linear scroll
+    const scrollAmount =
+      (categoryIndex * (scrollHeight - offsetHeight)) / (categories.length - 1)
+    scrollRef.current?.removeEventListener("scroll", handleScroll)
+    scrollRef.current?.scrollTo({ behavior: "instant", top: scrollAmount })
+    scrollRef.current?.addEventListener("scroll", handleScroll, {
+      passive: true,
+    })
+  }
+
+  const handleTileClick = (categoryIdx: number) => {
     // Sets the tile thats clicked and moves the orbit there
     // Sets the exact scroll amount as well to keep in sync
     // with angular offset
-    setAngularOffset(-tileIdx * ALPHA)
-    setActiveTile(tileIdx)
-    onSettle(categories[tileIdx])
-    if (!scrollRef.current) return
-    const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
-    const scrollAmount =
-      (tileIdx * (scrollHeight - offsetHeight)) / categories.length
-    scrollRef.current?.scrollTo({ behavior: "instant", top: scrollAmount })
+    // setAngularOffset(-tileIdx * ALPHA)
+    // setActiveCategory(tileIdx)
+    handleCategorySelect(categoryIdx)
+    onSettle(categories[categoryIdx])
+
+    // If there is a scroll settle timeout waiting, clear it
+    if (settleTimeout) clearTimeout(settleTimeout)
   }
 
-  const settleScroll = useCallback((offset: number) => {
-    // Find closest option by seeing if the diff btwn
-    // current angle and the angle of an option is smaller
-    // than half of ALHPA
-    console.log(Math.abs(0 * ALPHA - offset))
-    for (let i = 0; i < categories.length; i++) {
-      if (Math.abs(i * ALPHA - offset) < 0.5 * ALPHA) {
-        setActiveTile(i)
-        setAngularOffset(-i * ALPHA)
-        onSettle(categories[i])
-        return
+  const settleScroll = useCallback(
+    (offset: number) => {
+      // Find closest option by seeing if the diff btwn
+      // current angle and the angle of an option is smaller
+      // than half of ALHPA
+      for (let i = 0; i < categories.length; i++) {
+        if (Math.abs(i * ALPHA - offset) <= 0.5 * ALPHA) {
+          // setActiveCategory(i)
+          // setAngularOffset(-i * ALPHA)
+          handleCategorySelect(i)
+          onSettle(categories[i])
+          return
+        }
       }
-    }
-    setActiveTile(categories.length - 1)
-    setAngularOffset(-(categories.length - 1) * ALPHA)
-    onSettle(categories.at(-1)!)
-  }, [])
+      // If we get to here and no cat has been settled on
+      // Settle on the last as we assume it has gone past
+      // setActiveCategory(categories.length - 1)
+      // setAngularOffset(-(categories.length - 1) * ALPHA)
+      handleCategorySelect(categories.length - 1)
+      onSettle(categories.at(-1)!)
+    },
+    [categories, onSettle]
+  )
 
-  const handleScroll = (event: Event) => {
-    if (!scrollRef.current) return
-    if (timeout) clearTimeout(timeout)
-    const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
-    const scrollRatio = scrollTop / (scrollHeight - offsetHeight)
-    const angularOffset_ = scrollRatio * categories.length * ALPHA
-    setAngularOffset(-angularOffset_)
-    timeout = setTimeout(settleScroll, SETTLE_DELAY, angularOffset_)
-  }
+  const handleScroll = useCallback(
+    (event: Event) => {
+      console.log("scrolling")
+      // Translates element scroll to angular scroll
+      if (!scrollRef.current) return
+      if (settleTimeout) clearTimeout(settleTimeout) // Cancel any settling as we are still scrolling
+      const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
+      const scrollRatio = scrollTop / (scrollHeight - offsetHeight)
+      const angularOffset_ = scrollRatio * (categories.length - 1) * ALPHA
+      setAngularOffset(-angularOffset_)
+      settleTimeout = setTimeout(settleScroll, SETTLE_DELAY, angularOffset_)
+    },
+    [categories, settleScroll]
+  )
 
   useEffect(() => {
+    // This just sets our event listeners on scroll
+    // Used for scroll select
     if (!scrollRef.current) return
     scrollRef.current.scrollTo({ behavior: "instant", top: 0 })
     const ref = scrollRef.current
     ref.addEventListener("scroll", handleScroll, { passive: true })
-    // ref.addEventListener("", handleScroll, { passive: true })
 
     return () => {
       ref?.removeEventListener("scroll", handleScroll)
     }
-  }, [])
+  }, [settleScroll, categories])
 
   const showCategories = () => {
     setShown(true)
@@ -121,34 +151,25 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
             return (
               <div
                 key={category}
-                className="absolute top-0 left-0 h-0 cursor-pointer transition-transform transition-opacity duration-1000"
+                className="absolute top-0 left-0 h-0 cursor-pointer transition-opacity duration-1000"
                 style={{
-                  opacity: i === activeTile ? 1 : 1,
+                  opacity: i === activeCategory ? 1 : 1,
                   transformOrigin: "left",
                   rotate: `${rotation}deg`,
                   translate: `${translationX}px ${translationY}px`,
                 }}
               >
-                {category !== "__RESTART__" ? (
-                  <p
-                    className={clsx(
-                      "-translate-y-1/2 transition-opacity duration-150",
-                      activeTile === i || shown
-                        ? "opacity-1"
-                        : "delay-1000 opacity-0"
-                    )}
-                    onClick={() => handleTileClick(i)}
-                  >
-                    {category}
-                  </p>
-                ) : (
-                  <p
-                    className="-translate-y-1/2"
-                    onClick={() => setActiveTile(0)}
-                  >
-                    {categories[0]}
-                  </p>
-                )}
+                <p
+                  className={clsx(
+                    "-translate-y-1/2 transition-opacity duration-150",
+                    activeCategory === i || shown
+                      ? "opacity-1"
+                      : "delay-1000 opacity-0"
+                  )}
+                  onClick={(e) => handleTileClick(i)}
+                >
+                  {category}
+                </p>
               </div>
             )
           })}

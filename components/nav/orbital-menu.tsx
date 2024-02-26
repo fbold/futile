@@ -5,8 +5,10 @@ import { Fragment, memo, useCallback, useEffect, useRef, useState } from "react"
 const ALPHA = 30 // The angle between each option
 const R = 45 // The radius of the circle around which the options are
 const SETTLE_DELAY = 1000 // Delay before the menu settles on an option
+const HIDE_DELAY = 1000 // Delay before the non active categories are set to hide
 
 let settleTimeout: null | ReturnType<typeof setTimeout> = null
+let hideTimeout: null | ReturnType<typeof setTimeout> = null
 
 type OrbitalMenuProps = {
   categories: string[]
@@ -24,6 +26,11 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
     // Sets the active category and syncs scrolls to it
     // Used by both methods of selection: settle and click
     setActiveCategory(categoryIndex)
+    // So that they all hide at once (see conditional classes
+    // below) we clear timeout and hide from now so it is set
+    // at same time as active category
+    if (hideTimeout) clearTimeout(hideTimeout)
+    setShown(false)
     // SYNC scrolls to category
     const { scrollHeight, offsetHeight } = scrollRef.current!
     // set angular scroll
@@ -107,7 +114,9 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
     setShown(true)
   }
   const hideCategories = () => {
-    setShown(false)
+    hideTimeout = setTimeout(() => {
+      setShown(false)
+    }, HIDE_DELAY)
   }
 
   return (
@@ -129,9 +138,6 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
               <Fragment key={cat}>
                 <div key={cat + "a"} className="h-full" />
                 <div key={cat + "b"} className="h-full" />
-                {/* <div key={cat + 2} className="h-full" />
-                <div key={cat + 3} className="h-full" />
-                <div key={cat + 4} className="h-full" /> */}
               </Fragment>
             ))}
           </div>
@@ -139,7 +145,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
       </div>
       <div className="flex items-center absolute">
         <div
-          className=" relative transition-transform duration-100 h-0 aspect-square origin-top-left"
+          className=" relative transition-transform h-0 aspect-square origin-top-left"
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
           }}
@@ -151,9 +157,14 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
             return (
               <div
                 key={category}
-                className="absolute top-0 left-0 h-0 cursor-pointer transition-opacity duration-1000"
+                className={clsx(
+                  "absolute top-0 left-0 h-0 cursor-pointer transition-opacity duration-700",
+                  shown || i === activeCategory
+                    ? "opacity-1"
+                    : "opacity-0 delay-200"
+                )}
                 style={{
-                  opacity: i === activeCategory ? 1 : 1,
+                  opacity: shown || i === activeCategory ? 1 : 0,
                   transformOrigin: "left",
                   rotate: `${rotation}deg`,
                   translate: `${translationX}px ${translationY}px`,
@@ -161,10 +172,11 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
               >
                 <p
                   className={clsx(
-                    "-translate-y-1/2 transition-opacity duration-150",
-                    activeCategory === i || shown
-                      ? "opacity-1"
-                      : "delay-1000 opacity-0"
+                    "-translate-y-1/2",
+                    activeCategory === i && "text-red-400"
+                    // activeCategory === i || activeCategory
+                    //   ? "opacity-1"
+                    //   : "delay-1000 opacity-0"
                   )}
                   onClick={(e) => handleTileClick(i)}
                 >

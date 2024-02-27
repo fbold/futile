@@ -6,6 +6,16 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    // There are here because they are dynamically added
+    // So tailwind seems to purge them erroneously
+    "-translate-x-1/2",
+    "translate-x-1/2",
+    "right-3",
+    "right-0",
+    "left-3",
+    "left-0",
+  ],
   theme: {
     extend: {
       backgroundImage: {

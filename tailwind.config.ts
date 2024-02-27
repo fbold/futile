@@ -15,6 +15,8 @@ const config: Config = {
     "right-0",
     "left-3",
     "left-0",
+    "origin-right",
+    "origin-left",
   ],
   theme: {
     extend: {

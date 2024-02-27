@@ -55,6 +55,23 @@ export default function OrbitalMenus({
         rad={30}
         alpha={43}
       />
+      <OrbitalMenu
+        options={[
+          {
+            label: "settings",
+            value: "settings",
+          },
+          {
+            label: "about",
+            value: "about",
+          },
+        ]}
+        onSettle={() => {}}
+        colour="text-green-400"
+        pos="bl"
+        rad={60}
+        alpha={40}
+      />
     </>
   )
 }

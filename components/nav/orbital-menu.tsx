@@ -18,18 +18,75 @@ const HIDE_DELAY = 1000 // Delay before the non active categories are set to hid
 let settleTimeout: null | ReturnType<typeof setTimeout> = null
 let hideTimeout: null | ReturnType<typeof setTimeout> = null
 
+// What multiplier for angular position
 const angularSign = {
   tr: -1,
   tl: 1,
+  br: 1,
+  bl: -1,
 }
 
-const rorl = (pos: "tr" | "tl") => {
-  const map = {
-    tr: "right",
-    tl: "left",
-  }
+// If the vertical scroll is mapped directly or inversely
+// when set to zero its ratio will be directly proportional to angular scroll
+// opposite for 1 like so: Math.abs(oneorzero[pos] - ratio)
+const oneorzero = {
+  tr: 0,
+  tl: 0,
+  br: 1,
+  bl: 1,
+}
 
-  return map[pos]
+// before or after
+// whether the options appear above or below the vertical diameter line
+const bora = {
+  tr: -1,
+  tl: 1,
+  br: -1,
+  bl: 1,
+}
+
+// above or below
+// whether the options appear above or below the horizontal diameter line
+const aorb = {
+  tr: -1,
+  tl: 1,
+  br: -1,
+  bl: 1,
+}
+
+const pormx = {
+  tr: "",
+  tl: "-",
+  br: "",
+  bl: "-",
+}
+
+const pormy = {
+  tr: "-",
+  tl: "-",
+  br: "",
+  bl: "",
+}
+
+const origin = {
+  tr: "right",
+  tl: "left",
+  br: "right",
+  bl: "left",
+}
+
+const rorl = {
+  tr: "right",
+  tl: "left",
+  br: "right",
+  bl: "left",
+}
+
+const torb = {
+  tr: "top",
+  tl: "top",
+  br: "bottom",
+  bl: "bottom",
 }
 
 export type OrbitalMenuOption = {
@@ -41,7 +98,7 @@ type OrbitalMenuProps = {
   options: OrbitalMenuOption[]
   onSettle: (_: OrbitalMenuOption) => void
   colour: string
-  pos?: "tr" | "tl"
+  pos?: "tr" | "tl" | "br" | "bl"
   rad?: number
   alpha?: number
 }
@@ -77,8 +134,10 @@ function OrbitalMenu({
     // set angular scroll
     setAngularOffset(-angularSign[pos] * categoryIndex * alpha)
     // set linear scroll
-    const scrollAmount =
-      (categoryIndex * (scrollHeight - offsetHeight)) / (options.length - 1)
+    const scrollRatio = Math.abs(
+      oneorzero[pos] - categoryIndex / (options.length - 1)
+    )
+    const scrollAmount = scrollRatio * (scrollHeight - offsetHeight)
     scrollRef.current?.removeEventListener("scroll", handleScroll)
     scrollRef.current?.scrollTo({ behavior: "instant", top: scrollAmount })
     scrollRef.current?.addEventListener("scroll", handleScroll, {
@@ -131,7 +190,9 @@ function OrbitalMenu({
       if (!shown) showCategories()
       if (settleTimeout) clearTimeout(settleTimeout) // Cancel any settling as we are still scrolling
       const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
-      const scrollRatio = scrollTop / (scrollHeight - offsetHeight)
+      const scrollRatio = Math.abs(
+        oneorzero[pos] - scrollTop / (scrollHeight - offsetHeight)
+      )
       const angularOffset_ =
         angularSign[pos] * scrollRatio * (options.length - 1) * alpha
       setAngularOffset(-angularOffset_)
@@ -144,7 +205,12 @@ function OrbitalMenu({
     // This just sets our event listeners on scroll
     // Used for scroll select
     if (!scrollRef.current) return
-    scrollRef.current.scrollTo({ behavior: "instant", top: 0 })
+    scrollRef.current.scrollTo({
+      behavior: "instant",
+      top:
+        oneorzero[pos] * scrollRef.current.scrollHeight -
+        scrollRef.current.offsetHeight,
+    })
     const ref = scrollRef.current
     ref.addEventListener("scroll", handleScroll, { passive: true })
 
@@ -165,9 +231,9 @@ function OrbitalMenu({
 
   return (
     <>
-      <div className="absolute h-0 w-full">
+      <div className="absolute h-full w-full pointer-events-none">
         <div
-          className={`top-3 ${rorl(pos)}-3
+          className={`${torb[pos]}-3 ${rorl[pos]}-3
           absolute transition-transform aspect-square origin-center`}
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
@@ -176,17 +242,17 @@ function OrbitalMenu({
           {options.map((category, i) => {
             const rotation = angularSign[pos] * i * alpha
             const translationY =
-              angularSign[pos] * Math.sin((rotation * Math.PI) / 180) * rad
+              aorb[pos] * Math.sin((rotation * Math.PI) / 180) * rad
             const translationX =
-              angularSign[pos] * Math.cos((rotation * Math.PI) / 180) * rad
+              bora[pos] * Math.cos((rotation * Math.PI) / 180) * rad
             // const refProps =
             //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
                 key={category.value}
                 className={clsx(
-                  `${rorl(pos)}-0 origin-${rorl(pos)}`,
-                  "absolute top-0 h-0 cursor-pointer transition-opacity duration-700",
+                  `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
+                  "absolute h-0 cursor-pointer transition-opacity duration-700",
                   shown || i === activeCategory
                     ? "opacity-1"
                     : "opacity-0 delay-200",
@@ -201,7 +267,7 @@ function OrbitalMenu({
               >
                 <p
                   className={clsx(
-                    "-translate-y-1/2",
+                    "-translate-y-1/2 pointer-events-auto",
                     activeCategory === i && colour
                   )}
                   onClick={(e) => handleTileClick(i)}
@@ -213,8 +279,8 @@ function OrbitalMenu({
             )
           })}
         </div>
-        {rorl(pos) === "left" ? (
-          <div className="absolute w-full origin-left flex flex-col">
+        {pos === "tl" ? (
+          <div className="absolute origin-left flex flex-col">
             <p
               className="transition-transform duration-1000 "
               style={{
@@ -231,7 +297,7 @@ function OrbitalMenu({
             </p>
             <p
               className={clsx(
-                "w-full transition-opacity duration-700 text-gray-300 leading-none",
+                "transition-opacity duration-700 text-gray-300 leading-none",
                 shown ? "opacity-0" : "opacity-100 delay-500"
               )}
               style={{
@@ -244,12 +310,11 @@ function OrbitalMenu({
         ) : null}
       </div>
       <div
-        className={`absolute top-3 ${rorl(pos)}-3 ${
-          angularSign[pos] === 1 ? "-" : ""
-        }translate-x-1/2 -translate-y-1/2`}
+        className={`absolute ${torb[pos]}-3 ${rorl[pos]}-3 
+        ${pormx[pos]}translate-x-1/2 ${pormy[pos]}translate-y-1/2`}
       >
         <div
-          className={`relative top-0 ${rorl(pos)}-0 aspect-square
+          className={`relative ${torb[pos]}-0 ${rorl[pos]}-0 aspect-square
             outline outline-1 overflow-hidden rounded-full peer
             transition-opacity duration-200  hover:opacity-100
             ${colour}`}

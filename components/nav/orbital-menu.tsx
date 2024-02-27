@@ -21,9 +21,39 @@ let hideTimeout: null | ReturnType<typeof setTimeout> = null
 type OrbitalMenuProps = {
   categories: string[]
   onSettle: (_: string) => void
+  colour: string
+  pos?: "tr" | "tl"
+  rad?: number
+  alpha?: number
 }
 
-function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
+const angularSign = {
+  tr: -1,
+  tl: 1,
+}
+
+const positionClasses = {
+  tr: "top-3 right-3",
+  tl: "top-3 left-3",
+}
+
+const rorl = (pos: "tr" | "tl") => {
+  const map = {
+    tr: "right",
+    tl: "left",
+  }
+
+  return map[pos]
+}
+
+function OrbitalMenu({
+  categories,
+  onSettle,
+  colour,
+  pos = "tl",
+  rad = R,
+  alpha = ALPHA,
+}: OrbitalMenuProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const categoriesRefs = useRef(
     categories.map((c) => createRef<HTMLParagraphElement>())
@@ -45,7 +75,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
     // SYNC scrolls to category
     const { scrollHeight, offsetHeight } = scrollRef.current!
     // set angular scroll
-    setAngularOffset(-categoryIndex * ALPHA)
+    setAngularOffset(-angularSign[pos] * categoryIndex * alpha)
     // set linear scroll
     const scrollAmount =
       (categoryIndex * (scrollHeight - offsetHeight)) / (categories.length - 1)
@@ -60,7 +90,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
     // Sets the tile thats clicked and moves the orbit there
     // Sets the exact scroll amount as well to keep in sync
     // with angular offset
-    // setAngularOffset(-tileIdx * ALPHA)
+    // setAngularOffset(-tileIdx * alpha)
     // setActiveCategory(tileIdx)
     handleCategorySelect(categoryIdx)
     onSettle(categories[categoryIdx])
@@ -75,9 +105,9 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
       // current angle and the angle of an option is smaller
       // than half of ALHPA
       for (let i = 0; i < categories.length; i++) {
-        if (Math.abs(i * ALPHA - offset) <= 0.5 * ALPHA) {
+        if (Math.abs(i * alpha - angularSign[pos] * offset) <= 0.5 * alpha) {
           // setActiveCategory(i)
-          // setAngularOffset(-i * ALPHA)
+          // setAngularOffset(-i * alpha)
           handleCategorySelect(i)
           onSettle(categories[i])
           return
@@ -86,7 +116,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
       // If we get to here and no cat has been settled on
       // Settle on the last as we assume it has gone past
       // setActiveCategory(categories.length - 1)
-      // setAngularOffset(-(categories.length - 1) * ALPHA)
+      // setAngularOffset(-(categories.length - 1) * alpha)
       handleCategorySelect(categories.length - 1)
       onSettle(categories.at(-1)!)
     },
@@ -102,7 +132,8 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
       if (settleTimeout) clearTimeout(settleTimeout) // Cancel any settling as we are still scrolling
       const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
       const scrollRatio = scrollTop / (scrollHeight - offsetHeight)
-      const angularOffset_ = scrollRatio * (categories.length - 1) * ALPHA
+      const angularOffset_ =
+        angularSign[pos] * scrollRatio * (categories.length - 1) * alpha
       setAngularOffset(-angularOffset_)
       settleTimeout = setTimeout(settleScroll, SETTLE_DELAY, angularOffset_)
     },
@@ -136,30 +167,33 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
     <>
       <div className="absolute h-0 w-full">
         <div
-          className="top-3 left-3 absolute transition-transform aspect-square origin-center"
+          className={`top-3 ${rorl(pos)}-3
+          absolute transition-transform aspect-square origin-center`}
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
           }}
         >
           {categories.map((category, i) => {
-            const rotation = i * ALPHA
-            const translationY = Math.sin((rotation * Math.PI) / 180) * R
-            const translationX = Math.cos((rotation * Math.PI) / 180) * R
+            const rotation = angularSign[pos] * i * alpha
+            const translationY =
+              angularSign[pos] * Math.sin((rotation * Math.PI) / 180) * rad
+            const translationX =
+              angularSign[pos] * Math.cos((rotation * Math.PI) / 180) * rad
             // const refProps =
             //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
                 key={category}
                 className={clsx(
-                  "absolute top-0 left-0 h-0 cursor-pointer transition-opacity duration-700 origin-left",
+                  `${rorl(pos)}-0 origin-${rorl(pos)}`,
+                  "absolute top-0 h-0 cursor-pointer transition-opacity duration-700",
                   shown || i === activeCategory
                     ? "opacity-1"
                     : "opacity-0 delay-200",
-                  activeCategory === i && "text-red-400"
+                  activeCategory === i && colour
                 )}
                 style={{
                   opacity: shown || i === activeCategory ? 1 : 0,
-                  transformOrigin: "left",
                   rotate: `${rotation}deg`,
                   translate: `${translationX}px ${translationY}px`,
                 }}
@@ -168,7 +202,7 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
                 <p
                   className={clsx(
                     "-translate-y-1/2",
-                    activeCategory === i && "text-red-400"
+                    activeCategory === i && colour
                   )}
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}
@@ -179,40 +213,47 @@ function OrbitalMenu({ categories, onSettle }: OrbitalMenuProps) {
             )
           })}
         </div>
-        <div className="absolute w-full origin-left flex flex-col">
-          <p
-            className="w-full transition-transform duration-1000 "
-            style={{
-              transform: `translateX(${
-                R +
-                (categoriesRefs.current[activeCategory].current?.clientWidth ||
-                  30) +
-                12 + // for the top-3 and left-3
-                4 // for the space
-              }px)`,
-            }}
-          >
-            of a futile kind;
-          </p>
-          <p
-            className={clsx(
-              "w-full transition-opacity duration-700 text-gray-300 leading-none",
-              shown ? "opacity-0" : "opacity-100 delay-500"
-            )}
-            style={{
-              transform: `translateX(${R + 12}px)`,
-            }}
-          >
-            hailing from a troubled mind
-          </p>
-        </div>
+        {rorl(pos) === "left" ? (
+          <div className="absolute w-full origin-left flex flex-col">
+            <p
+              className="w-full transition-transform duration-1000 "
+              style={{
+                transform: `translateX(${
+                  rad +
+                  (categoriesRefs.current[activeCategory].current
+                    ?.clientWidth || 30) +
+                  12 + // for the top-3 and left-3
+                  4 // for the space
+                }px)`,
+              }}
+            >
+              of a futile kind;
+            </p>
+            <p
+              className={clsx(
+                "w-full transition-opacity duration-700 text-gray-300 leading-none",
+                shown ? "opacity-0" : "opacity-100 delay-500"
+              )}
+              style={{
+                transform: `translateX(${rad + 12}px)`,
+              }}
+            >
+              hailing from a troubled mind
+            </p>
+          </div>
+        ) : null}
       </div>
-      <div className="absolute top-3 left-3 -translate-x-1/2 -translate-y-1/2">
+      <div
+        className={`absolute top-3 ${rorl(pos)}-3 ${
+          angularSign[pos] === 1 ? "-" : ""
+        }translate-x-1/2 -translate-y-1/2`}
+      >
         <div
-          className={`relative top-0 left-0 aspect-square outline outline-1 outline-red-400
-      overflow-hidden rounded-full peer
-      transition-opacity duration-200  hover:opacity-100`}
-          style={{ width: `${2 * R - 10}px` }}
+          className={`relative top-0 ${rorl(pos)}-0 aspect-square
+            outline outline-1 overflow-hidden rounded-full peer
+            transition-opacity duration-200  hover:opacity-100
+            ${colour}`}
+          style={{ width: `${2 * rad - 10}px` }}
         >
           <div
             className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"

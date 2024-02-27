@@ -30,6 +30,8 @@ const CATEGORIES = [
   "journal",
 ]
 
+const CATEGORIES_ = ["settings", "me", "write"]
+
 export default function MainLayout({ children }: Props) {
   // const { theme, setTheme } = useTheme()
 
@@ -45,12 +47,16 @@ export default function MainLayout({ children }: Props) {
     setMenuOpen(false)
   }, [pathname])
 
-  const handleNavSettle = useCallback(
+  const handleCategorySettle = useCallback(
     (category: string) => {
       router.push(`/read/${category}`)
-      // setCategories((cats) => {
-      //   return [category, ...cats.filter((c) => c !== category)]
-      // })
+    },
+    [router]
+  )
+
+  const handleNavSettle = useCallback(
+    (page: string) => {
+      router.push(`/${page}`)
     },
     [router]
   )
@@ -137,7 +143,21 @@ export default function MainLayout({ children }: Props) {
         </div>
       </div>
       <nav className="sticky flex w-full h-12 z-50 bg-gradient-to-b">
-        <OrbitalMenu categories={categories} onSettle={handleNavSettle} />
+        <OrbitalMenu
+          categories={categories}
+          onSettle={handleCategorySettle}
+          colour="text-red-400"
+          pos="tl"
+        />
+        <OrbitalMenu
+          categories={CATEGORIES_}
+          onSettle={handleNavSettle}
+          colour="text-yellow-300"
+          pos="tr"
+          rad={30}
+          alpha={30}
+        />
+        {/* <OrbitalMenu categories={categories} onSettle={handleNavSettle} /> */}
         {/* <button
           className="h-full w-8"
           // onClick={() => {

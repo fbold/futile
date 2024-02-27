@@ -10,8 +10,8 @@ export default async function MainLayout({ children }: Props) {
     <>
       {/* This contains the orbital menus through another server-side component
     which retrieves the user's categories */}
-      <NavContainer className="sticky flex w-full h-12 z-50 bg-gradient-to-b" />
-      <main className="bg-pri dark:bg-pri-d flex-grow h-[calc(100%-50px)] flex">
+      <NavContainer />
+      <main className="absolute bg-pri dark:bg-pri-d flex-grow h-full w-full flex">
         <NextAuthProvider>{children}</NextAuthProvider>
       </main>
     </>

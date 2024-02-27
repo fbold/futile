@@ -3,10 +3,9 @@ import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { redirect } from "next/navigation"
 
-export default async function NavContainer({
-  className,
-}: {
-  className: string
+export default async function NavContainer({}: // className,
+{
+  // className: string
 }) {
   const session = await auth()
   const user = await prisma.user.findUnique({ where: { id: session?.user.id } })
@@ -16,7 +15,7 @@ export default async function NavContainer({
     value: cat,
   }))
   return (
-    <nav className={className}>
+    <nav className="fixed flex w-full h-full z-50 bg-gradient-to-b overflow-x-clip">
       <OrbitalMenus categories={categories} />
     </nav>
   )

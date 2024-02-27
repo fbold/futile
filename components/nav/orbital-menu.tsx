@@ -216,7 +216,7 @@ function OrbitalMenu({
         {rorl(pos) === "left" ? (
           <div className="absolute w-full origin-left flex flex-col">
             <p
-              className="w-full transition-transform duration-1000 "
+              className="transition-transform duration-1000 "
               style={{
                 transform: `translateX(${
                   rad +

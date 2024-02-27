@@ -18,6 +18,8 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   categories    String[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   accounts      Account[]
   tiles         Tile[]
 
@@ -55,12 +57,14 @@ model VerificationToken {
 }
 
 model Tile {
-  id       String @id @default(cuid())
-  title    String
-  category String // This will be a separating column. for example mcould be poem, thought, meditation or other sort of wiritng noun
-  user_id  String
-  user     User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
-  content  String
+  id        String   @id @default(cuid())
+  title     String
+  category  String // This will be a separating column. for example mcould be poem, thought, meditation or other sort of wiritng noun
+  user_id   String
+  user      User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([user_id])
   @@map("tiles")

@@ -18,23 +18,9 @@ const HIDE_DELAY = 1000 // Delay before the non active categories are set to hid
 let settleTimeout: null | ReturnType<typeof setTimeout> = null
 let hideTimeout: null | ReturnType<typeof setTimeout> = null
 
-type OrbitalMenuProps = {
-  categories: string[]
-  onSettle: (_: string) => void
-  colour: string
-  pos?: "tr" | "tl"
-  rad?: number
-  alpha?: number
-}
-
 const angularSign = {
   tr: -1,
   tl: 1,
-}
-
-const positionClasses = {
-  tr: "top-3 right-3",
-  tl: "top-3 left-3",
 }
 
 const rorl = (pos: "tr" | "tl") => {
@@ -46,8 +32,22 @@ const rorl = (pos: "tr" | "tl") => {
   return map[pos]
 }
 
+export type OrbitalMenuOption = {
+  value: string
+  label: string
+}
+
+type OrbitalMenuProps = {
+  options: OrbitalMenuOption[]
+  onSettle: (_: OrbitalMenuOption) => void
+  colour: string
+  pos?: "tr" | "tl"
+  rad?: number
+  alpha?: number
+}
+
 function OrbitalMenu({
-  categories,
+  options,
   onSettle,
   colour,
   pos = "tl",
@@ -56,7 +56,7 @@ function OrbitalMenu({
 }: OrbitalMenuProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const categoriesRefs = useRef(
-    categories.map((c) => createRef<HTMLParagraphElement>())
+    options.map((c) => createRef<HTMLParagraphElement>())
   )
   const [activeCategory, setActiveCategory] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
@@ -78,7 +78,7 @@ function OrbitalMenu({
     setAngularOffset(-angularSign[pos] * categoryIndex * alpha)
     // set linear scroll
     const scrollAmount =
-      (categoryIndex * (scrollHeight - offsetHeight)) / (categories.length - 1)
+      (categoryIndex * (scrollHeight - offsetHeight)) / (options.length - 1)
     scrollRef.current?.removeEventListener("scroll", handleScroll)
     scrollRef.current?.scrollTo({ behavior: "instant", top: scrollAmount })
     scrollRef.current?.addEventListener("scroll", handleScroll, {
@@ -93,7 +93,7 @@ function OrbitalMenu({
     // setAngularOffset(-tileIdx * alpha)
     // setActiveCategory(tileIdx)
     handleCategorySelect(categoryIdx)
-    onSettle(categories[categoryIdx])
+    onSettle(options[categoryIdx])
 
     // If there is a scroll settle timeout waiting, clear it
     if (settleTimeout) clearTimeout(settleTimeout)
@@ -104,12 +104,12 @@ function OrbitalMenu({
       // Find closest option by seeing if the diff btwn
       // current angle and the angle of an option is smaller
       // than half of ALHPA
-      for (let i = 0; i < categories.length; i++) {
+      for (let i = 0; i < options.length; i++) {
         if (Math.abs(i * alpha - angularSign[pos] * offset) <= 0.5 * alpha) {
           // setActiveCategory(i)
           // setAngularOffset(-i * alpha)
           handleCategorySelect(i)
-          onSettle(categories[i])
+          onSettle(options[i])
           return
         }
       }
@@ -117,10 +117,10 @@ function OrbitalMenu({
       // Settle on the last as we assume it has gone past
       // setActiveCategory(categories.length - 1)
       // setAngularOffset(-(categories.length - 1) * alpha)
-      handleCategorySelect(categories.length - 1)
-      onSettle(categories.at(-1)!)
+      handleCategorySelect(options.length - 1)
+      onSettle(options.at(-1)!)
     },
-    [categories, onSettle]
+    [options, onSettle]
   )
 
   const handleScroll = useCallback(
@@ -133,11 +133,11 @@ function OrbitalMenu({
       const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
       const scrollRatio = scrollTop / (scrollHeight - offsetHeight)
       const angularOffset_ =
-        angularSign[pos] * scrollRatio * (categories.length - 1) * alpha
+        angularSign[pos] * scrollRatio * (options.length - 1) * alpha
       setAngularOffset(-angularOffset_)
       settleTimeout = setTimeout(settleScroll, SETTLE_DELAY, angularOffset_)
     },
-    [categories, settleScroll]
+    [options, settleScroll]
   )
 
   useEffect(() => {
@@ -151,7 +151,7 @@ function OrbitalMenu({
     return () => {
       ref?.removeEventListener("scroll", handleScroll)
     }
-  }, [settleScroll, categories])
+  }, [settleScroll, options])
 
   const showCategories = () => {
     if (hideTimeout) clearTimeout(hideTimeout)
@@ -173,7 +173,7 @@ function OrbitalMenu({
             transform: `rotateZ(${angularOffset}deg)`,
           }}
         >
-          {categories.map((category, i) => {
+          {options.map((category, i) => {
             const rotation = angularSign[pos] * i * alpha
             const translationY =
               angularSign[pos] * Math.sin((rotation * Math.PI) / 180) * rad
@@ -183,7 +183,7 @@ function OrbitalMenu({
             //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
-                key={category}
+                key={category.value}
                 className={clsx(
                   `${rorl(pos)}-0 origin-${rorl(pos)}`,
                   "absolute top-0 h-0 cursor-pointer transition-opacity duration-700",
@@ -207,7 +207,7 @@ function OrbitalMenu({
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}
                 >
-                  {category}
+                  {category.label}
                 </p>
               </div>
             )
@@ -262,8 +262,8 @@ function OrbitalMenu({
             onMouseLeave={hideCategories}
           >
             <div className="h-full" />
-            {categories.map((cat) => (
-              <Fragment key={cat}>
+            {options.map((cat) => (
+              <Fragment key={cat.value}>
                 <div key={cat + "a"} className="h-full" />
                 <div key={cat + "b"} className="h-full" />
               </Fragment>

@@ -1,12 +1,12 @@
-import clsx from 'clsx'
-import Link from 'next/link'
-import React, { MouseEventHandler, PropsWithChildren } from 'react'
+import clsx from "clsx"
+import Link from "next/link"
+import React, { MouseEventHandler, PropsWithChildren } from "react"
 
 type DefaultButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>
   href?: string
   className?: string
-  type?: 'button' | 'submit' | 'reset'
+  type?: "button" | "submit" | "reset"
 }
 
 export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
@@ -21,7 +21,7 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
       <Link
         href={href}
         className={clsx(
-          'h-full relative px-2 text-txt-pri dark:text-txt-pri-d bg-sec dark:bg-sec-d border-acc dark:border-acc-d border flex items-center justify-center align-middle',
+          "relative p-2 text-txt-pri dark:text-txt-pri-d bg-sec dark:bg-sec-d border-acc dark:border-acc-d border flex items-center justify-center align-middle",
           className
         )}
       >
@@ -30,10 +30,10 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
     )
   return (
     <button
-      type={type || 'button'}
+      type={type || "button"}
       onClick={onClick}
       className={clsx(
-        'h-full relative px-2 text-txt-pri dark:text-txt-pri-d bg-sec dark:bg-sec-d border-acc dark:border-acc-d border flex items-center justify-center align-middle',
+        "relative p-2 text-txt-pri dark:text-txt-pri-d bg-sec dark:bg-sec-d border-acc dark:border-acc-d border flex items-center justify-center align-middle",
         className
       )}
     >

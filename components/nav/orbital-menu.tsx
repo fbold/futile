@@ -107,6 +107,11 @@ type OrbitalMenuProps = {
   alpha?: number
 }
 
+export type OrbitalMenuHandle = {
+  home: () => void
+  to: (_: number) => void
+}
+
 const OrbitalMenu = (
   {
     options: options_,
@@ -126,7 +131,7 @@ const OrbitalMenu = (
   const categoriesRefs = useRef(
     options.map((c) => createRef<HTMLParagraphElement>())
   )
-  const [activeCategory, setActiveCategory] = useState(0)
+  const [activeOption, setActiveOption] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
 
@@ -137,16 +142,19 @@ const OrbitalMenu = (
         home() {
           handleCategorySelect(0)
         },
+        to(idx: number) {
+          handleCategorySelect(idx + 1)
+        },
       }
     },
     []
   )
 
   const handleCategorySelect = (categoryIndex: number) => {
-    console.log("Setting category")
+    console.log("Setting category", categoryIndex)
     // Sets the active category and syncs scrolls to it
     // Used by both methods of selection: settle and click
-    setActiveCategory(categoryIndex)
+    setActiveOption(categoryIndex)
     // So that they all hide at once (see conditional classes
     // below) we clear timeout and hide from now so it is set
     // at same time as active category
@@ -168,14 +176,16 @@ const OrbitalMenu = (
     })
   }
 
-  const handleTileClick = (categoryIdx: number) => {
+  const handleTileClick = (optnIdx: number) => {
     // Sets the tile thats clicked and moves the orbit there
     // Sets the exact scroll amount as well to keep in sync
     // with angular offset
     // setAngularOffset(-tileIdx * alpha)
     // setActiveCategory(tileIdx)
-    handleCategorySelect(categoryIdx)
-    onSettle(options[categoryIdx])
+    handleCategorySelect(optnIdx)
+    if (options[optnIdx].value !== "__")
+      // skip setting if home option
+      onSettle(options[optnIdx])
 
     // If there is a scroll settle timeout waiting, clear it
     if (settleTimeout) clearTimeout(settleTimeout)
@@ -191,7 +201,9 @@ const OrbitalMenu = (
           // setActiveCategory(i)
           // setAngularOffset(-i * alpha)
           handleCategorySelect(i)
-          onSettle(options[i])
+          if (options[i].value !== "__")
+            // skip setting if home option
+            onSettle(options[i])
           return
         }
       }
@@ -276,13 +288,13 @@ const OrbitalMenu = (
                 className={clsx(
                   `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
                   "absolute h-0 cursor-pointer transition-opacity duration-700",
-                  shown || i === activeCategory
+                  shown || i === activeOption
                     ? "opacity-1"
                     : "opacity-0 delay-200",
-                  activeCategory === i && colour
+                  activeOption === i && colour
                 )}
                 style={{
-                  opacity: shown || i === activeCategory ? 1 : 0,
+                  opacity: shown || i === activeOption ? 1 : 0,
                   rotate: `${rotation}deg`,
                   translate: `${translationX}px ${translationY}px`,
                 }}
@@ -291,7 +303,7 @@ const OrbitalMenu = (
                 <p
                   className={clsx(
                     "-translate-y-1/2 pointer-events-auto",
-                    activeCategory === i && colour
+                    activeOption === i && colour
                   )}
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}
@@ -302,15 +314,15 @@ const OrbitalMenu = (
             )
           })}
         </div>
-        {pos === "tl" ? (
+        {pos === "tl" && options[activeOption].value !== "__" ? (
           <div className="absolute origin-left flex flex-col">
             <p
               className="transition-transform duration-1000 "
               style={{
                 transform: `translateX(${
                   rad +
-                  (categoriesRefs.current[activeCategory].current
-                    ?.clientWidth || 30) +
+                  (categoriesRefs.current[activeOption].current?.clientWidth ||
+                    30) +
                   12 + // for the top-3 and left-3
                   4 // for the space
                 }px)`,
@@ -361,10 +373,6 @@ const OrbitalMenu = (
       </div>
     </>
   )
-}
-
-export type OrbitalMenuHandle = {
-  home: () => void
 }
 
 export default memo(

@@ -4,7 +4,7 @@ import OrbitalMenu, {
   OrbitalMenuHandle,
   OrbitalMenuOption,
 } from "@/components/nav/orbital-menu"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useRef } from "react"
 
 const generalOptions = [
@@ -22,6 +22,10 @@ const generalOptions = [
   },
 ]
 
+const findInOptions = (value: string, options: OrbitalMenuOption[]) => {
+  return options.findIndex((opt) => opt.value === value) || 0
+}
+
 export default function OrbitalMenus({
   categories,
 }: {
@@ -29,28 +33,38 @@ export default function OrbitalMenus({
 }) {
   const router = useRouter()
   const pathname = usePathname()
+  const params = useSearchParams()
 
   const handleCategorySettle = useCallback(
     (category: OrbitalMenuOption) => {
-      if (category.value !== "__") router.push(`/read/${category.value}`)
+      router.push(`/read?c=${category.value}`)
     },
     [router]
   )
 
   const handleNavSettle = useCallback(
     (option: OrbitalMenuOption) => {
-      router.push(`/${option.value}`)
+      router.push(`/write?c=${option.value}`)
     },
     [router]
   )
 
   const readMenuRef = useRef<OrbitalMenuHandle>(null)
+  const writeMenuRef = useRef<OrbitalMenuHandle>(null)
 
   useEffect(() => {
     if (!pathname.startsWith("/read")) {
       readMenuRef.current?.home()
     }
   }, [pathname])
+
+  useEffect(() => {
+    const currentCat = params.get("c")
+    if (pathname.startsWith("/read") && currentCat)
+      readMenuRef.current?.to(findInOptions(currentCat, categories))
+    if (pathname.startsWith("/write") && currentCat)
+      writeMenuRef.current?.to(findInOptions(currentCat, categories))
+  }, [])
 
   return (
     <>
@@ -66,7 +80,8 @@ export default function OrbitalMenus({
       <OrbitalMenu
         // hidden={!pathname.endsWith("/me") && !pathname.endsWith("/visit")}
         // titleOption="nav&write"
-        options={generalOptions}
+        ref={writeMenuRef}
+        options={categories}
         onSettle={handleNavSettle}
         colour="text-yellow-300"
         pos="tr"

@@ -2,10 +2,14 @@
 import clsx from "clsx"
 import {
   Fragment,
+  Ref,
   createRef,
+  forwardRef,
   memo,
   useCallback,
   useEffect,
+  useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react"
@@ -103,14 +107,21 @@ type OrbitalMenuProps = {
   alpha?: number
 }
 
-function OrbitalMenu({
-  options,
-  onSettle,
-  colour,
-  pos = "tl",
-  rad = R,
-  alpha = ALPHA,
-}: OrbitalMenuProps) {
+const OrbitalMenu = (
+  {
+    options: options_,
+    onSettle,
+    colour,
+    pos = "tl",
+    rad = R,
+    alpha = ALPHA,
+  }: OrbitalMenuProps,
+  ref: Ref<OrbitalMenuHandle>
+) => {
+  const options = useMemo(
+    () => [{ label: "read", value: "__" }, ...options_],
+    [options_]
+  )
   const scrollRef = useRef<HTMLDivElement>(null)
   const categoriesRefs = useRef(
     options.map((c) => createRef<HTMLParagraphElement>())
@@ -118,6 +129,18 @@ function OrbitalMenu({
   const [activeCategory, setActiveCategory] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        home() {
+          handleCategorySelect(0)
+        },
+      }
+    },
+    []
+  )
 
   const handleCategorySelect = (categoryIndex: number) => {
     console.log("Setting category")
@@ -340,4 +363,10 @@ function OrbitalMenu({
   )
 }
 
-export default memo(OrbitalMenu)
+export type OrbitalMenuHandle = {
+  home: () => void
+}
+
+export default memo(
+  forwardRef<OrbitalMenuHandle, OrbitalMenuProps>(OrbitalMenu)
+)

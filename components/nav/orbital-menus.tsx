@@ -53,9 +53,9 @@ export default function OrbitalMenus({
   const writeMenuRef = useRef<OrbitalMenuHandle>(null)
 
   useEffect(() => {
-    if (!pathname.startsWith("/read")) {
-      readMenuRef.current?.home()
-    }
+    if (!pathname.startsWith("/read")) readMenuRef.current?.home()
+
+    if (!pathname.startsWith("/write")) writeMenuRef.current?.home()
   }, [pathname])
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function OrbitalMenus({
     <>
       <OrbitalMenu
         // hidden={!pathname.includes("/read/")}
-        // titleOption="read"
+        titleOption="read"
         ref={readMenuRef}
         options={categories}
         onSettle={handleCategorySettle}
@@ -79,7 +79,7 @@ export default function OrbitalMenus({
       />
       <OrbitalMenu
         // hidden={!pathname.endsWith("/me") && !pathname.endsWith("/visit")}
-        // titleOption="nav&write"
+        titleOption="write"
         ref={writeMenuRef}
         options={categories}
         onSettle={handleNavSettle}

@@ -99,6 +99,7 @@ export type OrbitalMenuOption = {
 }
 
 type OrbitalMenuProps = {
+  titleOption?: string
   options: OrbitalMenuOption[]
   onSettle: (_: OrbitalMenuOption) => void
   colour: string
@@ -114,6 +115,7 @@ export type OrbitalMenuHandle = {
 
 const OrbitalMenu = (
   {
+    titleOption,
     options: options_,
     onSettle,
     colour,
@@ -124,13 +126,18 @@ const OrbitalMenu = (
   ref: Ref<OrbitalMenuHandle>
 ) => {
   const options = useMemo(
-    () => [{ label: "read", value: "__" }, ...options_],
-    [options_]
+    () =>
+      titleOption
+        ? [{ label: titleOption, value: "__" }, ...options_]
+        : options_,
+    [titleOption, options_]
   )
   const scrollRef = useRef<HTMLDivElement>(null)
   const categoriesRefs = useRef(
     options.map((c) => createRef<HTMLParagraphElement>())
   )
+  const hideTimeout = useRef<null | NodeJS.Timeout>()
+  const settleTimeout = useRef<null | NodeJS.Timeout>()
   const [activeOption, setActiveOption] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
@@ -141,6 +148,7 @@ const OrbitalMenu = (
       return {
         home() {
           handleCategorySelect(0)
+          setShown(false)
         },
         to(idx: number) {
           handleCategorySelect(idx + 1)
@@ -151,15 +159,14 @@ const OrbitalMenu = (
   )
 
   const handleCategorySelect = (categoryIndex: number) => {
-    console.log("Setting category", categoryIndex)
+    console.log(titleOption, ": Setting category", categoryIndex)
     // Sets the active category and syncs scrolls to it
     // Used by both methods of selection: settle and click
     setActiveOption(categoryIndex)
     // So that they all hide at once (see conditional classes
     // below) we clear timeout and hide from now so it is set
     // at same time as active category
-    if (hideTimeout) clearTimeout(hideTimeout)
-    setShown(false)
+
     // SYNC scrolls to category
     const { scrollHeight, offsetHeight } = scrollRef.current!
     // set angular scroll
@@ -174,6 +181,9 @@ const OrbitalMenu = (
     scrollRef.current?.addEventListener("scroll", handleScroll, {
       passive: true,
     })
+    console.log(titleOption, ": clearing hide timeout from category set")
+    if (hideTimeout.current) clearTimeout(hideTimeout.current)
+    setShown(false)
   }
 
   const handleTileClick = (optnIdx: number) => {
@@ -188,11 +198,12 @@ const OrbitalMenu = (
       onSettle(options[optnIdx])
 
     // If there is a scroll settle timeout waiting, clear it
-    if (settleTimeout) clearTimeout(settleTimeout)
+    if (settleTimeout.current) clearTimeout(settleTimeout.current)
   }
 
   const settleScroll = useCallback(
     (offset: number) => {
+      console.log(titleOption, ": settling scroll")
       // Find closest option by seeing if the diff btwn
       // current angle and the angle of an option is smaller
       // than half of ALHPA
@@ -219,11 +230,11 @@ const OrbitalMenu = (
 
   const handleScroll = useCallback(
     (event: Event) => {
-      console.log("scrolling")
+      console.log(titleOption, ": scrolling")
       // Translates element scroll to angular scroll
       if (!scrollRef.current) return
       if (!shown) showCategories()
-      if (settleTimeout) clearTimeout(settleTimeout) // Cancel any settling as we are still scrolling
+      if (settleTimeout.current) clearTimeout(settleTimeout.current) // Cancel any settling as we are still scrolling
       const { scrollTop, scrollHeight, offsetHeight } = scrollRef.current
       const scrollRatio = Math.abs(
         oneorzero[pos] - scrollTop / (scrollHeight - offsetHeight)
@@ -231,9 +242,14 @@ const OrbitalMenu = (
       const angularOffset_ =
         angularSign[pos] * scrollRatio * (options.length - 1) * alpha
       setAngularOffset(-angularOffset_)
-      settleTimeout = setTimeout(settleScroll, SETTLE_DELAY, angularOffset_)
+      console.log(titleOption, ": Setting settle timeoit")
+      settleTimeout.current = setTimeout(
+        settleScroll,
+        SETTLE_DELAY,
+        angularOffset_
+      )
     },
-    [options, settleScroll]
+    [alpha, options.length, pos, settleScroll, shown, titleOption]
   )
 
   useEffect(() => {
@@ -254,12 +270,15 @@ const OrbitalMenu = (
     }
   }, [settleScroll, options])
 
-  const showCategories = () => {
-    if (hideTimeout) clearTimeout(hideTimeout)
+  const showCategories = useCallback(() => {
+    console.log(titleOption, ": clearing hide timeout from show")
+    if (hideTimeout.current) clearTimeout(hideTimeout.current)
     setShown(true)
-  }
+  }, [])
+
   const hideCategories = () => {
-    hideTimeout = setTimeout(() => {
+    console.log(titleOption, ": setting hide timeout")
+    hideTimeout.current = setTimeout(() => {
       setShown(false)
     }, HIDE_DELAY)
   }
@@ -289,12 +308,12 @@ const OrbitalMenu = (
                   `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
                   "absolute h-0 cursor-pointer transition-opacity duration-700",
                   shown || i === activeOption
-                    ? "opacity-1"
+                    ? "opacity-100"
                     : "opacity-0 delay-200",
                   activeOption === i && colour
                 )}
                 style={{
-                  opacity: shown || i === activeOption ? 1 : 0,
+                  // opacity: shown || i === activeOption ? 1 : 0,
                   rotate: `${rotation}deg`,
                   translate: `${translationX}px ${translationY}px`,
                 }}
@@ -303,7 +322,8 @@ const OrbitalMenu = (
                 <p
                   className={clsx(
                     "-translate-y-1/2 pointer-events-auto",
-                    activeOption === i && colour
+                    activeOption === i && colour,
+                    category.value === "__" && "text-gray-400"
                   )}
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}
@@ -356,7 +376,8 @@ const OrbitalMenu = (
           style={{ width: `${2 * rad - 10}px` }}
         >
           <div
-            className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"
+            className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto outline outline-red-300 outline-1
+            "
             ref={scrollRef}
             onMouseEnter={showCategories}
             onMouseLeave={hideCategories}

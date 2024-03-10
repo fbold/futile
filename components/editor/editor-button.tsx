@@ -1,12 +1,12 @@
-import { Icon as IconType } from '@tabler/icons-react'
-import { Attributes, ChainedCommands, Editor } from '@tiptap/react'
-import clsx from 'clsx'
+import { Icon as IconType } from "@tabler/icons-react"
+import { Attributes, ChainedCommands, Editor } from "@tiptap/react"
+import clsx from "clsx"
 
 type BaseProps = {
   editor: Editor
   effectConditions: {} | string
   Icon: IconType
-  group?: 'left' | 'right' | 'middle'
+  group?: "left" | "right" | "middle"
 }
 
 type ConditionalProps =
@@ -44,22 +44,22 @@ export const EditorButton = ({
   return (
     <button
       className={clsx(
-        'p-1 border-acc dark:border-acc-d border-y',
+        "p-1 border-acc dark:border-acc-d border-y aspect-square h-full ",
         // {
         //   'rounded-l-md': group === 'left',
         //   'rounded-r-md border-l': group === 'right',
         //   'rounded-none border-l': group === 'middle',
         //   'rounded-md': !group,
         // },
-        !group && 'border-x',
-        group === 'left' && 'border-l',
-        group === 'right' && 'border-l border-r',
-        group === 'middle' && 'border-l',
-        isActive() ? 'bg-sec dark:bg-sec-d' : ''
+        !group && "border-x",
+        group === "left" && "border-l",
+        group === "right" && "border-l border-r",
+        group === "middle" && "border-l",
+        isActive() ? "bg-sec dark:bg-sec-d" : ""
       )}
       onClick={handleClick}
     >
-      <Icon className="text-txt-pri dark:text-txt-pri-d" />
+      <Icon className="text-txt-pri dark:text-txt-pri-d m-auto" />
     </button>
   )
 }

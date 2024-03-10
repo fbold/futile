@@ -90,8 +90,8 @@ const Editor = ({
           {...register("title")}
         />
       </div>
-      <div className="w-full flex flex-row p-2 pb-3 gap-2 sticky top-0 bg-gradient-to-b from-pri dark:from-pri-d from-80% justify-between">
-        <div className="flex flex-row gap-2">
+      <div className="w-full h-9 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-pri dark:from-pri-d from-80% justify-between">
+        <div className="flex flex-row gap-2 h-9 w-full">
           <EditorButton
             editor={editor}
             toggleEffect={(e) => e.toggleBold()}
@@ -104,7 +104,7 @@ const Editor = ({
             effectConditions="italic"
             Icon={IconItalic}
           />
-          <div>
+          <div className="flex flex-row">
             <EditorButton
               editor={editor}
               toggleEffect={(e) => e.setTextAlign("left")}

@@ -287,7 +287,7 @@ const OrbitalMenu = (
     <>
       <div className="absolute h-full w-full pointer-events-none">
         <div
-          className={`${torb[pos]}-3 ${rorl[pos]}-3
+          className={`${torb[pos]}-3 ${rorl[pos]}-3 pointer-events-auto
           absolute transition-transform aspect-square origin-center`}
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
@@ -366,7 +366,8 @@ const OrbitalMenu = (
       </div>
       <div
         className={`absolute ${torb[pos]}-3 ${rorl[pos]}-3 
-        ${pormx[pos]}translate-x-1/2 ${pormy[pos]}translate-y-1/2`}
+        ${pormx[pos]}translate-x-1/2 ${pormy[pos]}translate-y-1/2
+        pointer-events-auto`}
       >
         <div
           className={`relative ${torb[pos]}-0 ${rorl[pos]}-0 aspect-square

@@ -15,7 +15,7 @@ export default async function NavContainer({}: // className,
     value: cat,
   }))
   return (
-    <nav className="fixed flex w-full h-full z-50 bg-gradient-to-b overflow-x-clip">
+    <nav className="fixed flex w-full h-full pointer-events-none z-50 bg-gradient-to-b overflow-x-clip">
       <OrbitalMenus categories={categories} />
     </nav>
   )

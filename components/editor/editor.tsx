@@ -82,7 +82,7 @@ const Editor = ({
         <TextInput
           type="text"
           placeholder="Title"
-          className="w-full text-2xl border-0 outline-none max-h-none p-3 text-center"
+          className="w-full text-2xl dark:text-text border-0 outline-none max-h-none p-3 text-center"
           classNameOnError="focus:outline-none focus:outline-0"
           error={errors?.title?.message || null}
           autoComplete="off"

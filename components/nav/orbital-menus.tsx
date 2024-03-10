@@ -35,27 +35,35 @@ export default function OrbitalMenus({
   const pathname = usePathname()
   const params = useSearchParams()
 
-  const handleCategorySettle = useCallback(
+  const handleReadSelect = useCallback(
     (category: OrbitalMenuOption) => {
       router.push(`/read?c=${category.value}`)
     },
     [router]
   )
 
-  const handleNavSettle = useCallback(
+  const handleWriteSelect = useCallback(
     (option: OrbitalMenuOption) => {
       router.push(`/write?c=${option.value}`)
     },
     [router]
   )
 
+  const handleMetaSelect = useCallback(
+    (option: OrbitalMenuOption) => {
+      router.push(`/meta/${option.value}`)
+    },
+    [router]
+  )
+
   const readMenuRef = useRef<OrbitalMenuHandle>(null)
   const writeMenuRef = useRef<OrbitalMenuHandle>(null)
+  const metaMenuRef = useRef<OrbitalMenuHandle>(null)
 
   useEffect(() => {
     if (!pathname.startsWith("/read")) readMenuRef.current?.home()
-
     if (!pathname.startsWith("/write")) writeMenuRef.current?.home()
+    if (!pathname.startsWith("/meta")) metaMenuRef.current?.home()
   }, [pathname])
 
   useEffect(() => {
@@ -64,6 +72,10 @@ export default function OrbitalMenus({
       readMenuRef.current?.to(findInOptions(currentCat, categories))
     if (pathname.startsWith("/write") && currentCat)
       writeMenuRef.current?.to(findInOptions(currentCat, categories))
+    if (pathname.startsWith("/meta"))
+      metaMenuRef.current?.to(
+        findInOptions(pathname.split("/meta/")[1], generalOptions)
+      )
   }, [])
 
   return (
@@ -73,7 +85,7 @@ export default function OrbitalMenus({
         titleOption="read"
         ref={readMenuRef}
         options={categories}
-        onSettle={handleCategorySettle}
+        onSettle={handleReadSelect}
         colour="text-red-400"
         pos="tl"
       />
@@ -82,31 +94,24 @@ export default function OrbitalMenus({
         titleOption="write"
         ref={writeMenuRef}
         options={categories}
-        onSettle={handleNavSettle}
+        onSettle={handleWriteSelect}
         colour="text-yellow-300"
         pos="tr"
-        rad={30}
-        alpha={43}
+        // rad={30}
+        // alpha={43}
       />
-      {pathname.endsWith("/me") ? (
-        <OrbitalMenu
-          options={[
-            {
-              label: "settings",
-              value: "settings",
-            },
-            {
-              label: "about",
-              value: "about",
-            },
-          ]}
-          onSettle={() => {}}
-          colour="text-green-400"
-          pos="br"
-          rad={60}
-          alpha={40}
-        />
-      ) : null}
+      {/* {pathname.endsWith("/me") ? ( */}
+      <OrbitalMenu
+        titleOption="meta"
+        ref={metaMenuRef}
+        options={generalOptions}
+        onSettle={handleMetaSelect}
+        colour="text-green-400"
+        pos="br"
+        rad={40}
+        alpha={20}
+      />
+      {/* ) : null} */}
     </>
   )
 }

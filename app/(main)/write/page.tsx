@@ -1,21 +1,22 @@
 "use client"
 import Editor from "@/components/editor"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Write() {
   const router = useRouter()
+  const params = useSearchParams()
   const handleSave = async (title: string, content?: string) => {
     const post = await fetch("/api/tile", {
       method: "POST",
       body: JSON.stringify({
         title,
         content,
-        category: "thought",
+        category: params.get("c"),
       }),
-    })
+    }).then((res) => res.json())
 
-    if (post.ok && post.status === 200) {
-      router.push("/")
+    if (post.status === 200) {
+      router.push(`/read/${post.tile.id}`)
     }
   }
 

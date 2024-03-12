@@ -31,7 +31,8 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json({
-      message: "User created successfully.",
+      status: 200,
+      tile: res,
     })
   } catch (error) {
     console.log(error)

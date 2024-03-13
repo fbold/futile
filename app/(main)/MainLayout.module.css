@@ -1,0 +1,236 @@
+.navigation {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.contextButton {
+  bottom: 1rem;
+  right: 1rem;
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  /* background-color: black; */
+  border-radius: 100%;
+  justify-items: center;
+  /* border: none; */
+  cursor: pointer;
+  z-index: 10;
+  padding: 0.7rem;
+  pointer-events: all;
+}
+
+.contextOrbit {
+  bottom: calc(1rem + 22.5px);
+  right: calc(1rem + 22.5px);
+  /* border: 0px black solid; */
+  transform: translate(50%, 50%);
+  width: 45px;
+  height: 45px;
+  border-radius: 100%;
+  position: absolute;
+  transition: width 300ms, height 300ms, border-color 500ms, transform 300ms;
+}
+
+.contextOrbit.open {
+  /* border: 1px  solid; */
+  width: 150px;
+  height: 150px;
+}
+
+.menuButton {
+  bottom: 50%;
+  right: 50%;
+  padding: 5px;
+  transform: translate(50%, 50%);
+  position: absolute;
+  z-index: 0;
+  width: 35px;
+  height: 35px;
+  /* background-color: black; */
+  /* border: 1px black solid; */
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 100%;
+  justify-items: center;
+  cursor: pointer;
+  pointer-events: all;
+  transition: transform 400ms, bottom 200ms, right 200ms, border-color 400ms;
+}
+
+.menuButton a {
+  padding: 5px;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.menuButton.open:hover {
+  /* border: 1px gainsboro solid; */
+  transform: translate(50%, 50%);
+}
+
+.menuButton.open {
+  transform: translate(-50%, -50%);
+}
+
+.menuButton:nth-child(1).open {
+  right: 100%;
+  transform: translate(50%, 50%);
+}
+
+.menuButton:nth-child(2).open {
+  bottom: 85.355%;
+  right: 85.355%;
+  transform: translate(50%, 50%);
+}
+
+.menuButton:nth-child(3).open {
+  bottom: 100%;
+  transform: translate(50%, 50%);
+}
+
+.menuButton p {
+  /* font-family: Arial, Helvetica, sans-serif; */
+  /* font-weight: 500; */
+  color: black;
+  opacity: 0;
+  margin: 0;
+  position: relative;
+  width: min-content;
+  transition: opacity 300ms;
+  pointer-events: none;
+}
+
+/* THE POSISTIONING OF THESE p's NEEDS WORK */
+
+/* .menuButton:nth-child(1) p {
+  bottom: 100%;
+  right: 160%;
+  transform: translate(10%, -90%);
+} */
+
+/* .menuButton:nth-child(2) p {
+  bottom: 85.355%;
+  right: 85.355%;
+  transform: translate(10%, -60%) rotate(45deg);
+}
+
+.menuButton:nth-child(3) p {
+  bottom: 500%;
+  right: 60%;
+  transform: translate(10%, -60%) rotate(90deg);
+} */
+
+.menuButton:hover p {
+  opacity: 100;
+}
+
+.menuButton.active p {
+  opacity: 100;
+}
+
+.menuIcon {
+  height: 17px;
+  margin: auto;
+  position: relative;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.menuIcon span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  /* background: white; */
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;
+}
+
+.menuIcon span:nth-child(1) {
+  bottom: 0px;
+}
+
+.menuIcon span:nth-child(2),
+.menuIcon span:nth-child(3) {
+  bottom: 7px;
+}
+
+.menuIcon span:nth-child(4) {
+  bottom: 14px;
+}
+
+.menuIcon.open span:nth-child(1) {
+  bottom: 7px;
+  width: 0%;
+  right: 50%;
+}
+
+.menuIcon.open span:nth-child(2) {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.menuIcon.open span:nth-child(3) {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.menuIcon.open span:nth-child(4) {
+  bottom: 14px;
+  width: 0%;
+  right: 50%;
+}
+
+.pageTitle {
+  position: relative;
+  margin: 0;
+  right: 70px;
+  width: fit-content;
+  cursor: pointer;
+  z-index: 60;
+  transition: right ease-in-out 200ms;
+}
+
+.pageTitle.open {
+  position: relative;
+  margin: 0;
+  right: 135px;
+  cursor: pointer;
+  z-index: 60;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: min(50px, 10%) min(100px, 20%);
+}

@@ -10,7 +10,7 @@ type EditorReadProps = {
 const EditorRead = ({ content }: EditorReadProps) => {
   const editor = useEditor({
     ...defaults,
-    editable: true,
+    editable: false,
     content: content,
   })
 
@@ -18,9 +18,10 @@ const EditorRead = ({ content }: EditorReadProps) => {
   return (
     <EditorContent
       editor={editor}
-      className={clsx()
-      // "h-full"
-      // 'before:absolute before:w-full before:bg-gradient-to-b before:from-sec before:h-5'
+      className={
+        clsx()
+        // "h-full"
+        // 'before:absolute before:w-full before:bg-gradient-to-b before:from-sec before:h-5'
       }
     />
   )

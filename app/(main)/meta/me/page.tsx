@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import CategoriesList from "@/app/(main)/meta/me/categories-list"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 
@@ -31,6 +31,11 @@ export default async function Me() {
           {user?.createdAt?.getTime().toString().split("").join(" ")}
         </p>
         <br />
+        {user?.categories ? (
+          <CategoriesList categories={user?.categories} />
+        ) : (
+          <p>...</p>
+        )}
       </div>
       {/* <p>{user?.createdAt?.getTime()}</p> */}
       {/* <h1 className="font-bold text-2xl">I call me</h1>

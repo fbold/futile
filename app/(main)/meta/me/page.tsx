@@ -37,11 +37,6 @@ export default async function Me() {
           <p>...</p>
         )}
       </div>
-      {/* <p>{user?.createdAt?.getTime()}</p> */}
-      {/* <h1 className="font-bold text-2xl">I call me</h1>
-      <p>{user.name}</p>
-      <h1 className="font-bold text-2xl">I call me</h1>
-      <p>{user.name}</p> */}
     </div>
   )
 }

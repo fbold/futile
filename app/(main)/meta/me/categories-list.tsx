@@ -1,5 +1,7 @@
 "use client"
 import { TextButton } from "@/components/buttons/text-button"
+import Popup from "@/components/popups/empty"
+import usePopup from "@/hooks/usePopup"
 import { User } from "@prisma/client"
 import clsx from "clsx"
 import { useState } from "react"
@@ -13,6 +15,13 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
   const [selected, setSelected] = useState<string | null>(null)
   const [formShown, setFormShown] = useState(false)
   const [newCategory, setNewCategory] = useState("")
+  const {
+    showPopup,
+    isUp,
+    register: registerPopup,
+  } = usePopup({
+    onOK: handleDel,
+  })
 
   const { register, setValue, handleSubmit } = useForm({})
 
@@ -20,8 +29,19 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     setSelected((c) => (c === cat ? null : cat))
   }
 
+  const handleDelClick = () => {
+    // DELETE
+    showPopup()
+  }
+
+  function handleDel() {
+    // SEND DELETE REQ
+    console.log("delete", selected)
+  }
+
   const showForm = () => {
     setFormShown(true)
+    setSelected(null)
   }
 
   const handleCancel = () => {
@@ -35,7 +55,11 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
 
   return (
     <div className="flex flex-col items-center text-center w-full">
-      {/* <div> */}
+      <Popup
+        title={`Delete ${selected}?`}
+        message="All fuTiles of this category will become uncategorized."
+        {...registerPopup}
+      />
       <p className="underline text-red-400">categories</p>
       <ul>
         {categories.map((cat) => (
@@ -55,15 +79,17 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
             <TextButton onClick={showForm} className="text-g">
               new
             </TextButton>
-            <TextButton
-              onClick={() => {}}
-              className={clsx(
-                "text-r transition-opacity duration-300",
-                selected ? "opacity-100" : "opacity-0"
-              )}
-            >
-              del
-            </TextButton>
+            {selected ? (
+              <TextButton
+                onClick={handleDelClick}
+                className={clsx(
+                  "text-r transition-opacity duration-300"
+                  //  ? "opacity-100" : "opacity-0"
+                )}
+              >
+                del
+              </TextButton>
+            ) : null}
           </li>
         ) : (
           <form onSubmit={handleSubmit(onValid)}>
@@ -72,9 +98,9 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
               className="border-none bg-transparent outline-none text-center"
               {...register("category")}
             ></input>
-            <div className="flex gap-1 justify-evenly">
-              {/* <TextButton>save</TextButton> */}
+            <div className="flex gap-2 justify-center">
               <TextButton onClick={handleCancel}>cancel</TextButton>
+              <TextButton className="!text-g">ok</TextButton>
             </div>
           </form>
         )}

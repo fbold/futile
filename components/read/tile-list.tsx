@@ -7,10 +7,12 @@ type TileListProps = {
 
 export default function TileList({ initialTiles }: TileListProps) {
   return (
-    <div className="flex flex-col w-full mt-12 gap-2 mx-12">
-      {initialTiles.map((tile) => (
-        <TilePreview key={tile.id} tile={tile}></TilePreview>
-      ))}
+    <div className="w-full h-full gap-2 overflow-scroll">
+      <div className="flex flex-col w-full gap-2 px-12 py-12">
+        {initialTiles.map((tile) => (
+          <TilePreview key={tile.id} tile={tile}></TilePreview>
+        ))}
+      </div>
     </div>
   )
 }

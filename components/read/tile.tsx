@@ -10,6 +10,7 @@ type Props = {
 }
 
 const TilePreview = memo(({ tile }: Props) => {
+  const containerRef = useRef<HTMLDivElement>(null)
   const divRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const [fadeText, setFadeText] = useState(false)
@@ -21,11 +22,16 @@ const TilePreview = memo(({ tile }: Props) => {
     onUpdate() {
       // Calculates if there is an overflow and shows fade if so
       // The multiplier should be same as height in percent of tile div
-      if (divRef.current && window.visualViewport && titleRef.current) {
+      if (
+        containerRef.current &&
+        divRef.current &&
+        window.visualViewport &&
+        titleRef.current
+      ) {
         setFadeText(
           divRef.current?.getBoundingClientRect().height +
             titleRef.current?.getBoundingClientRect().height >=
-            window.visualViewport?.height * 0.5
+            containerRef.current?.getBoundingClientRect().height
         )
       }
     },
@@ -39,9 +45,10 @@ const TilePreview = memo(({ tile }: Props) => {
   return (
     <div
       className={clsx(
-        "rounded-none flex-1 p-4 w-auto break-inside-avoid bg-pri dark:bg-pri-d mb-1 border border-opacity-30 relative overflow-hidden cursor-pointer"
+        "rounded-none flex-1 p-4 w-auto flex-grow max-h-screen break-inside-avoid bg-pri dark:bg-pri-d mb-1 border border-opacity-30 relative overflow-hidden cursor-pointer"
         // !fadeText && "py-14"
       )}
+      ref={containerRef}
     >
       <Link href={`/read/${encodeURIComponent(tile.id ?? "")}`}>
         <h2 ref={titleRef} className="font-extrabold">
@@ -58,7 +65,15 @@ const TilePreview = memo(({ tile }: Props) => {
         <EditorContent editor={editor} />
       </div>
       {fadeText ? (
-        <span className="absolute rounded-b-lg -ml-2 w-full h-32 pointer-events-none bottom-0 bg-gradient-to-t from-pri dark:from-pri-d"></span>
+        <>
+          <span className="absolute rounded-b-lg -ml-2 w-full h-32 pointer-events-none bottom-0 bg-gradient-to-t from-pri from-5% dark:from-pri-d"></span>
+          <Link
+            href={`/read/${encodeURIComponent(tile.id ?? "")}`}
+            className="absolute bottom-2 left-1/2 -translate-x-1/2"
+          >
+            read more...
+          </Link>
+        </>
       ) : null}
     </div>
   )

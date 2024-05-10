@@ -1,12 +1,8 @@
 "use client"
-import { signIn } from "next-auth/react"
 import { z } from "zod"
-// import { TextInput } from "@/components/core/text-input"
-// import Button from "@/components/core/button"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { redirect } from "next/navigation"
 import { TextInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 
@@ -28,9 +24,7 @@ const LoginSchema = z
 
 type LoginType = z.infer<typeof LoginSchema>
 
-export default function EmailSignOn() {
-  const [needsRegister, setNeedsRegister] = useState(false)
-
+export default function RegisterForm() {
   const {
     register,
     handleSubmit: handleLogin,
@@ -39,31 +33,6 @@ export default function EmailSignOn() {
     defaultValues: { username: "frodo" },
     resolver: zodResolver(LoginSchema),
   })
-
-  // const onLogin: SubmitHandler<LoginType> = async (data) => {
-  //   if (!needsRegister) {
-  //     const signInAttempt = await signIn("email", {
-  //       email: data.email,
-  //       redirect: false,
-  //     })
-
-  //     if (signInAttempt?.error === null) redirect("/")
-  //     else {
-  //       setNeedsRegister(true)
-  //     }
-  //   } else {
-  //     console.log("register")
-  //     const register = await fetch("/api/auth/register", {
-  //       method: "POST",
-  //       body: JSON.stringify(data),
-  //     })
-  //     if (register.ok)
-  //       signIn("email", {
-  //         email: data.email,
-  //         callbackUrl: "/",
-  //       })
-  //   }
-  // }
 
   const onLogin: SubmitHandler<LoginType> = async (data) => {
     console.log(data)
@@ -95,7 +64,7 @@ export default function EmailSignOn() {
         {...register("confirmPassword")}
       ></TextInput>
       <DefaultButton type="submit" className="justify-center">
-        Create Account
+        register
       </DefaultButton>
     </form>
   )

@@ -5,42 +5,29 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { TextInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
-
-const LoginSchema = z
-  .object({
-    username: z.string().min(4, "Must be at least 4 characters"),
-    password: z.string().min(10, "Must be at least 10 characters"),
-    confirmPassword: z.string().min(10, "Must be at least 10 characters"),
-  })
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
-      ctx.addIssue({
-        path: ["confirmPassword"],
-        code: "custom",
-        message: "Passwords don't match",
-      })
-    }
-  })
-
-type LoginType = z.infer<typeof LoginSchema>
+import { RegisterSchema, RegisterType } from "@/lib/validation"
 
 export default function RegisterForm() {
   const {
     register,
     handleSubmit: handleLogin,
     formState: { errors },
-  } = useForm<LoginType>({
+  } = useForm<RegisterType>({
     defaultValues: { username: "frodo" },
-    resolver: zodResolver(LoginSchema),
+    resolver: zodResolver(RegisterSchema),
   })
 
-  const onLogin: SubmitHandler<LoginType> = async (data) => {
+  const onRegister: SubmitHandler<RegisterType> = async (data) => {
     console.log(data)
+    fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
   }
 
   return (
     <form
-      onSubmit={handleLogin(onLogin)}
+      onSubmit={handleLogin(onRegister)}
       className="flex flex-col gap-2 w-full"
       noValidate
     >

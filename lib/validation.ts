@@ -1,29 +1,28 @@
 import { z } from "zod"
 
-const loginSchema = z.object({
-  email: z.string().email("Email is invalid").default(""),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .default(""),
+const LoginSchema = z.object({
+  username: z.string().min(4, "Must be at least 4 characters"),
+  password: z.string().min(10, "Should be at least 10 characters"),
 })
 
-const registerSchema = z.object({
-  username: z
-    .string()
-    .min(5, "Username is required and must be at least 5 characters")
-    .default(""),
-  email: z.string().email("Email is invalid").default(""),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .default(""),
-  acceptTerms: z
-    .boolean()
-    .default(true)
-    .refine((value) => value, {
-      message: "You must accept the terms and conditions",
-    }),
-})
+export type LoginType = z.infer<typeof LoginSchema>
 
-export { registerSchema, loginSchema, z }
+const RegisterSchema = z
+  .object({
+    username: z.string().min(4, "Must be at least 4 characters"),
+    password: z.string().min(10, "Must be at least 10 characters"),
+    confirmPassword: z.string().min(10, "Must be at least 10 characters"),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: "Passwords don't match",
+      })
+    }
+  })
+
+export type RegisterType = z.infer<typeof RegisterSchema>
+
+export { RegisterSchema, LoginSchema, z }

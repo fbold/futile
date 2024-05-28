@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { TextInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 import { LoginSchema, LoginType } from "@/lib/validation"
+import { useRouter } from "next/navigation"
 
 export default function LoginForm() {
   const {
@@ -16,12 +17,18 @@ export default function LoginForm() {
     resolver: zodResolver(LoginSchema),
   })
 
+  const router = useRouter()
+
   const onLogin: SubmitHandler<LoginType> = async (data) => {
     console.log(data)
-    fetch("/api/auth/login", {
+    const loginResult = await fetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
     })
+
+    if (loginResult.status === 200) {
+      router.push("/")
+    }
   }
 
   return (

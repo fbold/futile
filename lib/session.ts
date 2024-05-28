@@ -26,3 +26,8 @@ export const sessionOptions: SessionOptions = {
 export const getSession = async () => {
   return await getIronSession<SessionData>(cookies(), sessionOptions)
 }
+
+export const killSession = async () => {
+  const session = await getIronSession<SessionData>(cookies(), sessionOptions)
+  session.destroy()
+}

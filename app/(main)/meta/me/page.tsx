@@ -1,15 +1,14 @@
-import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
-import { getServerSession } from "next-auth"
+import { getSession } from "@/lib/session"
 
 export default async function Me() {
   const getUserData = async () => {
     "use server"
-    const session = await getServerSession()
-    if (!session?.user) return null
+    const session = await getSession()
+    if (!session.isLoggedIn) return null
     return await prisma.user.findFirst({
       where: {
-        id: session.user.id,
+        id: session.id,
       },
     })
   }
@@ -23,7 +22,7 @@ export default async function Me() {
           <span className="text-red-400">
             I{`   `}c a l l{`   `}m e{`   `}
           </span>
-          {user?.name?.split("").join(" ")}
+          {user?.username?.split("").join(" ")}
           {`   `}
           <span className="text-red-400">
             I{`   `}c a m e{`   `}h e r e{`   `}f i r s t{`   `}o n{`   `}

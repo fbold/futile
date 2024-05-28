@@ -41,6 +41,7 @@ export async function POST(request: Request) {
       })
 
     const session = await getIronSession<SessionData>(cookies(), sessionOptions)
+    session.id = user.id
     session.username = user.username
     session.isLoggedIn = true
     await session.save()

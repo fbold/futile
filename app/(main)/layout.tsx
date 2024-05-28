@@ -1,4 +1,3 @@
-import NextAuthProvider from "@/components/auth/next-auth-provider"
 import NavContainer from "@/components/nav/nav-container"
 
 type Props = {
@@ -12,7 +11,7 @@ export default async function MainLayout({ children }: Props) {
     which retrieves the user's categories */}
       <NavContainer />
       <main className="absolute bg-pri dark:bg-pri-d flex-grow h-full w-full flex items-center justify-center">
-        <NextAuthProvider>{children}</NextAuthProvider>
+        {children}
       </main>
     </>
   )

@@ -20,6 +20,7 @@
     "@tiptap/starter-kit": "^2.2.4",
     "bcrypt": "^5.1.1",
     "clsx": "^2.1.0",
+    "iron-session": "^8.0.1",
     "next": "14.0.4",
     "next-auth": "^4.24.6",
     "nodemailer": "^6.9.9",

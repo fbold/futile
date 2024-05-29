@@ -5,12 +5,14 @@ export interface SessionData {
   id: string
   username: string
   isLoggedIn: boolean
+  expires: number
 }
 
 export const defaultSession: SessionData = {
   id: "",
   username: "",
   isLoggedIn: false,
+  expires: 0,
 }
 
 export const sessionOptions: SessionOptions = {

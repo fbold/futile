@@ -15,6 +15,7 @@ model User {
   id         String   @id @default(cuid())
   username   String   @unique
   password   String
+  recoveryPhrase String @default("")
   categories String[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

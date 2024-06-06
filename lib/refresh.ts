@@ -2,7 +2,7 @@ import { sealData, unsealData } from "iron-session"
 
 export interface RefreshToken {
   userId: string
-  userIteration: string
+  authControlKey: string
   expires: number
 }
 
@@ -13,10 +13,14 @@ const refreshTokenOptions = {
   ttl: refreshTokenTTL,
 }
 
-export const getRefreshToken = async (userId: string) => {
+export const getRefreshToken = async (
+  userId: string,
+  authControlKey: string
+) => {
   const refreshToken = await sealData(
     {
-      userId: userId,
+      userId,
+      authControlKey,
       expires: Date.now() + refreshTokenTTL * 1000, // 30 days from now
     },
     refreshTokenOptions

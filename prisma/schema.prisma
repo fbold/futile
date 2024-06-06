@@ -12,14 +12,15 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  username   String   @unique
-  password   String
-  recoveryPhrase String @default("")
-  categories String[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  tiles      Tile[]
+  id             String   @id @default(cuid())
+  username       String   @unique
+  password       String
+  authControlKey String
+  recoveryPhrase String
+  categories     String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tiles          Tile[]
 
   @@map("users")
 }

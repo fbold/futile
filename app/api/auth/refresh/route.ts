@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma"
 import { extractRefreshToken } from "@/lib/refresh"
-import { SessionData, sessionOptions } from "@/lib/session"
-import { getIronSession } from "iron-session"
+import { getSession } from "@/lib/session"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
@@ -15,6 +14,7 @@ export async function POST() {
         message: "No refresh token. Sign out",
       })
 
+    // unseal the refresh token from iron-session sealed cookie
     const refreshToken = await extractRefreshToken(sealedToken.value)
 
     if (refreshToken.expires < Date.now())
@@ -28,22 +28,25 @@ export async function POST() {
     const user = await prisma.user.findUnique({
       where: {
         id: refreshToken.userId,
-        // here we'd check the iteration as well
+        authControlKey: refreshToken.authControlKey,
       },
     })
 
     if (!user)
       return NextResponse.json({
         status: 401,
-        message: "User no longer/doesn't exist. Sign out",
+        message:
+          "User no longer/doesn't exist or auth key doesn't match. Sign out",
       })
 
-    // all should be good, user exists, iteration matches, refresh token still valid
+    // all should be good, user exists, auth key matches, refresh token still valid
     // we can regenerate an access token
-    const session = await getIronSession<SessionData>(cookies(), sessionOptions)
-    session.id = user.id
-    session.username = user.username
-    session.isLoggedIn = true
+    const session = await getSession()
+    session.user = {
+      id: user.id,
+      username: user.username,
+    }
+    session.authControlKey
     session.expires = new Date().getTime() + 30 * 60 * 1000 // 30 minutes from now
 
     await session.save()

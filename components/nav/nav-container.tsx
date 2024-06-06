@@ -8,9 +8,9 @@ export default async function NavContainer({}: // className,
   // className: string
 }) {
   const session = await getSession()
-  if (!session.isLoggedIn) redirect("/login")
+  if (!session.user) redirect("/login")
   const user = await prisma.user.findUnique({
-    where: { username: session.username },
+    where: { id: session.user.id },
   })
   if (!user) redirect("/login")
   const categories = user.categories.map((cat) => ({

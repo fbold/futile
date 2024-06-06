@@ -4,7 +4,7 @@ import { cookies } from "next/headers"
 import bcrypt from "bcrypt"
 import prisma from "@/lib/prisma"
 import { getIronSession } from "iron-session"
-import { SessionData, sessionOptions } from "@/lib/session"
+import { SessionData, getSession, sessionOptions } from "@/lib/session"
 import { getRefreshToken } from "@/lib/refresh"
 
 export async function POST(request: Request) {
@@ -44,22 +44,23 @@ export async function POST(request: Request) {
     // From here on we are authenticated
     // Save the main session info, if this session is logged in
     // then whoever is this session will have access to this boyos shit
-    const session = await getIronSession<SessionData>(cookies(), sessionOptions)
-    session.id = user.id
-    session.username = user.username
-    session.isLoggedIn = true
+    const session = await getSession()
+    session.user = {
+      id: user.id,
+      username: user.username,
+    }
+    session.authControlKey = user.authControlKey
     session.expires = new Date().getTime() + 30 * 60 * 1000 // 30 minutes from now
 
     await session.save()
 
     // Generate refresh token and seal using iron-sesson
     // add to cookies using next.
-    const refreshToken = await getRefreshToken(user.id)
+    const refreshToken = await getRefreshToken(user.id, user.authControlKey)
     cookies().set({
-      name: "refresh-token",
+      name: "futile-refresh-token",
       value: refreshToken,
       secure: process.env.NODE_ENV === "production",
-      path: "/api/auth/refresh",
     })
     return NextResponse.json({
       status: 200,

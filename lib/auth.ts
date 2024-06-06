@@ -1,4 +1,5 @@
 import { getSession } from "@/lib/session"
+import { nanoid } from "nanoid"
 import { NextResponse } from "next/server"
 
 export const auth = async () => {
@@ -6,6 +7,10 @@ export const auth = async () => {
   if (session.expires > Date.now()) return session
 
   return false
+}
+
+export const getNewAuthKey = () => {
+  return nanoid(32)
 }
 
 export const UnauthdResponse = NextResponse.json(

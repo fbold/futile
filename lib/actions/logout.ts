@@ -5,5 +5,5 @@ import { redirect } from "next/navigation"
 
 export const logout = async () => {
   await killSession()
-  redirect("/login")
+  return redirect("/login")
 }

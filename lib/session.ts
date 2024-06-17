@@ -33,9 +33,10 @@ export const sessionOptions: SessionOptions = {
 
 export const getSession = async () => {
   // check session expiry, see if need to refresh
+  console.log("SESSION: retrieving session...")
   return await getIronSession<SessionData>(cookies(), sessionOptions)
 }
-5
+
 export const killSession = async () => {
   const session = await getSession()
 

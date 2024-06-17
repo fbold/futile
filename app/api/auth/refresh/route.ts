@@ -1,22 +1,22 @@
 import prisma from "@/lib/prisma"
 import { extractRefreshToken } from "@/lib/refresh"
-import { getSession } from "@/lib/session"
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { SessionData, sessionOptions } from "@/lib/session"
+import { sealData } from "iron-session"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
-    const sealedToken = cookies().get("refresh-token")
+    const { refreshToken: sealedRefreshToken } = await req.json()
 
-    if (!sealedToken?.value)
+    if (!sealedRefreshToken)
       return NextResponse.json({
         status: 401,
         message: "No refresh token. Sign out",
       })
 
     // unseal the refresh token from iron-session sealed cookie
-    const refreshToken = await extractRefreshToken(sealedToken.value)
-
+    const refreshToken = await extractRefreshToken(sealedRefreshToken)
+    console.log("REFRESH ENDPOINT: refresh token", refreshToken)
     if (refreshToken.expires < Date.now())
       // expired token
       return NextResponse.json({
@@ -32,6 +32,8 @@ export async function POST() {
       },
     })
 
+    console.log("REFRESH ENDPOINT: retrieved user in refresh endpoint", user)
+
     if (!user)
       return NextResponse.json({
         status: 401,
@@ -41,19 +43,25 @@ export async function POST() {
 
     // all should be good, user exists, auth key matches, refresh token still valid
     // we can regenerate an access token
-    const session = await getSession()
-    session.user = {
-      id: user.id,
-      username: user.username,
-    }
-    session.authControlKey
-    session.expires = new Date().getTime() + 30 * 60 * 1000 // 30 minutes from now
 
-    await session.save()
+    // if told to set we set the token here usig iron-session's method
+    // this should only happen when being called diectly fromthe browser.
+    // console.log("session in refresh endpoint", session)
+    // extend the session validity
+    const sessionData: SessionData = {
+      user: {
+        id: user.id,
+        username: user.username,
+      },
+      expires: new Date().getTime() + 30 * 60 * 1000,
+      authControlKey: user.authControlKey,
+    }
+    const sealedSession = await sealData(sessionData, sessionOptions)
 
     return NextResponse.json({
       status: 200,
-      message: "Successfully refreshed",
+      message: "REFRESH ENDPOINT: Successfully refreshed",
+      sealedNewSessionData: sealedSession,
     })
   } catch (e) {
     console.log(e)

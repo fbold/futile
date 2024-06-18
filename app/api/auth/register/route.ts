@@ -5,6 +5,10 @@ import prisma from "@/lib/prisma"
 import { generateMnemonic, mnemonicToSeed } from "@scure/bip39"
 import { wordlist } from "@scure/bip39/wordlists/english"
 import { getSession } from "@/lib/session"
+import { getNewAuthKey } from "@/lib/auth"
+import { cookies } from "next/headers"
+import { getRefreshToken } from "@/lib/refresh"
+import { GenericErrorResponse } from "@/lib/responses"
 
 export async function POST(request: Request) {
   try {
@@ -28,9 +32,12 @@ export async function POST(request: Request) {
     })
 
     if (user) {
-      return NextResponse.json({
-        error: "User already exist with this username",
-      })
+      return NextResponse.json(
+        {
+          error: "User already exist with this username",
+        },
+        { status: 400 }
+      )
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -44,27 +51,47 @@ export async function POST(request: Request) {
         username,
         password: hashedPassword,
         recoveryPhrase: hashedMnemonic,
+        authControlKey: getNewAuthKey(),
       },
     })
 
     // save user to session
     // so we are logged in after registering
     const session = await getSession()
-    session.id = createdUser.id
-    session.username = createdUser.username
-    session.isLoggedIn = true
+    session.user = {
+      id: createdUser.id,
+      username: createdUser.username,
+    }
     session.expires = new Date().getTime() + 30 * 60 * 1000 // 30 minutes from now
-
+    session.authControlKey = createdUser.authControlKey
     await session.save()
+    // Generate refresh token and seal using iron-sesson
+    // add to cookies using next.
+    const refreshToken = await getRefreshToken(
+      createdUser.id,
+      createdUser.authControlKey
+    )
+    cookies().set({
+      name: "futile-refresh-token",
+      value: refreshToken,
+      secure: process.env.NODE_ENV === "production",
+    })
 
-    return NextResponse.json({
-      message: "User created successfully.",
-      recoveryPhrase: mnemonic,
-    })
+    return NextResponse.json(
+      {
+        message: "User created successfully.",
+        recoveryPhrase: mnemonic,
+      },
+      {
+        status: 200,
+      }
+    )
   } catch (error) {
+    // TODO make sure that if the user was created to delete it
+    // careful about deleting an existing user if tat was the error
+    // mor ejust so if there is an error after the actual insertion into databse
+    // you dont end up with a bunch of "userless" users
     console.error(error)
-    return NextResponse.json({
-      error: "System error. Please contact support",
-    })
+    return GenericErrorResponse
   }
 }

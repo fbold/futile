@@ -34,19 +34,20 @@ export async function POST(req: NextRequest) {
 
     console.log("REFRESH ENDPOINT: retrieved user in refresh endpoint", user)
 
-    if (!user)
+    if (!user) {
+      console.log(
+        "REFRESH ENDPOINT: user doesn't exist or auth key doest match, destroy"
+      )
       return NextResponse.json({
         status: 401,
         message:
           "User no longer/doesn't exist or auth key doesn't match. Sign out",
       })
+    }
 
     // all should be good, user exists, auth key matches, refresh token still valid
-    // we can regenerate an access token
+    // we can regenerate a new access token
 
-    // if told to set we set the token here usig iron-session's method
-    // this should only happen when being called diectly fromthe browser.
-    // console.log("session in refresh endpoint", session)
     // extend the session validity
     const sessionData: SessionData = {
       user: {

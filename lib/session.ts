@@ -39,18 +39,19 @@ export const getSession = async () => {
 
 export const killSession = async () => {
   const session = await getSession()
-
-  // update the auth key so existing refresh tokens aren't valid
-  const user = await prisma.user.update({
-    where: {
-      id: session.user.id,
-    },
-    data: {
-      authControlKey: getNewAuthKey(),
-    },
-  })
-  // destroy the session
-  session.destroy()
+  if (session.user) {
+    // update the auth key so existing refresh tokens aren't valid
+    const user = await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        authControlKey: getNewAuthKey(),
+      },
+    })
+    // destroy the session
+    session.destroy()
+  }
   // delete the refresh cookie
   cookies().delete("futile-refresh-token")
 }

@@ -10,22 +10,23 @@ type Tile = {
 
 export async function POST(request: Request) {
   try {
+    const session = await auth()
+    if (!session) return UnauthdResponse
+
     const data = (await request.json()) as Tile
     const { title, content, category } = data
-    const session = await auth()
-
-    if (!session) return UnauthdResponse
 
     const res = await prisma.tile.create({
       data: {
         category: category,
         content: content,
         title: title,
-        user_id: session.id,
+        user_id: session.user.id,
       },
     })
 
     return NextResponse.json({
+      status: 200,
       tile: res,
     })
   } catch (error) {

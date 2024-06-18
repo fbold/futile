@@ -48,7 +48,11 @@ const handleRefresh = async (req: NextRequest): Promise<NextResponse> => {
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/login")) {
+  if (
+    !req.nextUrl.pathname.startsWith("/login") &&
+    !req.nextUrl.pathname.startsWith("/register") &&
+    !req.nextUrl.pathname.startsWith("/recover")
+  ) {
     console.log("REFRESH: running refresh middleware")
     const res = NextResponse.next()
     const session = await getIronSession<SessionData>(req, res, sessionOptions)

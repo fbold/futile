@@ -12,26 +12,30 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  username       String   @unique
+  id             String     @id @default(cuid())
+  username       String     @unique
   password       String
   authControlKey String
   recoveryPhrase String
-  categories     String[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  categories     Category[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   tiles          Tile[]
 
   @@map("users")
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+model Category {
+  id        String   @id @default(cuid())
+  label     String
+  private   Boolean
+  user_id   String
+  user      User     @relation(references: [id], fields: [user_id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([identifier, token])
-  @@map("verificationtokens")
+  @@index([user_id])
+  @@map("categories")
 }
 
 model Tile {

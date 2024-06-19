@@ -11,6 +11,9 @@ export default async function Me() {
       where: {
         id: session.user.id,
       },
+      include: {
+        categories: true,
+      },
     })
   }
 

@@ -2,19 +2,23 @@
 import { TextButton } from "@/components/buttons/text-button"
 import Popup from "@/components/popups/empty"
 import usePopup from "@/hooks/usePopup"
-import { User } from "@prisma/client"
+import { createCategory } from "@/lib/actions/categories"
+import { CategorySchema, CategoryType } from "@/lib/validation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Category, User } from "@prisma/client"
 import clsx from "clsx"
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 
 type CategoriesListProps = {
-  categories: User["categories"]
+  categories: Category[]
 }
 
 export default function CategoriesList({ categories }: CategoriesListProps) {
   const [selected, setSelected] = useState<string | null>(null)
   const [formShown, setFormShown] = useState(false)
   const [newCategory, setNewCategory] = useState("")
+
   const {
     showPopup,
     isUp,
@@ -23,7 +27,9 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     onOK: handleDel,
   })
 
-  const { register, setValue, handleSubmit } = useForm({})
+  const { register, setValue, handleSubmit } = useForm<CategoryType>({
+    resolver: zodResolver(CategorySchema),
+  })
 
   const handleCategorySelect = (cat: string) => {
     setSelected((c) => (c === cat ? null : cat))
@@ -46,11 +52,13 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
 
   const handleCancel = () => {
     setFormShown(false)
-    setValue("category", "")
+    setValue("label", "")
   }
 
-  const onValid = () => {
+  const onValid: SubmitHandler<CategoryType> = async (data) => {
     // POST NEW CATEGORY
+    const result = await createCategory(data.label)
+    if (result) console.log("created")
   }
 
   return (
@@ -64,14 +72,14 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
       <ul>
         {categories.map((cat) => (
           <li
-            key={cat}
+            key={cat.id}
             className={clsx(
               "cursor-pointer",
-              cat === selected && "line-through"
+              cat.id === selected && "line-through"
             )}
-            onClick={() => handleCategorySelect(cat)}
+            onClick={() => handleCategorySelect(cat.id)}
           >
-            {cat}
+            {cat.label}
           </li>
         ))}
         {!formShown ? (
@@ -97,7 +105,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
             <input
               autoFocus
               className="border-none bg-transparent outline-none text-center"
-              {...register("category")}
+              {...register("label")}
             ></input>
             <div className="flex gap-2 justify-center">
               <TextButton onClick={handleCancel}>cancel</TextButton>

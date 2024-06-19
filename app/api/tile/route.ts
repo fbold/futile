@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import { auth } from "@/lib/auth"
+import { UnauthdResponse, auth } from "@/lib/auth"
 
 type Tile = {
   title: string
@@ -10,16 +10,11 @@ type Tile = {
 
 export async function POST(request: Request) {
   try {
-    const data = (await request.json()) as Tile
-
-    const { title, content, category } = data
     const session = await auth()
+    if (!session) return UnauthdResponse
 
-    if (!session) {
-      return NextResponse.json({
-        error: "Unauthenticated",
-      })
-    }
+    const data = (await request.json()) as Tile
+    const { title, content, category } = data
 
     const res = await prisma.tile.create({
       data: {

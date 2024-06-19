@@ -1,3 +1,4 @@
+import CategoriesList from "@/app/(main)/meta/me/categories-list"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/session"
 
@@ -9,6 +10,9 @@ export default async function Me() {
     return await prisma.user.findFirst({
       where: {
         id: session.user.id,
+      },
+      include: {
+        categories: true,
       },
     })
   }
@@ -28,12 +32,12 @@ export default async function Me() {
           {user?.createdAt.toDateString().toLowerCase().split("").join(" ")}
         </p>
         <br />
+        {user?.categories ? (
+          <CategoriesList categories={user?.categories} />
+        ) : (
+          <p>...</p>
+        )}
       </div>
-      {/* <p>{user?.createdAt?.getTime()}</p> */}
-      {/* <h1 className="font-bold text-2xl">I call me</h1>
-      <p>{user.name}</p>
-      <h1 className="font-bold text-2xl">I call me</h1>
-      <p>{user.name}</p> */}
     </div>
   )
 }

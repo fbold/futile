@@ -2,7 +2,7 @@
 import { z } from "zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { TextInput } from "@/components/input"
+import { DefaultInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 import { LoginSchema, LoginType } from "@/lib/validation"
 import { useRouter } from "next/navigation"
@@ -38,18 +38,18 @@ export default function LoginForm() {
       noValidate
     >
       {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
-      <TextInput
+      <DefaultInput
         placeholder="username"
         type="text"
-        error={errors.username?.message ?? null}
+        error={errors.username?.message}
         {...register("username")}
-      ></TextInput>
-      <TextInput
+      ></DefaultInput>
+      <DefaultInput
         placeholder="password"
         type="password"
-        error={errors.password?.message ?? null}
+        error={errors.password?.message}
         {...register("password")}
-      ></TextInput>
+      ></DefaultInput>
       <DefaultButton type="submit" className="justify-center">
         login
       </DefaultButton>

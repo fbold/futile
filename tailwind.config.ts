@@ -36,6 +36,9 @@ const config: Config = {
         text: "#FFFFEB",
         accent: "#D48B72",
         action: "#D4A373",
+        r: "#f87171",
+        y: "#fde047",
+        g: "#4adb7e",
       },
       // colors: {
       //   // light mode

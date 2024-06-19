@@ -38,6 +38,8 @@ export const getSession = async () => {
 }
 
 export const killSession = async () => {
+  // delete the refresh cookie
+  cookies().delete("futile-refresh-token")
   const session = await getSession()
   if (session.user) {
     // update the auth key so existing refresh tokens aren't valid
@@ -52,6 +54,4 @@ export const killSession = async () => {
     // destroy the session
     session.destroy()
   }
-  // delete the refresh cookie
-  cookies().delete("futile-refresh-token")
 }

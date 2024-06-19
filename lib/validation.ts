@@ -51,3 +51,9 @@ export const RecoverySchema = z
 export type RecoveryType = z.infer<typeof RecoverySchema>
 
 export { RegisterSchema, LoginSchema, z }
+
+export const CategorySchema = z.object({
+  label: z.string(),
+})
+
+export type CategoryType = z.infer<typeof CategorySchema>

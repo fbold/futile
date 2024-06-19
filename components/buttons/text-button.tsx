@@ -15,7 +15,7 @@ export const TextButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
 }) => {
   return (
     <button
-      type={type || "button"}
+      type={type || "submit"}
       onClick={onClick}
       className={clsx(
         "bg-transparent border-none text-center outline-none underline cursor-pointer text-gray-400",

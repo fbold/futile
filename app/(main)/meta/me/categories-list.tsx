@@ -67,7 +67,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
             key={cat}
             className={clsx(
               "cursor-pointer",
-              cat === selected && "text-red-400"
+              cat === selected && "line-through"
             )}
             onClick={() => handleCategorySelect(cat)}
           >
@@ -75,10 +75,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
           </li>
         ))}
         {!formShown ? (
-          <li className="flex gap-1 justify-center">
-            <TextButton onClick={showForm} className="text-g">
-              new
-            </TextButton>
+          <li className="flex gap-1 justify-center mt-1">
             {selected ? (
               <TextButton
                 onClick={handleDelClick}
@@ -89,7 +86,11 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
               >
                 del
               </TextButton>
-            ) : null}
+            ) : (
+              <TextButton onClick={showForm} className="text-g">
+                add category
+              </TextButton>
+            )}
           </li>
         ) : (
           <form onSubmit={handleSubmit(onValid)}>

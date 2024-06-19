@@ -9,7 +9,6 @@ export default async function NavContainer() {
   const categories = await prisma.category.findMany({
     where: { user_id: session.user.id },
   })
-  console.log("categorird", categories)
   if (!categories) redirect("/login")
 
   return (

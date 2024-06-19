@@ -9,15 +9,30 @@ import { Category, User } from "@prisma/client"
 import clsx from "clsx"
 import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+// import useSWR from "swr"
 
 type CategoriesListProps = {
   categories: Category[]
 }
 
+// const fetcher = (url: string) => {
+//   console.log("fetching")
+//   return fetch(`/api/${url}`).then((res) => res.json())
+// }
+
 export default function CategoriesList({ categories }: CategoriesListProps) {
   const [selected, setSelected] = useState<string | null>(null)
   const [formShown, setFormShown] = useState(false)
-  const [newCategory, setNewCategory] = useState("")
+
+  // const { data: categories, mutate } = useSWR<Category[]>(
+  //   "/categories",
+  //   fetcher,
+  //   {
+  //     fallbackData: categories_,
+  //     revalidateOnMount: false,
+  //     revalidateOnFocus: false,
+  //   }
+  // )
 
   const {
     showPopup,
@@ -57,8 +72,13 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
 
   const onValid: SubmitHandler<CategoryType> = async (data) => {
     // POST NEW CATEGORY
+    console.log("running onValid")
     const result = await createCategory(data.label)
-    if (result) console.log("created")
+    if (result && categories) {
+      // mutate([...categories, result])
+      location.reload()
+      console.log("created")
+    }
   }
 
   return (
@@ -70,7 +90,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
       />
       <p className="underline text-red-400">categories</p>
       <ul>
-        {categories.map((cat) => (
+        {categories?.map((cat) => (
           <li
             key={cat.id}
             className={clsx(
@@ -108,7 +128,9 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
               {...register("label")}
             ></input>
             <div className="flex gap-2 justify-center">
-              <TextButton onClick={handleCancel}>cancel</TextButton>
+              <TextButton onClick={handleCancel} type="button">
+                cancel
+              </TextButton>
               <TextButton className="!text-g">ok</TextButton>
             </div>
           </form>

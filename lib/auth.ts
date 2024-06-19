@@ -1,29 +1,38 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next"
-import type { NextAuthOptions } from "next-auth"
-import { getServerSession } from "next-auth"
+import { refreshExpiredSession } from "@/lib/actions/refreshExpiredSession"
+import { getSession } from "@/lib/session"
+import { nanoid } from "nanoid"
+import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-// // You'll need to import and pass this
-// // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
-// export const config = {
-//   providers: [], // rest of your config
-// } satisfies NextAuthOptions
+export const auth = async () => {
+  const session = await getSession()
+  if (session.expires > Date.now()) return session
+  else {
+    console.log("AUTH: session has expired, will try to refresh")
+    // see if we have refresh token
+    const sealedRefreshToken = cookies().get("futile-refresh-token")
+    if (!sealedRefreshToken?.value) return false
+    console.log("AUTH: attempting refresh")
+    const sessionData = await refreshExpiredSession(sealedRefreshToken.value)
+    if (!sessionData) return false
+    session.user = sessionData.user
+    session.expires = sessionData.expires
+    session.authControlKey = sessionData.authControlKey
 
-// Use it in server contexts
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, authOptions)
+    session.save()
+    const expiresIn = Math.round(session.expires / (1000 * 60))
+    console.log(`AUTH: Session refreshed. Expires in ${expiresIn}`)
+    return session
+  }
 }
 
-export function unauthorized() {
-  return NextResponse.redirect("http://localhost:3000/login")
+export const getNewAuthKey = () => {
+  return nanoid(32)
 }
+
+export const UnauthdResponse = NextResponse.json(
+  {
+    message: "Unauthenticated",
+  },
+  { status: 401 }
+)

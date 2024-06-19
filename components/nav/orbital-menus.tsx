@@ -4,10 +4,11 @@ import OrbitalMenu, {
   OrbitalMenuHandle,
   OrbitalMenuOption,
 } from "@/components/nav/orbital-menu"
+import { logout } from "@/lib/actions/logout"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useRef } from "react"
 
-const generalOptions = [
+const generalOptions: OrbitalMenuOption[] = [
   {
     label: ".me",
     value: "me",
@@ -50,7 +51,11 @@ export default function OrbitalMenus({
   )
 
   const handleMetaSelect = useCallback(
-    (option: OrbitalMenuOption) => {
+    async (option: OrbitalMenuOption) => {
+      if (option.value === "logout") {
+        await logout()
+        return router.push("/login")
+      }
       router.push(`/meta/${option.value}`)
     },
     [router]

@@ -12,39 +12,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  categories    String[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  tiles         Tile[]
+  id             String   @id @default(cuid())
+  username       String   @unique
+  password       String
+  authControlKey String
+  recoveryPhrase String
+  categories     String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tiles          Tile[]
 
   @@map("users")
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String  @map("user_id")
-  type              String
-  provider          String
-  providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-  @@map("accounts")
 }
 
 model VerificationToken {

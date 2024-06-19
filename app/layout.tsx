@@ -16,8 +16,8 @@ const workSans = Work_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "invyted.me",
-  description: "Unique virtual invitations",
+  title: "futile.me",
+  description: "the home of personal textual futility",
 }
 
 export default function RootLayout({

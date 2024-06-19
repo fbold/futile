@@ -1,16 +1,15 @@
 "use client"
-import { signOut, useSession } from "next-auth/react"
 
 export default function Home() {
-  const session = useSession()
-
+  const refresh = async () => {
+    await fetch("/api/auth/refresh", {
+      method: "POST",
+    })
+  }
   return (
     <>
       <div className="w-full h-full flex items-center justify-center">
-        <pre>{JSON.stringify(session.data?.user, null, 2)}</pre>
-        <button onClick={() => signOut({ callbackUrl: "/login" })}>
-          sign out
-        </button>
+        <button onClick={refresh}>refresh</button>
       </div>
     </>
   )

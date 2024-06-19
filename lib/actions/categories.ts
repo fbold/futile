@@ -17,3 +17,22 @@ export const createCategory = async (category: string) => {
 
   return createdCategory
 }
+
+export const deleteCategory = async (categoryId: string) => {
+  try {
+    const session = await auth()
+    if (!session) return false
+
+    const deletedCategory = await prisma.category.delete({
+      where: {
+        user_id: session.user.id,
+        id: categoryId,
+      },
+    })
+
+    return deletedCategory
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}

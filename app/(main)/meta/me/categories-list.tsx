@@ -2,7 +2,7 @@
 import { TextButton } from "@/components/buttons/text-button"
 import Popup from "@/components/popups/empty"
 import usePopup from "@/hooks/usePopup"
-import { createCategory } from "@/lib/actions/categories"
+import { createCategory, deleteCategory } from "@/lib/actions/categories"
 import { CategorySchema, CategoryType } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Category, User } from "@prisma/client"
@@ -21,7 +21,7 @@ type CategoriesListProps = {
 // }
 
 export default function CategoriesList({ categories }: CategoriesListProps) {
-  const [selected, setSelected] = useState<string | null>(null)
+  const [selected, setSelected] = useState<Category | null>(null)
   const [formShown, setFormShown] = useState(false)
 
   // const { data: categories, mutate } = useSWR<Category[]>(
@@ -46,8 +46,8 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     resolver: zodResolver(CategorySchema),
   })
 
-  const handleCategorySelect = (cat: string) => {
-    setSelected((c) => (c === cat ? null : cat))
+  const handleCategorySelect = (cat: Category) => {
+    setSelected((c) => (c?.id === cat.id ? null : cat))
   }
 
   const handleDelClick = () => {
@@ -55,9 +55,12 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     showPopup()
   }
 
-  function handleDel() {
+  async function handleDel() {
     // SEND DELETE REQ
     console.log("delete", selected)
+    if (!selected) return
+    const deleted = await deleteCategory(selected.id)
+    if (deleted) location.reload()
   }
 
   const showForm = () => {
@@ -84,7 +87,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
   return (
     <div className="flex flex-col items-center text-center w-full">
       <Popup
-        title={`Delete ${selected}?`}
+        title={`Delete ${selected?.label}?`}
         message="All fuTiles of this category will become uncategorized."
         {...registerPopup}
       />
@@ -95,9 +98,9 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
             key={cat.id}
             className={clsx(
               "cursor-pointer",
-              cat.id === selected && "line-through"
+              cat.id === selected?.id && "line-through"
             )}
-            onClick={() => handleCategorySelect(cat.id)}
+            onClick={() => handleCategorySelect(cat)}
           >
             {cat.label}
           </li>

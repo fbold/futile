@@ -1,4 +1,5 @@
 "use client"
+import { DefaultInput } from "@/components/input"
 import { RecoverySchema, RecoveryType } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
@@ -42,26 +43,26 @@ export default function Recover() {
           className="flex flex-col gap-2"
           onSubmit={handleRecover(onSubmit)}
         >
-          <input
+          <DefaultInput
             placeholder="username"
-            className="bg-pri text-center focus:outline-none"
+            error={errors.username?.message}
             {...register("username")}
-          ></input>
+          ></DefaultInput>
           <textarea
             placeholder="recovery phrase. enter the space-separated words list"
             className="bg-pri text-center h-24 text-text whitespace-break-spaces grow p-1"
             {...register("recoveryPhrase")}
           ></textarea>
-          <input
+          <DefaultInput
             placeholder="new password"
-            className="bg-pri text-center focus:outline-none"
+            error={errors.password?.message}
             {...register("password")}
-          ></input>
-          <input
+          ></DefaultInput>
+          <DefaultInput
             placeholder="confirm new password"
-            className="bg-pri text-center focus:outline-none"
+            error={errors.confirmPassword?.message}
             {...register("confirmPassword")}
-          ></input>
+          ></DefaultInput>
           <button className="underline">reset</button>
         </form>
       </div>

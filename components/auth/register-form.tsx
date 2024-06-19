@@ -2,7 +2,7 @@
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { TextInput } from "@/components/input"
+import { DefaultInput, TextInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 import { RegisterSchema, RegisterType } from "@/lib/validation"
 import Link from "next/link"
@@ -70,24 +70,24 @@ export default function RegisterForm() {
         className="flex flex-col gap-2 w-full"
         noValidate
       >
-        <TextInput
+        <DefaultInput
           placeholder="username"
           type="text"
-          error={errors.username?.message ?? null}
+          error={errors.username?.message}
           {...register("username")}
-        ></TextInput>
-        <TextInput
+        ></DefaultInput>
+        <DefaultInput
           placeholder="password"
           type="password"
-          error={errors.password?.message ?? null}
+          error={errors.password?.message}
           {...register("password")}
-        ></TextInput>
-        <TextInput
+        ></DefaultInput>
+        <DefaultInput
           placeholder="password (again)"
           type="password"
-          error={errors.confirmPassword?.message ?? null}
+          error={errors.confirmPassword?.message}
           {...register("confirmPassword")}
-        ></TextInput>
+        ></DefaultInput>
         <DefaultButton type="submit" className="justify-center">
           register
         </DefaultButton>

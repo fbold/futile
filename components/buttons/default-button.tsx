@@ -21,7 +21,7 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
       <Link
         href={href}
         className={clsx(
-          "relative p-2 text-txt-pri dark:text-txt-pri-d bg-sec dark:bg-sec-d border-acc dark:border-acc-d border flex items-center justify-center align-middle",
+          "text-text underline bg-transparent flex items-center justify-center",
           className
         )}
       >
@@ -30,10 +30,10 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
     )
   return (
     <button
-      type={type || "button"}
+      type={type || "submit"}
       onClick={onClick}
       className={clsx(
-        "relative p-2 text-txt-pri dark:text-txt-pri-d bg-sec dark:bg-sec-d border-acc dark:border-acc-d border flex items-center justify-center align-middle",
+        "text-text border px-6 border-gray-400 bg-transparent flex items-center justify-center",
         className
       )}
     >

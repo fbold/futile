@@ -2,7 +2,7 @@
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { DefaultInput, TextInput } from "@/components/input"
+import { DefaultInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 import { RegisterSchema, RegisterType } from "@/lib/validation"
 import Link from "next/link"
@@ -55,9 +55,9 @@ export default function RegisterForm() {
         <p className="whitespace-pre-wrap text-red-500">
           {recoveryPhrase.split(" ").join(`\n`)}
         </p>
-        <button className="underline" onClick={handleCopy}>
+        <DefaultButton onClick={handleCopy}>
           {copied ? "copied" : "copy"}
-        </button>
+        </DefaultButton>
         <Link href="/" className="underline text-green-500">
           move on
         </Link>
@@ -88,9 +88,7 @@ export default function RegisterForm() {
           error={errors.confirmPassword?.message}
           {...register("confirmPassword")}
         ></DefaultInput>
-        <DefaultButton type="submit" className="justify-center">
-          register
-        </DefaultButton>
+        <DefaultButton type="submit">register</DefaultButton>
       </form>
     )
 }

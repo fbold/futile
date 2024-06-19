@@ -1,4 +1,2 @@
-import { DefaultButton } from "./default-button"
-import { MutationButton } from "./mutation-button"
-
-export { MutationButton, DefaultButton }
+export { DefaultButton } from "./default-button"
+export { MutationButton } from "./mutation-button"

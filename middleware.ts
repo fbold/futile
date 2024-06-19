@@ -7,8 +7,6 @@ const REFRESH_THRESHOLD = 5 * 60 * 1000 // 5 minutes in ms
 
 const handleRefresh = async (req: NextRequest): Promise<NextResponse> => {
   console.log("REFRESH: refreshing")
-  let res: NextResponse
-
   try {
     const refreshResponse = await fetch(
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/auth/refresh`,
@@ -24,26 +22,29 @@ const handleRefresh = async (req: NextRequest): Promise<NextResponse> => {
 
     if (!sealedNewSessionData) {
       console.log("REFRESH: Failed to refresh session. Will log out")
-      const res = NextResponse.rewrite(new URL("/login", req.url))
+      const res = NextResponse.redirect(new URL("/login", req.url))
       const session = await getIronSession<SessionData>(
         req,
         res,
         sessionOptions
       )
-      session.destroy()
+      // IMPORTANT: delete refresh before session.destroy
+      // for some reason, deleting refresh (expiring) overwrites the expiring of the access token
+      // cookie done by session.destroy()
       res.cookies.delete("futile-refresh-token")
+      session.destroy()
       return res
     }
-    res = NextResponse.next()
-    res.cookies.set("futile-access-token", sealedNewSessionData)
-    return res
+    const goodRes = NextResponse.next()
+    goodRes.cookies.set("futile-access-token", sealedNewSessionData)
+    return goodRes
   } catch (e) {
-    res = NextResponse.rewrite(new URL("/login", req.url))
+    const res = NextResponse.redirect(new URL("/login", req.url))
     const session = await getIronSession<SessionData>(req, res, sessionOptions)
-    session.destroy()
     res.cookies.delete("futile-refresh-token")
+    session.destroy()
+    return res
   }
-  return res
 }
 
 // This function can be marked `async` if using `await` inside
@@ -64,7 +65,8 @@ export async function middleware(req: NextRequest) {
     console.log(`REFRESH: expiring in ${minutesLeft} min`)
 
     if (session.expires - Date.now() < REFRESH_THRESHOLD) {
-      return await handleRefresh(req)
+      const refreshResult = await handleRefresh(req)
+      return refreshResult
     }
 
     // no need to refresh because session is still within validity threshold

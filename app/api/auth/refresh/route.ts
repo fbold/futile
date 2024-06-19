@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server"
 export async function POST(req: NextRequest) {
   try {
     const { refreshToken: sealedRefreshToken } = await req.json()
-
+    // console.log("REFRESH ENDPOINT:", sealedRefreshToken)
     if (!sealedRefreshToken)
       return NextResponse.json({
         status: 401,

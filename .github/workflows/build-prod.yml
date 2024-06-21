@@ -11,7 +11,7 @@ on:
         required: true
 
 env:
-  IMAGE_NAME: "futile-app-prod"
+  IMAGE_NAME: "futile"
 
 jobs:
   build_and_push:

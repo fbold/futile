@@ -9,6 +9,7 @@ import { getRefreshToken } from "@/lib/refresh"
 
 export async function POST(request: Request) {
   try {
+    console.log("loggin in")
     const data = await request.json()
 
     const validationResult = await LoginSchema.safeParseAsync(data)
@@ -54,19 +55,21 @@ export async function POST(request: Request) {
 
     await session.save()
 
+    console.log(session)
     // Generate refresh token and seal using iron-sesson
     // add to cookies using next.
     const refreshToken = await getRefreshToken(user.id, user.authControlKey)
     cookies().set({
       name: "futile-refresh-token",
       value: refreshToken,
-      secure: process.env.NODE_ENV === "production",
+      secure: false, //process.env.NODE_ENV === "production",
     })
     return NextResponse.json({
       status: 200,
       message: "User logged in successfully.",
     })
   } catch (error) {
+    console.log(error)
     return NextResponse.json({
       error: "System error. Please contact support",
     })

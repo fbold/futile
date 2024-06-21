@@ -21,6 +21,7 @@ RUN \
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY ./entrypoint.sh entrypoint.sh
 COPY . .
 # important for prisma stuff
 RUN npx prisma generate
@@ -47,7 +48,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 
 EXPOSE 3000
-
 ENV PORT 3000
 
+ENTRYPOINT [ "/entrypoint.sh" ]
 CMD node server.js

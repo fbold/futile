@@ -21,11 +21,20 @@ RUN \
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ./entrypoint.sh entrypoint.sh
+COPY ./entrypoint.sh /app/entrypoint.sh
 COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
 # important for prisma stuff
 RUN npx prisma generate
-RUN npm run build
+
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner
@@ -46,13 +55,14 @@ RUN chown nextjs:nodejs .next
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/entrypoint.sh ./entrypoint.sh
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 
 USER nextjs
 
 EXPOSE 3000
-ENV PORT 3000
+ENV PORT=3000
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD node server.js

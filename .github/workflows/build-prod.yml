@@ -1,0 +1,70 @@
+name: Build Image and Push to DockerHub
+on:
+  push:
+    branches:
+      - main
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version"
+        required: true
+
+env:
+  IMAGE_NAME: "futile-app-prod"
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+      - name: Notify Coolify
+        run: |
+          curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
+  # This step will now be done by coolify
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build_and_push
+  #   steps:
+  #     - name: SSH to Droplet and Update Container
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.DROPLET_IP }}
+  #         username: root
+  #         key: ${{ secrets.DROPLET_SSH_KEY }}
+  #         passphrase: ${{ secrets.DROPLET_SSH_PASSPHRASE }}
+  #         envs: IMAGE_NAME
+  #         script: |
+  #           # Login to registry
+  #           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+  #           # Stop running container
+  #           docker stop $(echo $IMAGE_NAME)
+  #           # Remove old container
+  #           docker rm $(echo $IMAGE_NAME)
+  #           # Pull latest image
+  #           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
+  #           # Run a new container from the new image
+  #           echo ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
+  #           docker run -d \
+  #           --restart always \
+  #           --name $(echo $IMAGE_NAME) \
+  #           -p 3000:3000 \
+  #           ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest

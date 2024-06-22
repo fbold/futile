@@ -1,6 +1,6 @@
 #!/bin/sh
 
 # Apply migrations
-npx prisma migrate dev
+npx prisma migrate deploy
 
 exec "$@"

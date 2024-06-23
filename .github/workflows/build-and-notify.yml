@@ -50,6 +50,8 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
           envs: IMAGE_NAME
+          # TODO: run a docker-compose.yml file in /home/surak/futile instead
+          # have that file do what is happening below but also create the database
           script: |
             # Login to registry
             docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
@@ -61,8 +63,9 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
             # Run a new container from the new image
             echo ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
-            docker run -d \
-            --restart always \
-            --name $(echo $IMAGE_NAME) \
-            -p 3000:3000 \
-            ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
+            docker compose -f /home/surak/futile.me up
+            # docker run -d \
+            # --restart always \
+            # --name $(echo $IMAGE_NAME) \
+            # -p 3000:3000 \
+            # ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest

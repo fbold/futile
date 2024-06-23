@@ -43,7 +43,7 @@ jobs:
           curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
   deploy:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: build_and_push
     steps:
       - name: SSH to Droplet and Update Container
         uses: appleboy/ssh-action@master

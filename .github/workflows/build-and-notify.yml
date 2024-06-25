@@ -63,7 +63,7 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
             # Run a new container from the new image
             echo ${{ secrets.DOCKERHUB_USERNAME }}/$(echo $IMAGE_NAME):latest
-            docker compose -f /home/surak/futile.me/docker-compose.yml up
+            docker compose -f /home/surak/futile.me/docker-compose.yml up -d
             # docker run -d \
             # --restart always \
             # --name $(echo $IMAGE_NAME) \

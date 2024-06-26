@@ -111,7 +111,7 @@ export default function OrbitalMenus({
         ref={metaMenuRef}
         options={generalOptions}
         onSettle={handleMetaSelect}
-        colour="text-green-400"
+        colour="text-g"
         pos="br"
         rad={40}
         alpha={20}

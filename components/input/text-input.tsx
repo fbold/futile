@@ -53,7 +53,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, Props>(
           className={clsx(
             `p-2 px-2 max-h-10 text-txt-pri dark:text-txt-pri-d bg-pri ${className}`,
             !error && "focus:outline-acc dark:focus:outline-acc-d",
-            error && (classNameOnError || "outline-1 outline outline-red-500"),
+            error && (classNameOnError || "outline-1 outline outline-danger"),
             outline
               ? "focus:outline focus:outline-1"
               : "focus:outline-none focus:outline-0"
@@ -64,14 +64,14 @@ export const TextInput = React.forwardRef<HTMLInputElement, Props>(
         {error && (
           <>
             <IconAlertOctagon
-              className="absolute right-0 h-full pr-1 stroke-red-500 my-auto peer w-7"
+              className="absolute right-0 h-full pr-1 stroke-danger my-auto peer w-7"
               onClick={toggleError}
             />
 
             <span
               className={clsx(
-                "before:block before:absolute before:w-2 before:h-2 before:-top-1 before:right-3 before:rotate-45 before:bg-red-500",
-                "bg-red-500 text-white w-max max-w-full rounded-md p-2 z-10 right-0 block absolute top-full pointer-events-none text-xs transition-opacity opacity-0 peer-hover:opacity-100",
+                "before:block before:absolute before:w-2 before:h-2 before:-top-1 before:right-3 before:rotate-45 before:bg-danger",
+                "bg-danger text-white w-max max-w-full rounded-md p-2 z-10 right-0 block absolute top-full pointer-events-none text-xs transition-opacity opacity-0 peer-hover:opacity-100",
                 clicked && "opacity-100"
               )}
             >

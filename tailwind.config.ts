@@ -39,7 +39,7 @@ const config: Config = {
         accent: "#D48B72",
         action: "#D4A373",
         danger: "#ef4444",
-        success: "",
+        success: "#22c55e",
         warn: "",
         r: "#f87171",
         y: "#fde047",

@@ -353,7 +353,7 @@ const OrbitalMenu = (
             </p>
             <p
               className={clsx(
-                "transition-opacity duration-700 text-gray-300 leading-none",
+                "transition-opacity duration-700 text-dim leading-none",
                 shown ? "opacity-0" : "opacity-100 delay-500"
               )}
               style={{
@@ -378,8 +378,7 @@ const OrbitalMenu = (
           style={{ width: `${2 * rad - 10}px` }}
         >
           <div
-            className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto outline outline-red-300 outline-1
-            "
+            className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"
             ref={scrollRef}
             onMouseEnter={showCategories}
             onMouseLeave={hideCategories}

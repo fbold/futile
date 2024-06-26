@@ -69,14 +69,14 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
       {error && (
         <>
           <IconAlertCircle
-            className="absolute right-0 top-0 h-full pr-1 stroke-red-500 my-auto peer w-6"
+            className="absolute right-0 top-0 h-full pr-1 stroke-danger my-auto peer w-6"
             onClick={toggleError}
           />
 
           <span
             className={clsx(
-              "before:block before:absolute before:w-2 before:h-2 before:-top-1 before:right-3 before:rotate-45 before:bg-red-500",
-              "bg-red-500 text-white font-mono hyphens-auto w-max max-w-full rounded-sm p-1 z-10 right-0 block absolute top-full pointer-events-none text-xs transition-opacity opacity-0 peer-hover:opacity-100",
+              "before:block before:absolute before:w-2 before:h-2 before:-top-1 before:right-3 before:rotate-45 before:bg-danger",
+              "bg-danger text-white font-mono hyphens-auto w-max max-w-full rounded-sm p-1 z-10 right-0 block absolute top-full pointer-events-none text-xs transition-opacity opacity-0 peer-hover:opacity-100",
               clicked && "opacity-100"
             )}
           >

@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     cookies().set({
       name: "futile-refresh-token",
       value: refreshToken,
-      secure: false, //process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
     })
     return NextResponse.json({
       status: 200,

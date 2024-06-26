@@ -37,7 +37,6 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
     } else {
       setClicked(true)
       timer.current = setTimeout(() => {
-        console.log("running tiumeout")
         setClicked(false)
       }, 2000)
     }

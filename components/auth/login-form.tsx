@@ -34,7 +34,6 @@ export default function LoginForm() {
       className="flex flex-col gap-2 w-full"
       noValidate
     >
-      {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
       <DefaultInput
         placeholder="username"
         type="text"
@@ -55,7 +54,7 @@ export default function LoginForm() {
       >
         login
       </DefaultButton>
-      <Link href="/register" className="underline text-center">
+      <Link href="/register" className="underline text-center mt-2 text-sm">
         make a futile account
       </Link>
     </form>

@@ -19,7 +19,7 @@ export default function usePOST<BodyType, ResultType = BodyType>(
       const result = await response.json()
       if (response.status !== 200) {
         console.log(result, response)
-        setError(result.error)
+        setError(result.message)
         result.message as string
       } else {
         setSuccess(true)

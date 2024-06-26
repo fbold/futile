@@ -11,3 +11,14 @@ export const UnauthdResponse = NextResponse.json(
   },
   { status: 401 }
 )
+
+export const UserErrorResponse = (message: string, status = 400) => {
+  return NextResponse.json(
+    {
+      message,
+    },
+    {
+      status,
+    }
+  )
+}

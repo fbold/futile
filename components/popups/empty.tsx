@@ -31,7 +31,7 @@ export default function Popup({
               <DefaultButton className="text-text text-right" onClick={onOK}>
                 ok
               </DefaultButton>
-              <TextButton className="text-gray-400" onClick={onCancel}>
+              <TextButton className="text-dim" onClick={onCancel}>
                 cancel
               </TextButton>
             </div>

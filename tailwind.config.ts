@@ -34,8 +34,13 @@ const config: Config = {
         pri: "#403532",
         sec: "#292321",
         text: "#FFFFEB",
+        dim: "#9ca3af",
+
         accent: "#D48B72",
         action: "#D4A373",
+        danger: "#ef4444",
+        success: "",
+        warn: "",
         r: "#f87171",
         y: "#fde047",
         g: "#4adb7e",

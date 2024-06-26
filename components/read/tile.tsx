@@ -55,7 +55,7 @@ const TilePreview = memo(({ tile }: Props) => {
           {tile.title}
         </h2>
       </Link>
-      <p className="text-gray-500 text-xs mb-2">
+      <p className="text-dim text-xs mb-2">
         {tile.createdAt ? tile.createdAt.toDateString() : null}
       </p>
       <div

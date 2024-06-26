@@ -324,7 +324,7 @@ const OrbitalMenu = (
                   className={clsx(
                     "-translate-y-1/2 pointer-events-auto whitespace-nowrap",
                     activeOption === i && colour,
-                    category.value === "__" && "text-gray-400"
+                    category.value === "__" && "text-dim"
                   )}
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}

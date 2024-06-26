@@ -60,7 +60,7 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
         type={type || "submit"}
         onClick={onClick}
         className={clsx(
-          "w-full text-text border px-6 border-gray-400 bg-transparent flex items-center justify-center",
+          "w-full text-text border px-6 border-dim bg-transparent flex items-center justify-center",
           className
         )}
       >
@@ -85,7 +85,7 @@ export const DefaultButton: React.FC<PropsWithChildren<DefaultButtonProps>> = ({
         </>
       )}
       {loading ? (
-        <IconLoader2 className="absolute right-0 top-0 h-full mr-1 my-auto peer w-5 animate-spin stroke-gray-400" />
+        <IconLoader2 className="absolute right-0 top-0 h-full mr-1 my-auto peer w-5 animate-spin stroke-dim" />
       ) : null}
     </div>
   )

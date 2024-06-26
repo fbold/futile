@@ -91,7 +91,7 @@ export default function OrbitalMenus({
         ref={readMenuRef}
         options={categories}
         onSettle={handleReadSelect}
-        colour="text-red-400"
+        colour="text-r"
         pos="tl"
       />
       <OrbitalMenu

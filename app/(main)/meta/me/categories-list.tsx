@@ -91,7 +91,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
         message="All fuTiles of this category will become uncategorized."
         {...registerPopup}
       />
-      <p className="underline text-red-400">categories</p>
+      <p className="underline text-r">categories</p>
       <ul>
         {categories?.map((cat) => (
           <li

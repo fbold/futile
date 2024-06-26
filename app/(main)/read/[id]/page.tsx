@@ -26,10 +26,7 @@ export default async function Read({ params }: { params: { id: string } }) {
               <a className="w-16 underline" href={`/write/${tile.id}`}>
                 edit
               </a>
-              <a
-                className="w-16 underline text-red-400"
-                href={`/write/${tile.id}`}
-              >
+              <a className="w-16 underline text-r" href={`/write/${tile.id}`}>
                 delete
               </a>
             </div>

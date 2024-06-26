@@ -3,9 +3,9 @@ import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import bcrypt from "bcrypt"
 import prisma from "@/lib/prisma"
-import { getIronSession } from "iron-session"
-import { SessionData, getSession, sessionOptions } from "@/lib/session"
+import { getSession } from "@/lib/session"
 import { getRefreshToken } from "@/lib/refresh"
+import { UserErrorResponse } from "@/lib/responses"
 
 export async function POST(request: Request) {
   try {
@@ -28,19 +28,12 @@ export async function POST(request: Request) {
       },
     })
 
-    if (!user) {
-      return NextResponse.json({
-        error: "User does not exist",
-      })
-    }
+    if (!user) return UserErrorResponse("Incorrect username or password")
 
     const authenticated = await bcrypt.compare(password, user.password)
 
     if (!authenticated)
-      return NextResponse.json({
-        status: 400,
-        message: "Wrong password",
-      })
+      return UserErrorResponse("Incorrect username or password")
 
     // From here on we are authenticated
     // Save the main session info, if this session is logged in
@@ -70,8 +63,11 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.log(error)
-    return NextResponse.json({
-      error: "System error. Please contact support",
-    })
+    return NextResponse.json(
+      {
+        error: "System error. Please contact support",
+      },
+      { status: 500 }
+    )
   }
 }

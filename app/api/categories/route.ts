@@ -1,6 +1,6 @@
-import { UnauthdResponse, auth } from "@/lib/auth"
+import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
-import { GenericErrorResponse } from "@/lib/responses"
+import { GenericErrorResponse, UnauthdResponse } from "@/lib/responses"
 import { NextResponse } from "next/server"
 
 export async function GET() {

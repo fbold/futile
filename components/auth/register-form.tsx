@@ -6,6 +6,7 @@ import { DefaultInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 import { RegisterSchema, RegisterType } from "@/lib/validation"
 import Link from "next/link"
+import usePOST from "@/hooks/fetchers/usePOST"
 
 export default function RegisterForm() {
   const {
@@ -18,18 +19,21 @@ export default function RegisterForm() {
   })
 
   const [recoveryPhrase, setRecoveryPhrase] = useState("")
-  const [error, setError] = useState<null | string>(null)
+  // const [error, setError] = useState<null | string>(null)
   const [copied, setCopied] = useState(false)
 
+  const { trigger, error } = usePOST<RegisterType, { recoveryPhrase: string }>(
+    "/api/auth/register"
+  )
   const onRegister: SubmitHandler<RegisterType> = async (data) => {
-    const submitResult = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-    const submitJson = await submitResult.json()
-    if (!submitResult.ok) setError(submitJson.message)
-
-    setRecoveryPhrase(submitJson.recoveryPhrase)
+    const res = await trigger(data)
+    if (res) setRecoveryPhrase(res.recoveryPhrase)
+    //  await fetch("/api/auth/register", {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    // })
+    // const submitJson = await submitResult.json()
+    // if (!submitResult.ok) setError(submitJson.message)
   }
 
   const handleCopy = () => {
@@ -88,7 +92,10 @@ export default function RegisterForm() {
           error={errors.confirmPassword?.message}
           {...register("confirmPassword")}
         ></DefaultInput>
-        <DefaultButton type="submit">register</DefaultButton>
+        <DefaultButton type="submit" error={error}>
+          register
+        </DefaultButton>
+        {/* {error ? error : null} */}
       </form>
     )
 }

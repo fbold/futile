@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import { UnauthdResponse, auth } from "@/lib/auth"
+import { auth } from "@/lib/auth"
+import { GenericErrorResponse, UnauthdResponse } from "@/lib/responses"
 
 type Tile = {
   title: string
@@ -26,13 +27,10 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json({
-      status: 200,
       tile: res,
     })
   } catch (error) {
     console.log(error)
-    return NextResponse.json({
-      error: "System error. Please contact support",
-    })
+    return GenericErrorResponse
   }
 }

@@ -1,11 +1,12 @@
 "use client"
-import { z } from "zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { DefaultInput } from "@/components/input"
 import { DefaultButton } from "@/components/buttons"
 import { LoginSchema, LoginType } from "@/lib/validation"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import usePOST from "@/hooks/fetchers/usePOST"
 
 export default function LoginForm() {
   const {
@@ -19,16 +20,12 @@ export default function LoginForm() {
 
   const router = useRouter()
 
+  const { trigger, error, loading } = usePOST<LoginType>("/api/auth/login")
+
   const onLogin: SubmitHandler<LoginType> = async (data) => {
     console.log(data)
-    const loginResult = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-
-    if (loginResult.status === 200) {
-      router.push("/")
-    }
+    const loginResult = await trigger(data)
+    if (loginResult) router.push("/")
   }
 
   return (
@@ -37,7 +34,6 @@ export default function LoginForm() {
       className="flex flex-col gap-2 w-full"
       noValidate
     >
-      {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
       <DefaultInput
         placeholder="username"
         type="text"
@@ -50,9 +46,17 @@ export default function LoginForm() {
         error={errors.password?.message}
         {...register("password")}
       ></DefaultInput>
-      <DefaultButton type="submit" className="justify-center">
+      <DefaultButton
+        type="submit"
+        className="justify-center"
+        error={error}
+        loading={loading}
+      >
         login
       </DefaultButton>
+      <Link href="/register" className="underline text-center mt-2 text-sm">
+        make a futile account
+      </Link>
     </form>
   )
 }

@@ -2,13 +2,13 @@ import { RegisterSchema } from "@/lib/validation"
 import { NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import prisma from "@/lib/prisma"
-import { generateMnemonic, mnemonicToSeed } from "@scure/bip39"
+import { generateMnemonic } from "@scure/bip39"
 import { wordlist } from "@scure/bip39/wordlists/english"
 import { getSession } from "@/lib/session"
 import { getNewAuthKey } from "@/lib/auth"
 import { cookies } from "next/headers"
 import { getRefreshToken } from "@/lib/refresh"
-import { GenericErrorResponse } from "@/lib/responses"
+import { GenericErrorResponse, UserErrorResponse } from "@/lib/responses"
 
 export async function POST(request: Request) {
   try {
@@ -18,9 +18,7 @@ export async function POST(request: Request) {
     const validationResult = await RegisterSchema.safeParseAsync(data)
     console.log(validationResult)
     if (!validationResult.success) {
-      return NextResponse.json({
-        error: validationResult.error,
-      })
+      return UserErrorResponse("Invalid input")
     }
 
     const { username, password } = validationResult.data
@@ -31,14 +29,7 @@ export async function POST(request: Request) {
       },
     })
 
-    if (user) {
-      return NextResponse.json(
-        {
-          error: "User already exist with this username",
-        },
-        { status: 400 }
-      )
-    }
+    if (user) return UserErrorResponse("Username taken")
 
     const hashedPassword = await bcrypt.hash(password, 12)
     // generate a recovery mnemonic phrase

@@ -39,6 +39,7 @@ const handleRefresh = async (req: NextRequest): Promise<NextResponse> => {
     goodRes.cookies.set("futile-access-token", sealedNewSessionData)
     return goodRes
   } catch (e) {
+    console.log("REFRESH: failed to refresh", e)
     const res = NextResponse.redirect(new URL("/login", req.url))
     const session = await getIronSession<SessionData>(req, res, sessionOptions)
     res.cookies.delete("futile-refresh-token")
@@ -57,20 +58,24 @@ export async function middleware(req: NextRequest) {
     console.log("REFRESH: running refresh middleware")
     const res = NextResponse.next()
     const session = await getIronSession<SessionData>(req, res, sessionOptions)
-    if (!session.user) return NextResponse.redirect(new URL("/login", req.url))
+    if (session.user) {
+      // we have a session, check if expires soon
+      // if session will expire within REFRESH_THRESHOLD, refresh
+      const minutesLeft =
+        Math.round(((session.expires - Date.now()) / (60 * 1000)) * 10) / 10
+      console.log(`REFRESH: expiring in ${minutesLeft} min`)
 
-    // if session will expire within REFRESH_THRESHOLD, refresh
-    const minutesLeft =
-      Math.round(((session.expires - Date.now()) / (60 * 1000)) * 10) / 10
-    console.log(`REFRESH: expiring in ${minutesLeft} min`)
-
-    if (session.expires - Date.now() < REFRESH_THRESHOLD) {
+      if (session.expires - Date.now() < REFRESH_THRESHOLD) {
+        const refreshResult = await handleRefresh(req)
+        return refreshResult
+      }
+      // no need to refresh because session is still within validity threshold
+      return res
+    } else {
+      // no session, see if we can refresh anyway using refresh token
       const refreshResult = await handleRefresh(req)
       return refreshResult
     }
-
-    // no need to refresh because session is still within validity threshold
-    return res
   }
 
   // any other response just proceed

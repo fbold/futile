@@ -168,6 +168,7 @@ const OrbitalMenu = (
     // at same time as active category
 
     // SYNC scrolls to category
+    if (!scrollRef.current) return
     const { scrollHeight, offsetHeight } = scrollRef.current!
     // set angular scroll
     setAngularOffset(-angularSign[pos] * categoryIndex * alpha)

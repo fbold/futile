@@ -29,18 +29,24 @@ export async function POST(request: Request) {
     })
 
     if (!user) {
-      return NextResponse.json({
-        error: "User does not exist",
-      })
+      return NextResponse.json(
+        {
+          error: "Incorrect username or password",
+        },
+        { status: 400 }
+      )
     }
 
     const authenticated = await bcrypt.compare(password, user.password)
 
     if (!authenticated)
-      return NextResponse.json({
-        status: 400,
-        message: "Wrong password",
-      })
+      return NextResponse.json(
+        {
+          status: 400,
+          error: "Incorrect username or password",
+        },
+        { status: 400 }
+      )
 
     // From here on we are authenticated
     // Save the main session info, if this session is logged in
@@ -70,8 +76,11 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.log(error)
-    return NextResponse.json({
-      error: "System error. Please contact support",
-    })
+    return NextResponse.json(
+      {
+        error: "System error. Please contact support",
+      },
+      { status: 500 }
+    )
   }
 }

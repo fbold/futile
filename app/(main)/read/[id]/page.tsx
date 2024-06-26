@@ -1,4 +1,3 @@
-import { DefaultButton } from "@/components/buttons"
 import EditorRead from "@/components/editor/editor-read"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"

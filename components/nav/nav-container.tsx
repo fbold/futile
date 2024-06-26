@@ -13,6 +13,7 @@ export default async function NavContainer() {
 
   return (
     <nav className="fixed flex w-full h-full pointer-events-none z-50 bg-gradient-to-b overflow-x-clip">
+      <div className="top-0 w-full h-[4.5rem] bg-gradient-to-b from-pri via-60% via-pri to-transparent pointer-events-none"></div>
       <OrbitalMenus
         categories={categories.map((cat) => ({
           label: cat.label,

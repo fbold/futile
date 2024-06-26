@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
-import { UnauthdResponse, auth } from "@/lib/auth"
+import { auth } from "@/lib/auth"
+import { UnauthdResponse } from "@/lib/responses"
 
 type Tile = {
   title: string

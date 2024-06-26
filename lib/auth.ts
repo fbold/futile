@@ -29,10 +29,3 @@ export const auth = async () => {
 export const getNewAuthKey = () => {
   return nanoid(32)
 }
-
-export const UnauthdResponse = NextResponse.json(
-  {
-    message: "Unauthenticated",
-  },
-  { status: 401 }
-)

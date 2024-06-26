@@ -100,7 +100,7 @@ export default function OrbitalMenus({
         ref={writeMenuRef}
         options={categories}
         onSettle={handleWriteSelect}
-        colour="text-yellow-300"
+        colour="text-y"
         pos="tr"
         // rad={30}
         // alpha={43}

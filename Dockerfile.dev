@@ -1,0 +1,22 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json* ./
+COPY ./prisma ./prisma
+RUN npx prisma generate --schema=./prisma/schema.prisma
+RUN npm ci
+
+COPY . .
+COPY public ./public
+COPY next.config.js .
+COPY tsconfig.json .
+
+RUN chmod +x ./entrypoint.dev.sh
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Start Next.js in development mode based on the preferred package manager
+CMD npm run dev
+ENTRYPOINT [ "./entrypoint.dev.sh" ]

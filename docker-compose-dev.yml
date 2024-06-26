@@ -1,14 +1,27 @@
 services:
-  prod:
-    container_name: futile-prod
+  app:
+    container_name: futile-app
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     # Set environment variables based on the .env file
     env_file:
       - .env
     ports:
-      - 3000:3000
+      - 4000:3000
+    networks:
+      - futile_network
+    depends_on:
+      - db
+  db:
+    container_name: futile-db
+    image: postgres:16-alpine
+    env_file:
+      - .env.db
+    volumes:
+      - db-data-dev:/var/lib/postgresql/data
+    ports:
+      - 4001:5432
     networks:
       - futile_network
 
@@ -19,3 +32,6 @@ services:
 networks:
   futile_network:
     name: futile_network
+
+volumes:
+  db-data-dev:

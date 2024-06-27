@@ -1,7 +1,6 @@
 import EditorRead from "@/components/editor/editor-read"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
-import { CSSProperties } from "react"
 
 export default async function Read({ params }: { params: { id: string } }) {
   const session = await auth()

@@ -27,7 +27,7 @@ export default async function Read({
   const initialTiles = await prisma.tile.findMany({
     take: 10,
     where: {
-      category: searchParams.c,
+      category_id: searchParams.c,
       user_id: session.user.id,
     },
   })

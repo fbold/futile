@@ -24,7 +24,7 @@ type EditorProps = {
   onSave: (title: string, content?: string) => {}
   initialTitle?: string
   initialContent?: string
-  saveResult: any //UseMutationState
+  loadingSave: boolean //UseMutationState
 }
 
 const PoemSchema = z.object({
@@ -37,7 +37,7 @@ const Editor = ({
   onSave,
   initialTitle,
   initialContent,
-  saveResult,
+  loadingSave,
 }: EditorProps) => {
   const editor = useEditor({
     autofocus: true,
@@ -78,11 +78,11 @@ const Editor = ({
   if (!editor) return <p>Loading</p>
   return (
     <>
-      <div className="px-2">
+      <div className="px-2 z-50">
         <TextInput
           type="text"
           placeholder="Title"
-          className="w-full text-2xl dark:text-text border-0 outline-none max-h-none p-3 text-center"
+          className="font-work-sans  w-full text-2xl border-0 outline-none max-h-none p-3 text-center"
           classNameOnError="focus:outline-none focus:outline-0"
           error={errors?.title?.message || null}
           autoComplete="off"
@@ -90,8 +90,8 @@ const Editor = ({
           {...register("title")}
         />
       </div>
-      <div className="w-full h-9 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-pri dark:from-pri-d from-80% justify-between">
-        <div className="flex flex-row gap-2 h-9 w-full">
+      <div className="w-full h-8 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-pri dark:from-pri-d from-80% justify-between">
+        <div className="flex flex-row gap-2 h-8 w-full">
           <EditorButton
             editor={editor}
             toggleEffect={(e) => e.toggleBold()}
@@ -136,7 +136,8 @@ const Editor = ({
           </div>
         </div>
         <MutationButton
-          fetching={saveResult.fetching}
+          className="h-full"
+          fetching={loadingSave}
           onClick={handleSubmit(handleSave)}
         />
       </div>

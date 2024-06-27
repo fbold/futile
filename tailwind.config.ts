@@ -40,9 +40,9 @@ const config: Config = {
         danger: "#ef4444",
         success: "#22c55e",
         warn: "",
-        r: "#f87171",
-        y: "#fde047",
-        g: "#4adb7e",
+        rd: "#f87171",
+        yw: "#fde047",
+        gn: "#4adb7e",
       },
       blur: {
         "2xs": "2px",

@@ -91,7 +91,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
         message="All fuTiles of this category will become uncategorized."
         {...registerPopup}
       />
-      <p className="underline text-r">categories</p>
+      <p className="underline text-rd">categories</p>
       <ul>
         {categories?.map((cat) => (
           <li
@@ -111,14 +111,14 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
               <TextButton
                 onClick={handleDelClick}
                 className={clsx(
-                  "text-r transition-opacity duration-300"
+                  "text-rd transition-opacity duration-300"
                   //  ? "opacity-100" : "opacity-0"
                 )}
               >
                 del
               </TextButton>
             ) : (
-              <TextButton onClick={showForm} className="text-g">
+              <TextButton onClick={showForm} className="text-gn">
                 add category
               </TextButton>
             )}
@@ -134,7 +134,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
               <TextButton onClick={handleCancel} type="button">
                 cancel
               </TextButton>
-              <TextButton className="!text-g">ok</TextButton>
+              <TextButton className="!text-gn">ok</TextButton>
             </div>
           </form>
         )}

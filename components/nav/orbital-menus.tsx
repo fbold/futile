@@ -91,7 +91,7 @@ export default function OrbitalMenus({
         ref={readMenuRef}
         options={categories}
         onSettle={handleReadSelect}
-        colour="text-r"
+        colour="text-rd"
         pos="tl"
       />
       <OrbitalMenu
@@ -100,7 +100,7 @@ export default function OrbitalMenus({
         ref={writeMenuRef}
         options={categories}
         onSettle={handleWriteSelect}
-        colour="text-y"
+        colour="text-yw"
         pos="tr"
         // rad={30}
         // alpha={43}
@@ -111,7 +111,7 @@ export default function OrbitalMenus({
         ref={metaMenuRef}
         options={generalOptions}
         onSettle={handleMetaSelect}
-        colour="text-g"
+        colour="text-gn"
         pos="br"
         rad={40}
         alpha={20}

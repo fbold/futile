@@ -15,54 +15,71 @@ const TilePreview = memo(({ tile }: Props) => {
   const titleRef = useRef<HTMLHeadingElement>(null)
   const [fadeText, setFadeText] = useState(false)
 
-  const editor = useEditor({
-    ...defaults,
-    editable: false,
-    content: tile.content,
-    onUpdate() {
-      // Calculates if there is an overflow and shows fade if so
-      // The multiplier should be same as height in percent of tile div
-      if (
-        containerRef.current &&
-        divRef.current &&
-        window.visualViewport &&
-        titleRef.current
-      ) {
-        setFadeText(
-          divRef.current?.getBoundingClientRect().height +
-            titleRef.current?.getBoundingClientRect().height >=
-            containerRef.current?.getBoundingClientRect().height
-        )
-      }
-    },
-  })
+  // const editor = useEditor({
+  //   ...defaults,
+  //   editable: false,
+  //   content: tile.content,
+  //   onUpdate() {
+  //     // Calculates if there is an overflow and shows fade if so
+  //     // The multiplier should be same as height in percent of tile div
+  //     if (
+  //       containerRef.current &&
+  //       divRef.current &&
+  //       window.visualViewport &&
+  //       titleRef.current
+  //     ) {
+  //       setFadeText(
+  //         divRef.current?.getBoundingClientRect().height +
+  //           titleRef.current?.getBoundingClientRect().height >=
+  //           containerRef.current?.getBoundingClientRect().height
+  //       )
+  //     }
+  //   },
+  // })
 
   useEffect(() => {
-    if (!editor || !tile) return
-    editor?.commands.setContent(tile.content || "", true)
-  }, [editor, tile])
+    if (
+      containerRef.current &&
+      divRef.current &&
+      window.visualViewport &&
+      titleRef.current
+    ) {
+      setFadeText(
+        divRef.current?.getBoundingClientRect().height +
+          titleRef.current?.getBoundingClientRect().height >=
+          containerRef.current?.getBoundingClientRect().height
+      )
+    }
+  }, [])
 
   return (
     <div
       className={clsx(
-        "rounded-none flex-1 p-4 w-auto flex-grow max-h-screen break-inside-avoid bg-pri dark:bg-pri-d mb-1 border border-opacity-30 relative overflow-hidden cursor-pointer"
+        "rounded-none flex-1 p-4 w-auto flex-grow max-h-screen break-inside-avoid bg-pri mb-1 border-opacity-30 relative overflow-hidden cursor-pointer"
         // !fadeText && "py-14"
       )}
       ref={containerRef}
     >
       <Link href={`/read/${encodeURIComponent(tile.id ?? "")}`}>
-        <h2 ref={titleRef} className="font-extrabold">
+        <h2 ref={titleRef} className="font-bold">
           {tile.title}
         </h2>
       </Link>
-      <p className="text-dim text-xs mb-2">
-        {tile.createdAt ? tile.createdAt.toDateString() : null}
+      <p className="text-dim text-xs mb-2 whitespace-pre-wrap">
+        {tile.createdAt
+          ? `${tile.createdAt
+              .toLocaleTimeString()
+              .split(":")
+              .slice(0, 2)
+              .join(":")}  ${tile.createdAt.toLocaleDateString()}`
+          : null}
       </p>
       <div
         ref={divRef}
-        className="overflow-hidden whitespace-pre-wrap font-eb-garamond text-base"
+        className="overflow-hidden whitespace-pre-wrap text-base"
+        dangerouslySetInnerHTML={{ __html: tile.content! }}
       >
-        <EditorContent editor={editor} />
+        {/* <EditorContent editor={editor} /> */}
       </div>
       {fadeText ? (
         <>

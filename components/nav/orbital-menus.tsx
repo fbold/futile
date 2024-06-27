@@ -75,13 +75,13 @@ export default function OrbitalMenus({
     const currentCat = params.get("c")
     if (pathname.startsWith("/read") && currentCat)
       readMenuRef.current?.to(findInOptions(currentCat, categories))
-    if (pathname.startsWith("/write") && currentCat)
+    else if (pathname.startsWith("/write") && currentCat)
       writeMenuRef.current?.to(findInOptions(currentCat, categories))
-    if (pathname.startsWith("/meta"))
+    else if (pathname.startsWith("/meta"))
       metaMenuRef.current?.to(
         findInOptions(pathname.split("/meta/")[1], generalOptions)
       )
-  }, [])
+  }, [params, pathname])
 
   return (
     <>

@@ -2,14 +2,16 @@
 
 import { DefaultButton } from "@/components/buttons"
 import { TextButton } from "@/components/buttons/text-button"
+import { ReactNode } from "react"
 import { createPortal } from "react-dom"
 
 type PopupProps = {
   show: boolean
   title: string
-  message: string
-  onOK: () => void
-  onCancel: () => void
+  message?: string
+  onOK: () => any
+  onCancel?: () => void
+  children?: ReactNode
 }
 
 export default function Popup({
@@ -18,14 +20,16 @@ export default function Popup({
   message,
   onOK,
   onCancel,
+  children,
 }: PopupProps) {
   return show
     ? createPortal(
-        <div className="fixed w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className=" bg-sec p-5 min-w-1/5 flex flex-row gap-4 justify-between">
             <div>
               <h2>{title}</h2>
               <p>{message}</p>
+              <div className="mt-2">{children}</div>
             </div>
             <div className="flex flex-col justify-end text-right gap-1">
               <DefaultButton className="text-text text-right" onClick={onOK}>

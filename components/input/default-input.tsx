@@ -8,7 +8,7 @@ type Props = React.DetailedHTMLProps<
 > & {
   type?: HTMLInputTypeAttribute
   placeholder?: string
-  error: string | undefined
+  error?: string
   className?: string
   classNameOnError?: string
   outline?: boolean

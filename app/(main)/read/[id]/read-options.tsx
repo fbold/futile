@@ -1,7 +1,7 @@
 "use client"
 
 import { DefaultInput } from "@/components/input"
-import OrbitalMenu from "@/components/nav/orbital-menu"
+import OrbitalMenu, { OrbitalMenuHandle } from "@/components/nav/orbital-menu"
 import Popup from "@/components/popups/empty"
 import useDELETE from "@/hooks/fetchers/useDELETE"
 import usePopup from "@/hooks/usePopup"
@@ -16,10 +16,15 @@ const menuOptions = [
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
   // delete popup
   const { trigger } = useDELETE(`/api/tile?id=${tile.id}`)
-  const menuRef = useRef(null)
+  const menuRef = useRef<OrbitalMenuHandle>(null)
 
   const { showPopup, isUp, register } = usePopup({
-    onOK: () => trigger({ password }),
+    onOK() {
+      trigger({ password })
+    },
+    onCancel() {
+      menuRef.current?.home()
+    },
   })
 
   const [password, setPassword] = useState("")
@@ -43,7 +48,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         rad={24}
         alpha={45}
         onSettle={handleSettle}
-        titleOption="tile options"
+        titleOption=" "
         options={menuOptions}
       />
       <Popup

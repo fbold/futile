@@ -5,7 +5,13 @@ import { useCallback, useState } from "react"
 //   regiter:
 // }
 
-export default function usePopup({ onOK }: { onOK: () => void }) {
+export default function usePopup({
+  onOK,
+  onCancel,
+}: {
+  onOK: () => void
+  onCancel?: () => void
+}) {
   const [popupShown, setPopupShown] = useState(false)
   // const Popup = dynamic(() => import("@/components/popups/empty"), {ssr: false})
 
@@ -22,6 +28,11 @@ export default function usePopup({ onOK }: { onOK: () => void }) {
     onOK()
   }, [onOK])
 
+  const handleCancel = useCallback(() => {
+    setPopupShown(false)
+    onCancel && onCancel()
+  }, [onCancel])
+
   return {
     showPopup,
     isUp: popupShown,
@@ -29,7 +40,7 @@ export default function usePopup({ onOK }: { onOK: () => void }) {
       show: popupShown,
       onClose: hidePopup,
       onOK: handleOK,
-      onCancel: hidePopup,
+      onCancel: handleCancel,
     },
   }
 }

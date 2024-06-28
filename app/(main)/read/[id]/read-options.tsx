@@ -6,6 +6,7 @@ import Popup from "@/components/popups/empty"
 import useDELETE from "@/hooks/fetchers/useDELETE"
 import usePopup from "@/hooks/usePopup"
 import { Tile } from "@prisma/client"
+import { useRouter } from "next/navigation"
 import { useCallback, useRef, useState } from "react"
 
 const menuOptions = [
@@ -14,10 +15,10 @@ const menuOptions = [
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
-  // delete popup
-  const { trigger } = useDELETE(`/api/tile?id=${tile.id}`)
+  const { trigger, success, error } = useDELETE(`/api/tile?id=${tile.id}`)
   const menuRef = useRef<OrbitalMenuHandle>(null)
-
+  const router = useRouter()
+  // delete popup
   const { showPopup, isUp, register } = usePopup({
     onOK() {
       trigger({ password })
@@ -26,6 +27,11 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
       menuRef.current?.home()
     },
   })
+
+  // useEffect(() => {
+  if (success) router.push("/read")
+  if (error) menuRef.current?.home()
+  // }, [router, success, error])
 
   const [password, setPassword] = useState("")
 

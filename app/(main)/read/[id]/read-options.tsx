@@ -6,7 +6,12 @@ import Popup from "@/components/popups/empty"
 import useDELETE from "@/hooks/fetchers/useDELETE"
 import usePopup from "@/hooks/usePopup"
 import { Tile } from "@prisma/client"
-import { useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
+
+const menuOptions = [
+  { label: "edit", value: "edit" },
+  { label: "delete", value: "delete" },
+]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
   // delete popup
@@ -19,12 +24,15 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
 
   const [password, setPassword] = useState("")
 
-  const handleSettle = (opt: any) => {
-    console.log(opt)
-    if (opt.value === "delete") {
-      showPopup()
-    }
-  }
+  const handleSettle = useCallback(
+    (opt: any) => {
+      console.log(opt)
+      if (opt.value === "delete") {
+        showPopup()
+      }
+    },
+    [showPopup]
+  )
 
   return (
     <>
@@ -35,11 +43,8 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         rad={24}
         alpha={45}
         onSettle={handleSettle}
-        titleOption="_"
-        options={[
-          { label: "edit", value: "edit" },
-          { label: "delete", value: "delete" },
-        ]}
+        titleOption="tile options"
+        options={menuOptions}
       />
       <Popup
         title="title"

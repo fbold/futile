@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 // type UsePopupReturnType = {
 //   showPopup: () => {},
@@ -9,18 +9,18 @@ export default function usePopup({ onOK }: { onOK: () => void }) {
   const [popupShown, setPopupShown] = useState(false)
   // const Popup = dynamic(() => import("@/components/popups/empty"), {ssr: false})
 
-  const showPopup = () => {
+  const showPopup = useCallback(() => {
     setPopupShown(true)
-  }
+  }, [])
 
-  const hidePopup = () => {
+  const hidePopup = useCallback(() => {
     setPopupShown(false)
-  }
+  }, [])
 
-  const handleOK = () => {
+  const handleOK = useCallback(() => {
     setPopupShown(false)
     onOK()
-  }
+  }, [onOK])
 
   return {
     showPopup,

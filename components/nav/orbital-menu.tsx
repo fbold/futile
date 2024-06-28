@@ -125,12 +125,13 @@ const OrbitalMenu = (
   }: OrbitalMenuProps,
   ref: Ref<OrbitalMenuHandle>
 ) => {
+  // If this updates bad things happen. That is why deps are omitted
   const options = useMemo(
     () =>
       titleOption
         ? [{ label: titleOption, value: "__" }, ...options_]
         : options_,
-    [titleOption, options_]
+    []
   )
   const scrollRef = useRef<HTMLDivElement>(null)
   const categoriesRefs = useRef(
@@ -169,7 +170,7 @@ const OrbitalMenu = (
 
     // SYNC scrolls to category
     if (!scrollRef.current) return
-    const { scrollHeight, offsetHeight } = scrollRef.current!
+    const { scrollHeight, offsetHeight } = scrollRef.current
     // set angular scroll
     setAngularOffset(-angularSign[pos] * categoryIndex * alpha)
     // set linear scroll
@@ -193,6 +194,7 @@ const OrbitalMenu = (
     // with angular offset
     // setAngularOffset(-tileIdx * alpha)
     // setActiveCategory(tileIdx)
+    // console.log(titleOption, "Calling categorySelect from handleTileClick()")
     handleCategorySelect(optnIdx)
     if (options[optnIdx].value !== "__")
       // skip setting if home option
@@ -212,6 +214,7 @@ const OrbitalMenu = (
         if (Math.abs(i * alpha - angularSign[pos] * offset) <= 0.5 * alpha) {
           // setActiveCategory(i)
           // setAngularOffset(-i * alpha)
+          // console.log(titleOption, "Calling categorySelect from settleScroll 1")
           handleCategorySelect(i)
           if (options[i].value !== "__")
             // skip setting if home option
@@ -223,15 +226,20 @@ const OrbitalMenu = (
       // Settle on the last as we assume it has gone past
       // setActiveCategory(categories.length - 1)
       // setAngularOffset(-(categories.length - 1) * alpha)
+      // console.log(titleOption, "Calling categorySelect from settleScroll 2")
       handleCategorySelect(options.length - 1)
       onSettle(options.at(-1)!)
     },
     [options, onSettle]
   )
 
+  // useEffect(() => {
+  //   console.log("ON SETTLE CHANGING---------")
+  // }, [options])
+
   const handleScroll = useCallback(
     (event: Event) => {
-      console.log(titleOption, ": scrolling")
+      console.log(titleOption, ": handleScroll()")
       // Translates element scroll to angular scroll
       if (!scrollRef.current) return
       if (!shown) showCategories()

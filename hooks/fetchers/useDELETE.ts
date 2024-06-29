@@ -18,7 +18,7 @@ export default function useDELETE<ResultType>(url: string, body?: {}) {
       if (response.status !== 200) {
         console.log(result, response)
         setError(result.message)
-        result.message as string
+        return result.message as string
       } else {
         setSuccess(true)
         return result as ResultType

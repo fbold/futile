@@ -16,10 +16,10 @@ export default async function Read({ params }: { params: { id: string } }) {
 
   if (tile)
     return (
-      <div className="relative md:z-20 whitespace-pre-wrap w-full h-full pt-24 mx-5 sm:mx-20 md:mx-0 md:w-2/3 lg:w-1/2">
+      <div className="relative md:z-20 whitespace-pre-wrap overflow-x-visible w-full h-full pt-24 mx-5 sm:mx-20 md:mx-0 md:w-2/3 lg:w-1/2">
         <div className="my-2 flex justify-between">
           <p className="font-bold w-full">{tile.title}</p>
-          <div className="absolute flex flex-row justify-between items-start top-24 right-0">
+          <div className="absolute flex flex-row justify-between items-start top-24 right-2">
             {/* {tile.id === session.data?.user.id ? ( */}
             {/* <div className="mt-2 flex flex-col">
               <a className="w-16 underline" href={`/write/${tile.id}`}>

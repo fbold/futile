@@ -10,7 +10,7 @@ export default async function MainLayout({ children }: Props) {
       {/* This contains the orbital menus through another server-side component
     which retrieves the user's categories */}
       <NavContainer />
-      <main className="absolute bg-pri dark:bg-pri-d flex-grow h-full w-full flex items-center justify-center">
+      <main className="absolute bg-pri dark:bg-pri-d flex-grow h-full w-full overflow-x-clip flex items-center justify-center">
         {children}
       </main>
     </>

@@ -12,6 +12,7 @@ import { useCallback, useRef, useState } from "react"
 const menuOptions = [
   { label: "edit", value: "edit" },
   { label: "delete", value: "delete" },
+  { label: "TODO category", value: "category" },
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
@@ -54,7 +55,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         rad={24}
         alpha={45}
         onSettle={handleSettle}
-        titleOption=" "
+        // titleOption=" "
         options={menuOptions}
       />
       <Popup

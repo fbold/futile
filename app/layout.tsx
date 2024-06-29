@@ -23,7 +23,7 @@ const openSans = Open_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "futile.me",
+  title: "futile",
   description: "the home of personal textual futility",
 }
 

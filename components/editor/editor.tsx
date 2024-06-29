@@ -81,8 +81,8 @@ const Editor = ({
       <div className="px-2 z-50">
         <TextInput
           type="text"
-          placeholder="Title"
-          className="font-work-sans  w-full text-2xl border-0 outline-none max-h-none p-3 text-center"
+          placeholder="title"
+          className="font-open-sans bg-transparent w-full text-xl border-0 outline-none max-h-none p-3 text-left"
           classNameOnError="focus:outline-none focus:outline-0"
           error={errors?.title?.message || null}
           autoComplete="off"
@@ -90,7 +90,7 @@ const Editor = ({
           {...register("title")}
         />
       </div>
-      <div className="w-full h-8 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-pri dark:from-pri-d from-80% justify-between">
+      <div className="w-full h-8 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-pri from-80% justify-between">
         <div className="flex flex-row gap-2 h-8 w-full">
           <EditorButton
             editor={editor}
@@ -139,7 +139,9 @@ const Editor = ({
           className="h-full"
           fetching={loadingSave}
           onClick={handleSubmit(handleSave)}
-        />
+        >
+          save
+        </MutationButton>
       </div>
       <EditorContent
         editor={editor}

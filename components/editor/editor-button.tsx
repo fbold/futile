@@ -44,7 +44,7 @@ export const EditorButton = ({
   return (
     <button
       className={clsx(
-        "p-1 border-acc dark:border-acc-d border-y aspect-square h-full ",
+        "border-dim border-y aspect-square h-full block",
         // {
         //   'rounded-l-md': group === 'left',
         //   'rounded-r-md border-l': group === 'right',
@@ -59,7 +59,7 @@ export const EditorButton = ({
       )}
       onClick={handleClick}
     >
-      <Icon className="text-txt-pri dark:text-txt-pri-d m-auto" />
+      <Icon className="text-txt-pri dark:text-txt-pri-d m-auto h-auto" />
     </button>
   )
 }

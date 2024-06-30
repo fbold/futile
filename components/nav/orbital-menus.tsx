@@ -75,13 +75,13 @@ export default function OrbitalMenus({
     const currentCat = params.get("c")
     if (pathname.startsWith("/read") && currentCat)
       readMenuRef.current?.to(findInOptions(currentCat, categories))
-    if (pathname.startsWith("/write") && currentCat)
+    else if (pathname.startsWith("/write") && currentCat)
       writeMenuRef.current?.to(findInOptions(currentCat, categories))
-    if (pathname.startsWith("/meta"))
+    else if (pathname.startsWith("/meta"))
       metaMenuRef.current?.to(
         findInOptions(pathname.split("/meta/")[1], generalOptions)
       )
-  }, [])
+  }, [params, pathname])
 
   return (
     <>
@@ -91,7 +91,7 @@ export default function OrbitalMenus({
         ref={readMenuRef}
         options={categories}
         onSettle={handleReadSelect}
-        colour="text-red-400"
+        colour="text-rd"
         pos="tl"
       />
       <OrbitalMenu
@@ -100,7 +100,7 @@ export default function OrbitalMenus({
         ref={writeMenuRef}
         options={categories}
         onSettle={handleWriteSelect}
-        colour="text-yellow-300"
+        colour="text-yw"
         pos="tr"
         // rad={30}
         // alpha={43}
@@ -111,7 +111,7 @@ export default function OrbitalMenus({
         ref={metaMenuRef}
         options={generalOptions}
         onSettle={handleMetaSelect}
-        colour="text-green-400"
+        colour="text-gn"
         pos="br"
         rad={40}
         alpha={20}

@@ -56,13 +56,13 @@ export default function RegisterForm() {
           leave this page it will be{" "}
           <span className="underline">gone forever.</span>
         </p>
-        <p className="whitespace-pre-wrap text-red-500">
+        <p className="whitespace-pre-wrap text-danger">
           {recoveryPhrase.split(" ").join(`\n`)}
         </p>
         <DefaultButton onClick={handleCopy}>
           {copied ? "copied" : "copy"}
         </DefaultButton>
-        <Link href="/" className="underline text-green-500">
+        <Link href="/" className="underline text-success">
           move on
         </Link>
       </div>

@@ -29,47 +29,30 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      // PURPLE
       colors: {
         pri: "#403532",
         sec: "#292321",
         text: "#FFFFEB",
+        dim: "#9ca3af",
+
         accent: "#D48B72",
         action: "#D4A373",
-        r: "#f87171",
-        y: "#fde047",
-        g: "#4adb7e",
+        danger: "#ef4444",
+        success: "#22c55e",
+        warn: "",
+        rd: "#f87171",
+        yw: "#fde047",
+        gn: "#4adb7e",
       },
-      // colors: {
-      //   // light mode
-      //   'pri': '#FFFFEB',    // lighter - 60%
-      //   'sec': '#FAEDCD',    // darker  - 30%
-      //   'acc': '#D4A373',    // accent  - 10%
-      //   'txt-pri': '#281515',
-      //   'txt-sec': '#FFFFEB',
-      //   // dark mode
-      //   'pri-d': '#403532',  // lighter - 60%
-      //   'sec-d': '#292321',  // darker  - 30%
-      //   'acc-d': '#D48B72',  // accent  - 10%
-      //   'txt-pri-d': '#FFFFEB',
-      //   'txt-sec-d': '#281515',
-      // },
       blur: {
         "2xs": "2px",
         xs: "4px",
         sm: "8px",
       },
-      //GREEN
-      // colors: {
-      //   pri: "#FFFFFF",
-      //   sec: "#309362",
-      //   text: "#0d1216",
-      //   accent: "#BF4E30",
-      //   action: "#1BA361",
-      // },
       fontFamily: {
         josefin: ["var(--font-josefin)"],
         "work-sans": ["var(--font-work-sans)"],
+        "open-sans": ["var(--font-open-sans)"],
       },
     },
   },

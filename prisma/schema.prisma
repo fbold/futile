@@ -7,9 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider     = "postgres"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+  // relationMode = "prisma"
 }
 
 model User {
@@ -32,6 +32,7 @@ model Category {
   private   Boolean
   user_id   String
   user      User     @relation(references: [id], fields: [user_id])
+  tiles     Tile[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -40,15 +41,16 @@ model Category {
 }
 
 model Tile {
-  id        String   @id @default(cuid())
-  title     String
-  category  String // This will be a separating column. for example mcould be poem, thought, meditation or other sort of wiritng noun
-  user_id   String
-  user      User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  title       String
+  category_id String
+  category    Category @relation(references: [id], fields: [category_id]) // This will be a separating column. for example mcould be poem, thought, meditation or other sort of wiritng noun
+  user_id     String
+  user        User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@index([user_id])
+  @@index([user_id, category_id])
   @@map("tiles")
 }

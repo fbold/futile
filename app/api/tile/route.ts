@@ -7,6 +7,8 @@ import {
   UserErrorResponse,
 } from "@/lib/responses"
 import * as bcrypt from "bcrypt"
+import sanitizeHtml from "sanitize-html"
+import { htmlSanitizationOptions } from "@/lib/sanitization"
 
 export type TileInput = {
   title: string
@@ -24,10 +26,15 @@ export async function POST(request: Request) {
 
     if (!title || !category_id) return UserErrorResponse("No title or category")
 
+    const sanitizedContent = sanitizeHtml(
+      content || "",
+      htmlSanitizationOptions
+    )
+
     const res = await prisma.tile.create({
       data: {
         category_id: category_id,
-        content: content,
+        content: sanitizedContent,
         title: title,
         user_id: session.user.id,
       },

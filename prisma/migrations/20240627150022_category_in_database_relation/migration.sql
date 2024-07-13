@@ -9,7 +9,7 @@ DROP INDEX "tiles_user_id_idx";
 
 -- AlterTable
 ALTER TABLE "tiles" DROP COLUMN "category",
-ADD COLUMN     "category_id" TEXT NOT NULL DEFAULT 'clxvici7e0001h0had4omsop1';
+ADD COLUMN     "category_id" TEXT NOT NULL;
 
 -- CreateIndex
 CREATE INDEX "tiles_user_id_category_id_idx" ON "tiles"("user_id", "category_id");

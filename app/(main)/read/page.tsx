@@ -21,7 +21,6 @@ export default async function Read({
 }: {
   searchParams: { c: string }
 }) {
-  //
   const session = await getSession()
   if (!session.user) redirect("/login")
   const initialTiles = await prisma.tile.findMany({
@@ -34,14 +33,9 @@ export default async function Read({
 
   return (
     <div className="w-full h-full gap-2 overflow-scroll">
-      <div className="flex flex-col w-full gap-2 px-12 py-12">
+      <div className="flex flex-col my-12 px-4 sm:mx-0 w-full md:w-1/2 xl:w-1/3 gap-4 relative left-1/2 -translate-x-1/2">
         {initialTiles.map((tile) => (
-          // <Suspense
-          //   fallback={<TilePreviewFallback tile={tile} />}
-          //   key={tile.id}
-          // >
           <TilePreview key={tile.id} tile={tile}></TilePreview>
-          // </Suspense>
         ))}
       </div>
     </div>

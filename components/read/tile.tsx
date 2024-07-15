@@ -55,7 +55,7 @@ const TilePreview = memo(({ tile }: Props) => {
   return (
     <div
       className={clsx(
-        "rounded-none flex-1 p-4 w-auto flex-grow max-h-screen break-inside-avoid bg-pri mb-1 border-opacity-30 relative overflow-hidden cursor-pointer"
+        "rounded-none block p-4 w-full flex-grow max-h-screen break-inside-avoid bg-pri mb-1 relative overflow-hidden cursor-pointer"
         // !fadeText && "py-14"
       )}
       ref={containerRef}

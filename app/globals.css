@@ -25,6 +25,6 @@
   }
 
   h2 {
-    @apply font-bold;
+    @apply text-xl font-bold;
   }
 }

@@ -21,8 +21,17 @@ export default async function Read({ params }: { params: { id: string } }) {
           <div className="fixed block top-24 right-8 sm:right-20 md:right-[16.7%]">
             <ReadOptions tile={tile} />
           </div>
-          <div className="my-2 flex justify-between">
-            <p className="font-bold w-full">{tile.title}</p>
+          <div className="my-2 flex flex-col">
+            <h2 className="w-full">{tile.title}</h2>
+            <p className="text-dim text-xs mb-2 ">
+              {tile.createdAt
+                ? `${tile.createdAt
+                    .toLocaleTimeString()
+                    .split(":")
+                    .slice(0, 2)
+                    .join(":")}  ${tile.createdAt.toLocaleDateString()}`
+                : null}
+            </p>
           </div>
           <EditorRead content={tile.content} />
         </div>

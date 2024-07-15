@@ -2,19 +2,6 @@ import TilePreview from "@/components/read/tile"
 import prisma from "@/lib/prisma"
 import { getSession } from "@/lib/session"
 import { redirect } from "next/navigation"
-// import { Tile } from "@prisma/client"
-// import { Suspense } from "react"
-
-// const TilePreviewFallback = ({ tile }: { tile: Tile }) => {
-//   console.log("fallbackkk....")
-//   return (
-//     <div>
-//       {tile.content.split("\n").map((line) => (
-//         <p key={line}>---------------</p>
-//       ))}
-//     </div>
-//   )
-// }
 
 export default async function Read({
   searchParams,

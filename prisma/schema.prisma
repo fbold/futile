@@ -43,6 +43,7 @@ model Category {
 model Tile {
   id          String   @id @default(cuid())
   title       String
+  inVoid      Boolean  @default(false)
   category_id String
   category    Category @relation(references: [id], fields: [category_id]) // This will be a separating column. for example mcould be poem, thought, meditation or other sort of wiritng noun
   user_id     String

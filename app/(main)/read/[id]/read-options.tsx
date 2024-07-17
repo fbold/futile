@@ -12,7 +12,8 @@ import { useCallback, useRef, useState } from "react"
 const menuOptions = [
   { label: "edit", value: "edit" },
   { label: "delete", value: "delete" },
-  { label: "TODO category", value: "category" },
+  { label: "category", value: "category" },
+  { label: "void", value: "void" },
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
@@ -20,7 +21,21 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
   const menuRef = useRef<OrbitalMenuHandle>(null)
   const router = useRouter()
   // delete popup
-  const { showPopup, isUp, register } = usePopup({
+  const {
+    showPopup: showDeletePopup,
+    isUp,
+    register: registerDeletePopup,
+  } = usePopup({
+    onOK() {
+      trigger({ password })
+    },
+    onCancel() {
+      menuRef.current?.home()
+    },
+  })
+
+  // void popup
+  const { showPopup: showVoidPopup, register: registerVoidPopup } = usePopup({
     onOK() {
       trigger({ password })
     },
@@ -40,10 +55,12 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
     (opt: any) => {
       console.log(opt)
       if (opt.value === "delete") {
-        showPopup()
+        showDeletePopup()
+      } else if (opt.value === "void") {
+        showVoidPopup()
       }
     },
-    [showPopup]
+    [showDeletePopup]
   )
 
   return (
@@ -53,15 +70,27 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         colour="text-dim"
         pos="tr"
         rad={24}
-        alpha={45}
+        alpha={36}
         onSettle={handleSettle}
         // titleOption=" "
         options={menuOptions}
       />
       <Popup
-        title="title"
+        title="delete document"
         message="deleting this requires password reprompt"
-        {...register}
+        {...registerDeletePopup}
+      >
+        <DefaultInput
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          placeholder="password"
+          type="password"
+        />
+      </Popup>
+      <Popup
+        title="send to the void"
+        message="sending this to the void requires password reprompt. once in the void it cannot be reclaimed, only deleted"
+        {...registerVoidPopup}
       >
         <DefaultInput
           onChange={(e) => setPassword(e.target.value)}

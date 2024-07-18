@@ -37,6 +37,9 @@ export async function GET(request: NextRequest) {
       where: {
         user_id: session.user.id,
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     })
 
     return NextResponse.json({ tiles: res }, { status: 200 })

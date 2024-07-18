@@ -16,6 +16,9 @@ export default async function Read({
       category_id: searchParams.c,
       user_id: session.user.id,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   })
 
   return (

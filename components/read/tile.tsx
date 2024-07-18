@@ -76,7 +76,7 @@ const TilePreview = memo(({ tile }: Props) => {
       </p>
       <div
         ref={divRef}
-        className="overflow-hidden whitespace-pre-wrap text-base"
+        className="overflow-hidden whitespace-pre-wrap break-words text-base"
         dangerouslySetInnerHTML={{ __html: tile.content! }}
       >
         {/* <EditorContent editor={editor} /> */}

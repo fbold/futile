@@ -4,6 +4,7 @@ import { DefaultInput } from "@/components/input"
 import OrbitalMenu, { OrbitalMenuHandle } from "@/components/nav/orbital-menu"
 import Popup from "@/components/popups/empty"
 import useDELETE from "@/hooks/fetchers/useDELETE"
+import usePATCH from "@/hooks/fetchers/usePATCH"
 import usePopup from "@/hooks/usePopup"
 import { Tile } from "@prisma/client"
 import { useRouter } from "next/navigation"
@@ -17,7 +18,16 @@ const menuOptions = [
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
-  const { trigger, success, error } = useDELETE(`/api/tile?id=${tile.id}`)
+  const {
+    trigger: triggerDelete,
+    success,
+    error,
+  } = useDELETE(`/api/tile?id=${tile.id}`)
+  const {
+    trigger: triggerVoid,
+    success: successVoid,
+    error: errorVoid,
+  } = usePATCH(`/api/tile/void?id=${tile.id}`)
   const menuRef = useRef<OrbitalMenuHandle>(null)
   const router = useRouter()
   // delete popup
@@ -27,7 +37,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
     register: registerDeletePopup,
   } = usePopup({
     onOK() {
-      trigger({ password })
+      triggerDelete({ password })
     },
     onCancel() {
       menuRef.current?.home()
@@ -37,7 +47,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
   // void popup
   const { showPopup: showVoidPopup, register: registerVoidPopup } = usePopup({
     onOK() {
-      trigger({ password })
+      triggerVoid({ password })
     },
     onCancel() {
       menuRef.current?.home()
@@ -89,7 +99,13 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
       </Popup>
       <Popup
         title="send to the void"
-        message="sending this to the void requires password reprompt. once in the void it cannot be reclaimed, only deleted"
+        message={
+          <p>
+            sending this to the void requires password reprompt. once in the
+            void it{" "}
+            <span className="underline">cannot be reclaimed, only deleted</span>
+          </p>
+        }
         {...registerVoidPopup}
       >
         <DefaultInput

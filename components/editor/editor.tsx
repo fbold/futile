@@ -90,7 +90,7 @@ const Editor = ({
           {...register("title")}
         />
       </div>
-      <div className="w-full h-8 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-pri from-80% justify-between">
+      <div className="w-full h-8 mb-3 flex flex-row gap-2 sticky top-0 bg-gradient-to-b from-80% justify-between">
         <div className="flex flex-row gap-2 h-8 w-full">
           <EditorButton
             editor={editor}

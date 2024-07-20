@@ -101,8 +101,8 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         title="send to the void"
         message={
           <p>
-            sending this to the void requires password reprompt. once in the
-            void it{" "}
+            sending this to the void requires password reprompt. <br />
+            once in the void it{" "}
             <span className="underline">cannot be reclaimed, only deleted</span>
           </p>
         }

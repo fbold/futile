@@ -14,7 +14,7 @@ type PopupProps = {
   children?: ReactNode
 }
 
-export default function Popup({
+export default function InformationPopup({
   show,
   title,
   message,

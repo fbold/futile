@@ -96,6 +96,7 @@ const torb = {
 export type OrbitalMenuOption = {
   value: string
   label: string
+  className?: string
 }
 
 type OrbitalMenuProps = {
@@ -106,6 +107,8 @@ type OrbitalMenuProps = {
   pos?: "tr" | "tl" | "br" | "bl"
   rad?: number
   alpha?: number
+  thickness?: number
+  fill?: boolean
 }
 
 export type OrbitalMenuHandle = {
@@ -122,6 +125,8 @@ const OrbitalMenu = (
     pos = "tl",
     rad = R,
     alpha = ALPHA,
+    thickness = 1,
+    fill = false,
   }: OrbitalMenuProps,
   ref: Ref<OrbitalMenuHandle>
 ) => {
@@ -302,7 +307,7 @@ const OrbitalMenu = (
             transform: `rotateZ(${angularOffset}deg)`,
           }}
         >
-          {options.map((category, i) => {
+          {options.map((option, i) => {
             const rotation = angularSign[pos] * i * alpha
             const translationY =
               aorb[pos] * Math.sin((rotation * Math.PI) / 180) * rad
@@ -312,14 +317,14 @@ const OrbitalMenu = (
             //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
-                key={category.value}
+                key={option.value}
                 className={clsx(
                   `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
                   "absolute h-0 cursor-pointer transition-opacity duration-700",
                   shown || i === activeOption
                     ? "opacity-100"
                     : "opacity-0 delay-200",
-                  activeOption === i && colour
+                  activeOption === i && `text-${colour}`
                 )}
                 style={{
                   // opacity: shown || i === activeOption ? 1 : 0,
@@ -331,14 +336,17 @@ const OrbitalMenu = (
                 <p
                   className={clsx(
                     "-translate-y-1/2 whitespace-nowrap",
-                    shown ? "pointer-events-auto" : "pointer-events-none",
-                    activeOption === i && colour,
-                    category.value === "__" && "text-dim"
+                    shown && option.value !== "__"
+                      ? "pointer-events-auto"
+                      : "pointer-events-none",
+                    activeOption === i && `text-${colour}`,
+                    option.className || ""
+                    // category.value === "__" && "text-dim"
                   )}
                   onClick={(e) => handleTileClick(i)}
                   ref={categoriesRefs.current[i]}
                 >
-                  {category.label}
+                  {option.label}
                 </p>
               </div>
             )
@@ -380,11 +388,13 @@ const OrbitalMenu = (
         pointer-events-auto`}
       >
         <div
-          className={`relative ${torb[pos]}-0 ${rorl[pos]}-0 aspect-square
-            outline outline-1 overflow-hidden rounded-full peer
-            transition-opacity duration-200  hover:opacity-100
-            ${colour}`}
-          style={{ width: `${2 * rad - 10}px` }}
+          className={clsx(
+            `relative ${torb[pos]}-0 ${rorl[pos]}-0`,
+            "aspect-square outline overflow-hidden rounded-full peer transition-opacity duration-200  hover:opacity-100",
+            `text-${colour}`,
+            activeOption && fill ? `bg-${colour}` : ""
+          )}
+          style={{ width: `${2 * rad - 10}px`, outlineWidth: thickness + "px" }}
         >
           <div
             className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"

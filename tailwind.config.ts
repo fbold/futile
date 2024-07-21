@@ -21,6 +21,9 @@ const config: Config = {
     "bottom-3",
     "origin-right",
     "origin-left",
+    "bg-rd",
+    "bg-yw",
+    "bg-gn",
   ],
   theme: {
     extend: {

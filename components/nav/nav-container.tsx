@@ -12,7 +12,7 @@ export default async function NavContainer() {
   if (!categories) redirect("/login")
 
   return (
-    <nav className="fixed flex w-full h-full pointer-events-none z-30 bg-gradient-to-b overflow-x-clip">
+    <nav className="fixed flex w-full h-full pointer-events-none overflow-x-clip">
       <div className="top-0 w-full h-[4.2rem] bg-gradient-to-b from-pri via-60% via-pri to-transparent pointer-events-none"></div>
       <OrbitalMenus
         categories={categories.map((cat) => ({

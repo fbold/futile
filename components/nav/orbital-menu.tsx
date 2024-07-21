@@ -330,7 +330,8 @@ const OrbitalMenu = (
               >
                 <p
                   className={clsx(
-                    "-translate-y-1/2 pointer-events-auto whitespace-nowrap",
+                    "-translate-y-1/2 whitespace-nowrap",
+                    shown ? "pointer-events-auto" : "pointer-events-none",
                     activeOption === i && colour,
                     category.value === "__" && "text-dim"
                   )}

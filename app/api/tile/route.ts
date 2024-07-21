@@ -103,7 +103,7 @@ export async function DELETE(req: NextRequest, route: { id: string }) {
     if (!password || !user) return UnauthdResponse
 
     const match = await bcrypt.compare(password, user.password)
-    if (!match) return UnauthdResponse
+    if (!match) return UserErrorResponse("Password doesn't match")
 
     const tileId = req.nextUrl.searchParams.get("id") as string
     if (!tileId) return UserErrorResponse("No ID provided")

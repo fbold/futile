@@ -97,6 +97,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         title="delete document"
         message="deleting this requires password reprompt"
         loading={loadingDelete}
+        error={errorDelete}
         {...registerDeletePopup}
       >
         <DefaultInput
@@ -116,6 +117,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
           </p>
         }
         loading={loadingVoid}
+        error={errorVoid}
         {...registerVoidPopup}
       >
         <DefaultInput

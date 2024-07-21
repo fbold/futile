@@ -2,40 +2,39 @@
 
 import { DefaultInput } from "@/components/input"
 import OrbitalMenu, { OrbitalMenuHandle } from "@/components/nav/orbital-menu"
-import Popup from "@/components/popups/empty"
+import RequestPopup from "@/components/popups/request"
 import useDELETE from "@/hooks/fetchers/useDELETE"
 import usePATCH from "@/hooks/fetchers/usePATCH"
 import usePopup from "@/hooks/usePopup"
 import { Tile } from "@prisma/client"
 import { useRouter } from "next/navigation"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 const menuOptions = [
   { label: "edit", value: "edit" },
   { label: "delete", value: "delete" },
   { label: "category", value: "category" },
-  { label: "void", value: "void" },
+  { label: "publish to void", value: "void" },
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
+  const [password, setPassword] = useState("")
+
+  // delete
   const {
     trigger: triggerDelete,
-    success,
-    error,
+    loading: loadingDelete,
+    success: successDelete,
+    error: errorDelete,
   } = useDELETE(`/api/tile?id=${tile.id}`)
-  const {
-    trigger: triggerVoid,
-    success: successVoid,
-    error: errorVoid,
-  } = usePATCH(`/api/tile/void?id=${tile.id}`)
-  const menuRef = useRef<OrbitalMenuHandle>(null)
-  const router = useRouter()
+
   // delete popup
   const {
     showPopup: showDeletePopup,
     isUp,
     register: registerDeletePopup,
   } = usePopup({
+    type: "request",
     onOK() {
       triggerDelete({ password })
     },
@@ -44,8 +43,19 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
     },
   })
 
+  // void patch
+  const {
+    trigger: triggerVoid,
+    loading: loadingVoid,
+    success: successVoid,
+    error: errorVoid,
+  } = usePATCH(`/api/tile/void?id=${tile.id}`)
+  const menuRef = useRef<OrbitalMenuHandle>(null)
+  const router = useRouter()
+
   // void popup
   const { showPopup: showVoidPopup, register: registerVoidPopup } = usePopup({
+    type: "request",
     onOK() {
       triggerVoid({ password })
     },
@@ -54,12 +64,11 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
     },
   })
 
-  // useEffect(() => {
-  if (success) router.push("/read")
-  if (error) menuRef.current?.home()
-  // }, [router, success, error])
-
-  const [password, setPassword] = useState("")
+  useEffect(() => {
+    if (successDelete) router.push("/read")
+    if (successVoid) router.push(`/void/${tile.id}`)
+    if (errorDelete || errorVoid) menuRef.current?.home()
+  }, [successDelete, successVoid, errorDelete, errorVoid])
 
   const handleSettle = useCallback(
     (opt: any) => {
@@ -82,12 +91,12 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         rad={24}
         alpha={36}
         onSettle={handleSettle}
-        // titleOption=" "
         options={menuOptions}
       />
-      <Popup
+      <RequestPopup
         title="delete document"
         message="deleting this requires password reprompt"
+        loading={loadingDelete}
         {...registerDeletePopup}
       >
         <DefaultInput
@@ -96,8 +105,8 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
           placeholder="password"
           type="password"
         />
-      </Popup>
-      <Popup
+      </RequestPopup>
+      <RequestPopup
         title="send to the void"
         message={
           <p>
@@ -106,6 +115,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
             <span className="underline">cannot be reclaimed, only deleted</span>
           </p>
         }
+        loading={loadingVoid}
         {...registerVoidPopup}
       >
         <DefaultInput
@@ -114,7 +124,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
           placeholder="password"
           type="password"
         />
-      </Popup>
+      </RequestPopup>
     </>
   )
 }

@@ -40,6 +40,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     register: registerPopup,
   } = usePopup({
     onOK: handleDel,
+    type: "information",
   })
 
   const { register, setValue, handleSubmit } = useForm<CategoryType>({

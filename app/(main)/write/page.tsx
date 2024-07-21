@@ -24,7 +24,7 @@ export default function Write() {
 
   return (
     // <div className="flex justify-center h-full max-h-full scroll">
-    <div className="relative bg-pri dark:bg-pri-d p-4 md:px-8 md:py-4 flex flex-col w-full md:w-2/3 lg:w-3/5 h-full min-h-full">
+    <div className="relative p-4 pt-11 md:px-8 md:py-20 flex flex-col w-full md:w-2/3 lg:w-3/5 h-full min-h-full">
       <Editor onSave={handleSave} loadingSave={loading} />
     </div>
     // </div>

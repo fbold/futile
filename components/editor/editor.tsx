@@ -146,7 +146,7 @@ const Editor = ({
       <EditorContent
         editor={editor}
         className={clsx(
-          "h-full"
+          "pb-24"
           // 'before:absolute before:w-full before:bg-gradient-to-b before:from-sec before:h-5'
         )}
       />

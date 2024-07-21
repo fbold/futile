@@ -18,12 +18,13 @@ export default function useDELETE<ResultType>(url: string, body?: {}) {
       if (response.status !== 200) {
         console.log(result, response)
         setError(result.message)
+        setLoading(false)
         return result.message as string
       } else {
         setSuccess(true)
+        setLoading(false)
         return result as ResultType
       }
-      setLoading(false)
     } catch (e) {
       setLoading(false)
       // client side fetch error

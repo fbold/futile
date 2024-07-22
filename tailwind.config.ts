@@ -21,6 +21,9 @@ const config: Config = {
     "bottom-3",
     "origin-right",
     "origin-left",
+    "bg-rd",
+    "bg-yw",
+    "bg-gn",
   ],
   theme: {
     extend: {
@@ -30,8 +33,8 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        pri: "#403532",
-        sec: "#292321",
+        pri: "#221d1c",
+        sec: "#0d0b0b",
         text: "#FFFFEB",
         dim: "#9ca3af",
 

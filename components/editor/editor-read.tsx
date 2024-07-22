@@ -19,7 +19,7 @@ const EditorRead = ({ content }: EditorReadProps) => {
     <EditorContent
       editor={editor}
       className={
-        "pb-20"
+        "pb-20 break-all"
         // "h-full"
         // 'before:absolute before:w-full before:bg-gradient-to-b before:from-sec before:h-5'
       }

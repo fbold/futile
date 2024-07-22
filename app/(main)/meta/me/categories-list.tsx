@@ -1,6 +1,6 @@
 "use client"
 import { TextButton } from "@/components/buttons/text-button"
-import Popup from "@/components/popups/empty"
+import InformationPopup from "@/components/popups/information"
 import usePopup from "@/hooks/usePopup"
 import { createCategory, deleteCategory } from "@/lib/actions/categories"
 import { CategorySchema, CategoryType } from "@/lib/validation"
@@ -40,6 +40,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     register: registerPopup,
   } = usePopup({
     onOK: handleDel,
+    type: "information",
   })
 
   const { register, setValue, handleSubmit } = useForm<CategoryType>({
@@ -86,7 +87,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
 
   return (
     <div className="flex flex-col items-center text-center w-full">
-      <Popup
+      <InformationPopup
         title={`Delete ${selected?.label}?`}
         message="All fuTiles of this category will become uncategorized."
         {...registerPopup}

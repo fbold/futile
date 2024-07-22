@@ -6,22 +6,22 @@ import useSkipTake from "@/hooks/useSkipTake"
 import type { Tile } from "@prisma/client"
 import { useRef, useState } from "react"
 
-type TileListProps = {
+type VoidTileListProps = {
   initialTiles: Tile[]
 }
 
-export default function TileList({ initialTiles }: TileListProps) {
+export default function VoidTileList({ initialTiles }: VoidTileListProps) {
   const [tiles, setTiles] = useState(initialTiles)
   const secondLastTile = useRef<HTMLSpanElement>(null)
 
   const { skipTake, takeMore } = useSkipTake([10, 20])
 
-  const { trigger } = useGET<{ tiles: Tile[] }>("/api/tile")
+  const { trigger } = useGET<{ tiles: Tile[] }>("/api/tile/void")
 
   const shouldLoadMore = useOnScreen(secondLastTile, async () => {
     console.log("on screen")
     const result = await trigger(
-      `/api/tile?skip=${skipTake[0]}&take=${skipTake[1]}`
+      `/api/tile/void?skip=${skipTake[0]}&take=${skipTake[1]}`
     )
     if (result?.tiles?.length) {
       setTiles((curr) => [

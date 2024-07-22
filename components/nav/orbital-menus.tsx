@@ -27,12 +27,12 @@ const voidOptions: OrbitalMenuOption[] = [
   {
     label: "random",
     value: "random",
-    className: "font-bold text-black",
+    // className: "font-bold text-black",
   },
   {
     label: "all",
-    value: "all",
-    className: "font-bold text-black",
+    value: "",
+    // className: "font-bold text-black",
   },
 ]
 
@@ -148,12 +148,12 @@ export default function OrbitalMenus({
         ref={voidMenuRef}
         options={voidOptions}
         onSettle={handleVoidSelect}
-        colour="black font-bold"
+        colour="white"
         pos="bl"
         rad={25}
         alpha={35}
-        thickness={2}
-        fill
+        thickness={1}
+        // fill
       />
     </>
   )

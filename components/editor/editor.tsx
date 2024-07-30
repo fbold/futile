@@ -19,9 +19,12 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
 // import { UseMutationState } from 'urql'
 import { MutationButton } from "@/components/buttons"
+import { useRef } from "react"
+import { localSave } from "@/lib/editor"
 
 type EditorProps = {
   onSave: (title: string, content?: string) => {}
+  category: string
   initialTitle?: string
   initialContent?: string
   loadingSave: boolean //UseMutationState
@@ -35,10 +38,13 @@ type PoemType = z.infer<typeof PoemSchema>
 
 const Editor = ({
   onSave,
+  category,
   initialTitle,
   initialContent,
   loadingSave,
 }: EditorProps) => {
+  const savingTimeout = useRef<NodeJS.Timeout | null>(null)
+
   const editor = useEditor({
     autofocus: true,
     editable: true,
@@ -58,12 +64,21 @@ const Editor = ({
         class: "px-2 pt-1 pb-3 min-h-full focus:outline-none",
       },
     },
+    onUpdate() {
+      if (savingTimeout.current) clearTimeout(savingTimeout.current)
+
+      savingTimeout.current = setTimeout(() => {
+        console.log("saving to localStorage")
+        localSave(editor?.getHTML() || "", getValues("title"), category)
+      }, 1000)
+    },
   })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<PoemType>({
     // resolver: zodResolver(PoemSchema),
     defaultValues: {

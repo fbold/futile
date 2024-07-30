@@ -22,7 +22,8 @@ export default function Write() {
     }
   }
 
-  const localSave = localStorage.getItem(category)
+  const localSave =
+    typeof window !== "undefined" ? localStorage.getItem(category) : null
   const { editorContent = "", title = "" } = localSave
     ? JSON.parse(localSave)
     : {}

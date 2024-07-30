@@ -19,9 +19,12 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
 // import { UseMutationState } from 'urql'
 import { MutationButton } from "@/components/buttons"
+import { useRef } from "react"
+import { localSave } from "@/lib/editor"
 
 type EditorProps = {
   onSave: (title: string, content?: string) => {}
+  category: string
   initialTitle?: string
   initialContent?: string
   loadingSave: boolean //UseMutationState
@@ -35,10 +38,13 @@ type PoemType = z.infer<typeof PoemSchema>
 
 const Editor = ({
   onSave,
+  category,
   initialTitle,
   initialContent,
   loadingSave,
 }: EditorProps) => {
+  const savingTimeout = useRef<NodeJS.Timeout | null>(null)
+
   const editor = useEditor({
     autofocus: true,
     editable: true,
@@ -55,8 +61,16 @@ const Editor = ({
     content: initialContent,
     editorProps: {
       attributes: {
-        class: "px-2 pt-1 pb-3 min-h-full focus:outline-none",
+        class: "px-2 pt-1 pb-32 min-h-full focus:outline-none break-words",
       },
+    },
+    onUpdate() {
+      if (savingTimeout.current) clearTimeout(savingTimeout.current)
+
+      savingTimeout.current = setTimeout(() => {
+        console.log("saving to localStorage")
+        localSave(editor?.getHTML() || "", getValues("title"), category)
+      }, 1000)
     },
   })
 
@@ -64,6 +78,7 @@ const Editor = ({
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<PoemType>({
     // resolver: zodResolver(PoemSchema),
     defaultValues: {
@@ -143,13 +158,7 @@ const Editor = ({
           save
         </MutationButton>
       </div>
-      <EditorContent
-        editor={editor}
-        className={clsx(
-          "pb-24 break-words"
-          // 'before:absolute before:w-full before:bg-gradient-to-b before:from-sec before:h-5'
-        )}
-      />
+      <EditorContent editor={editor} className="h-full" />
     </>
   )
 }

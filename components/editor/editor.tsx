@@ -61,7 +61,7 @@ const Editor = ({
     content: initialContent,
     editorProps: {
       attributes: {
-        class: "px-2 pt-1 pb-3 min-h-full focus:outline-none",
+        class: "px-2 pt-1 pb-32 min-h-full focus:outline-none break-words",
       },
     },
     onUpdate() {
@@ -158,13 +158,7 @@ const Editor = ({
           save
         </MutationButton>
       </div>
-      <EditorContent
-        editor={editor}
-        className={clsx(
-          "pb-24 break-words"
-          // 'before:absolute before:w-full before:bg-gradient-to-b before:from-sec before:h-5'
-        )}
-      />
+      <EditorContent editor={editor} className="h-full" />
     </>
   )
 }

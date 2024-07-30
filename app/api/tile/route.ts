@@ -9,6 +9,7 @@ import {
 import * as bcrypt from "bcrypt"
 import sanitizeHtml from "sanitize-html"
 import { htmlSanitizationOptions } from "@/lib/sanitization"
+import { Optional } from "@prisma/client/runtime/library"
 
 export type TileInput = {
   title: string
@@ -70,6 +71,46 @@ export async function POST(request: Request) {
         content: sanitizedContent,
         title: title,
         user_id: session.user.id,
+      },
+    })
+
+    return NextResponse.json(
+      {
+        tile: res,
+      },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.log(error)
+    return GenericErrorResponse
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await auth()
+    if (!session) return UnauthdResponse
+
+    const tileId = request.nextUrl.searchParams.get("id") as string
+    if (!tileId) return UserErrorResponse("No ID provided")
+
+    const data = (await request.json()) as Optional<TileInput>
+    const { title, content, category_id } = data
+
+    const sanitizedContent = sanitizeHtml(
+      content || "",
+      htmlSanitizationOptions
+    )
+
+    const res = await prisma.tile.update({
+      where: {
+        id: tileId,
+        user_id: session.user.id,
+      },
+      data: {
+        category_id: category_id,
+        content: sanitizedContent,
+        title: title,
       },
     })
 

@@ -14,7 +14,7 @@ const menuOptions = [
   { label: "edit", value: "edit" },
   { label: "delete", value: "delete" },
   { label: "category", value: "category" },
-  { label: "publish to void", value: "void" },
+  { label: "void", value: "void" },
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
@@ -73,7 +73,9 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
   const handleSettle = useCallback(
     (opt: any) => {
       console.log(opt)
-      if (opt.value === "delete") {
+      if (opt.value === "edit") {
+        router.push(`/edit/${tile.id}`)
+      } else if (opt.value === "delete") {
         showDeletePopup()
       } else if (opt.value === "void") {
         showVoidPopup()
@@ -86,12 +88,13 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
     <>
       <OrbitalMenu
         ref={menuRef}
-        colour="text-dim"
+        colour="white"
         pos="tr"
-        rad={24}
-        alpha={36}
+        rad={26}
+        alpha={30}
         onSettle={handleSettle}
         options={menuOptions}
+        titleOption="—"
       />
       <RequestPopup
         title="delete document"

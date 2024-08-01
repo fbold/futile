@@ -21,15 +21,21 @@ export default async function Me() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      <div className="sm:text-left w-1/3 sm:w-1/4 md:w-1/6 lg:w-2/12 sm:whitespace-break-spaces text-justify tracking-widest">
+      <div className="sm:text-left max-w-[10rem] sm:whitespace-break-spaces text-justify tracking-widest">
         <p>
           <span className="text-rd">u s e r n a m e</span>
           {` // `}
+          <br />
           {user?.username?.split("").join(" ")}
-          {` // `}
+          <br />
           <span className="text-rd">j o i n e d</span>
           {` // `}
-          {user?.createdAt.toDateString().toLowerCase().split("").join(" ")}
+          <br />
+          {user?.createdAt
+            .toLocaleDateString("en-UK")
+            .replaceAll("/", "")
+            .split("")
+            .join(" ")}
         </p>
         <br />
         {user?.categories ? (

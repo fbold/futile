@@ -18,6 +18,7 @@ export default function EditClient({
   const router = useRouter()
   const params = useSearchParams()
   const category = params.get("c") || ""
+  const localStorageKey = tileId + "-edit"
 
   const { trigger, loading, success, error } = usePATCH<Partial<Tile>, any>(
     `/api/tile?id=${tileId}`
@@ -27,9 +28,17 @@ export default function EditClient({
     const result = await trigger({ title, content })
 
     if (result) {
+      localStorage.removeItem(localStorageKey)
       router.push(`/read/${result.tile.id}`)
     }
   }
+
+  // override fetched tile content with localstorage in case something has been saved
+  // locally on top of it, quicksave
+  const localSave =
+    typeof window !== "undefined" ? localStorage.getItem(localStorageKey) : null
+  const { editorContent: editorContent_local = "", title: title_local = "" } =
+    localSave ? JSON.parse(localSave) : {}
 
   return (
     // <div className="flex justify-center h-full max-h-full scroll">
@@ -40,9 +49,9 @@ export default function EditClient({
       <Editor
         onSave={handleSave}
         loadingSave={loading}
-        category={category}
-        initialContent={editorContent}
-        initialTitle={title}
+        initialContent={editorContent_local || editorContent}
+        initialTitle={title_local || title}
+        saveTo={localStorageKey}
       />
     </div>
     // </div>

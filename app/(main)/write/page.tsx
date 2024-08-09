@@ -8,6 +8,7 @@ export default function Write() {
   const router = useRouter()
   const params = useSearchParams()
   const category = params.get("c") || ""
+  const localStorageKey = category + "-write"
 
   const { trigger, loading, success, error } = usePOST<Partial<Tile>, any>(
     "/api/tile"
@@ -18,13 +19,13 @@ export default function Write() {
     const result = await trigger({ title, content, category_id: category })
 
     if (result) {
-      localStorage.removeItem(category)
+      localStorage.removeItem(localStorageKey)
       router.push(`/read/${result.tile.id}`)
     }
   }
 
   const localSave =
-    typeof window !== "undefined" ? localStorage.getItem(category) : null
+    typeof window !== "undefined" ? localStorage.getItem(localStorageKey) : null
   const { editorContent = "", title = "" } = localSave
     ? JSON.parse(localSave)
     : {}
@@ -38,9 +39,9 @@ export default function Write() {
       <Editor
         onSave={handleSave}
         loadingSave={loading}
-        category={category}
         initialContent={editorContent}
         initialTitle={title}
+        saveTo={localStorageKey}
       />
     </div>
     // </div>

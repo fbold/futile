@@ -18,6 +18,7 @@ export default function Write() {
     const result = await trigger({ title, content, category_id: category })
 
     if (result) {
+      localStorage.removeItem(category)
       router.push(`/read/${result.tile.id}`)
     }
   }

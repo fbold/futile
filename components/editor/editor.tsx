@@ -24,10 +24,10 @@ import { localSave } from "@/lib/editor"
 
 type EditorProps = {
   onSave: (title: string, content?: string) => {}
-  category: string
   initialTitle?: string
   initialContent?: string
   loadingSave: boolean //UseMutationState
+  saveTo?: string
 }
 
 const PoemSchema = z.object({
@@ -38,10 +38,10 @@ type PoemType = z.infer<typeof PoemSchema>
 
 const Editor = ({
   onSave,
-  category,
   initialTitle,
   initialContent,
   loadingSave,
+  saveTo,
 }: EditorProps) => {
   const savingTimeout = useRef<NodeJS.Timeout | null>(null)
 
@@ -64,12 +64,13 @@ const Editor = ({
         class: "px-2 pt-1 pb-32 min-h-full focus:outline-none break-words",
       },
     },
-    onUpdate() {
+    onUpdate(e) {
+      if (!saveTo) return
       if (savingTimeout.current) clearTimeout(savingTimeout.current)
 
       savingTimeout.current = setTimeout(() => {
         console.log("saving to localStorage")
-        localSave(editor?.getHTML() || "", getValues("title"), category)
+        localSave(e.editor?.getHTML() || "", getValues("title"), saveTo)
       }, 1000)
     },
   })

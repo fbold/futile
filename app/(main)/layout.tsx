@@ -1,5 +1,5 @@
 import NavContainer from "@/components/nav/nav-container"
-
+import { version } from "@/package.json"
 type Props = {
   children?: JSX.Element
 }
@@ -12,6 +12,9 @@ export default async function MainLayout({ children }: Props) {
       <NavContainer />
       <main className="absolute bg-sec dark:bg-pri-d flex-grow h-full w-full overflow-x-clip flex items-center justify-center">
         {children}
+        <p className="font-mono absolute rotate-90 text-text right-full translate-x-1/2 bottom-40 origin-bottom-left hover:translate-x-full transition-transform pt-6">
+          ({version})
+        </p>
       </main>
     </>
   )

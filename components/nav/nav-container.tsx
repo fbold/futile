@@ -9,17 +9,11 @@ export default async function NavContainer() {
   const categories = await prisma.category.findMany({
     where: { user_id: session.user.id },
   })
-  if (!categories) redirect("/login")
 
   return (
     <nav className="fixed flex z-30 w-full h-full pointer-events-none overflow-x-clip">
-      <div className="top-0 w-full h-[4.2rem] bg-gradient-to-b from-pri via-60% via-pri to-transparent pointer-events-none"></div>
-      <OrbitalMenus
-        categories={categories.map((cat) => ({
-          label: cat.label,
-          value: cat.id,
-        }))}
-      />
+      <div className="top-0 w-full h-[4.2rem] bg-gradient-to-b from-sec via-60% via-sec to-transparent pointer-events-none"></div>
+      <OrbitalMenus categories={categories} />
     </nav>
   )
 }

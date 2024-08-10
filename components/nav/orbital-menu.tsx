@@ -1,5 +1,6 @@
 "use client"
 import clsx from "clsx"
+import Link from "next/link"
 import {
   Fragment,
   Ref,
@@ -93,11 +94,16 @@ const torb = {
   bl: "bottom",
 }
 
-export type OrbitalMenuOption = {
-  value: string
+type MenuOptionCore = {
   label: string
+  id: string
   className?: string
+  isTitle?: boolean
+  action?: string
+  href?: string
 }
+
+export type OrbitalMenuOption = MenuOptionCore
 
 type OrbitalMenuProps = {
   titleOption?: string
@@ -134,14 +140,12 @@ const OrbitalMenu = (
   const options = useMemo(
     () =>
       titleOption
-        ? [{ label: titleOption, value: "__" }, ...options_]
+        ? [{ label: titleOption, id: "____", isTitle: true }, ...options_]
         : options_,
     []
   )
   const scrollRef = useRef<HTMLDivElement>(null)
-  const categoriesRefs = useRef(
-    options.map((c) => createRef<HTMLParagraphElement>())
-  )
+  const categoriesRefs = useRef(options.map((c) => createRef<HTMLDivElement>()))
   const hideTimeout = useRef<null | NodeJS.Timeout>()
   const settleTimeout = useRef<null | NodeJS.Timeout>()
   const [activeOption, setActiveOption] = useState(0)
@@ -201,7 +205,8 @@ const OrbitalMenu = (
     // setActiveCategory(tileIdx)
     // console.log(titleOption, "Calling categorySelect from handleTileClick()")
     handleCategorySelect(optnIdx)
-    if (options[optnIdx].value !== "__")
+    // make sure it isnt the title and it is an action option (not href)
+    if (!options[optnIdx].isTitle && options[optnIdx].action)
       // skip setting if home option
       onSettle(options[optnIdx])
 
@@ -221,7 +226,7 @@ const OrbitalMenu = (
           // setAngularOffset(-i * alpha)
           // console.log(titleOption, "Calling categorySelect from settleScroll 1")
           handleCategorySelect(i)
-          if (options[i].value !== "__")
+          if (!options[i].isTitle)
             // skip setting if home option
             onSettle(options[i])
           return
@@ -317,7 +322,7 @@ const OrbitalMenu = (
             //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
-                key={option.value}
+                key={option.id}
                 className={clsx(
                   `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
                   "absolute h-0 cursor-pointer transition-opacity duration-700",
@@ -333,26 +338,45 @@ const OrbitalMenu = (
                 }}
                 ref={categoriesRefs.current[i]}
               >
-                <p
-                  className={clsx(
-                    "-translate-y-1/2 whitespace-nowrap",
-                    shown && option.value !== "__"
-                      ? "pointer-events-auto"
-                      : "pointer-events-none",
-                    activeOption === i && `text-${colour}`,
-                    option.className || ""
-                    // category.value === "__" && "text-dim"
-                  )}
-                  onClick={(e) => handleTileClick(i)}
-                  ref={categoriesRefs.current[i]}
-                >
-                  {option.label}
-                </p>
+                {option.href ? (
+                  <Link
+                    href={option.href}
+                    className={clsx(
+                      "-translate-y-1/2 whitespace-nowrap block",
+                      shown && !option.isTitle
+                        ? "pointer-events-auto"
+                        : "pointer-events-none",
+                      activeOption === i && `text-${colour}`,
+                      option.className || ""
+                      // category.value === "__" && "text-dim"
+                    )}
+                    onClick={(e) => handleTileClick(i)}
+                    ref={categoriesRefs.current[i] as any}
+                  >
+                    {option.label}
+                  </Link>
+                ) : (
+                  <p
+                    className={clsx(
+                      "-translate-y-1/2 whitespace-nowrap",
+                      shown && !option.isTitle
+                        ? "pointer-events-auto"
+                        : "pointer-events-none",
+                      activeOption === i && `text-${colour}`,
+                      option.className || ""
+                      // category.value === "__" && "text-dim"
+                    )}
+                    onClick={(e) => handleTileClick(i)}
+                    ref={categoriesRefs.current[i]}
+                  >
+                    {option.label}
+                  </p>
+                )}
               </div>
             )
           })}
         </div>
-        {pos === "tl" && options[activeOption].value !== "__" ? (
+        {pos === "tl" && !options[activeOption].isTitle ? (
           <div className="absolute origin-left flex flex-col">
             <p
               className="transition-transform duration-1000 "
@@ -403,10 +427,10 @@ const OrbitalMenu = (
             onMouseLeave={hideCategories}
           >
             <div className="h-full" />
-            {options.map((cat) => (
-              <Fragment key={cat.value}>
-                <div key={cat + "a"} className="h-full" />
-                <div key={cat + "b"} className="h-full" />
+            {options.map((opt) => (
+              <Fragment key={opt.id}>
+                <div key={opt + "a"} className="h-full" />
+                <div key={opt + "b"} className="h-full" />
               </Fragment>
             ))}
           </div>

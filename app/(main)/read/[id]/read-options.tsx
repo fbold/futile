@@ -1,7 +1,10 @@
 "use client"
 
 import { DefaultInput } from "@/components/input"
-import OrbitalMenu, { OrbitalMenuHandle } from "@/components/nav/orbital-menu"
+import OrbitalMenu, {
+  OrbitalMenuHandle,
+  OrbitalMenuOption,
+} from "@/components/nav/orbital-menu"
 import RequestPopup from "@/components/popups/request"
 import useDELETE from "@/hooks/fetchers/useDELETE"
 import usePATCH from "@/hooks/fetchers/usePATCH"
@@ -10,11 +13,11 @@ import { Tile } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
 
-const menuOptions = [
-  { label: "edit", value: "edit" },
-  { label: "delete", value: "delete" },
-  { label: "category", value: "category" },
-  { label: "void", value: "void" },
+const menuOptions: OrbitalMenuOption[] = [
+  { label: "edit", id: "edit", action: "edit" },
+  { label: "delete", id: "delete", action: "delete" },
+  { label: "category", id: "category", action: "category" },
+  { label: "void", id: "void", action: "void" },
 ]
 
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
@@ -71,13 +74,13 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
   }, [successDelete, successVoid, errorDelete, errorVoid])
 
   const handleSettle = useCallback(
-    (opt: any) => {
+    (opt: OrbitalMenuOption) => {
       console.log(opt)
-      if (opt.value === "edit") {
+      if (opt.action === "edit") {
         router.push(`/edit/${tile.id}`)
-      } else if (opt.value === "delete") {
+      } else if (opt.action === "delete") {
         showDeletePopup()
-      } else if (opt.value === "void") {
+      } else if (opt.action === "void") {
         showVoidPopup()
       }
     },
@@ -95,6 +98,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         onSettle={handleSettle}
         options={menuOptions}
         titleOption="—"
+        showOffscreenIndicators={false}
       />
       <RequestPopup
         title="delete document"

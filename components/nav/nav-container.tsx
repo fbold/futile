@@ -11,9 +11,10 @@ export default async function NavContainer() {
   })
 
   return (
-    <nav className="fixed flex z-30 w-full h-full pointer-events-none overflow-x-clip">
-      <div className="top-0 w-full h-[4.2rem] bg-gradient-to-b from-sec via-60% via-sec to-transparent pointer-events-none"></div>
+    <nav className="fixed z-30 w-full h-full pointer-events-none overflow-x-clip">
+      <div className="fixed top-0 w-full h-[4.2rem] bg-gradient-to-b from-sec via-60% via-sec to-transparent pointer-events-none"></div>
       <OrbitalMenus categories={categories} />
+      <div className="-z-10 fixed bottom-0 w-full h-[4.2rem] bg-gradient-to-t from-sec via-60% via-sec to-transparent pointer-events-none"></div>
     </nav>
   )
 }

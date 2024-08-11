@@ -38,7 +38,7 @@ export default function TileList({ initialTiles }: TileListProps) {
 
   return (
     <div className="relative w-full h-full gap-2 overflow-scroll">
-      <div className="flex flex-col w-full gap-2 px-12 py-12">
+      <div className="flex flex-col w-full gap-2 py-12">
         {tiles.map((tile) => (
           <TilePreview key={tile.id} tile={tile}></TilePreview>
         ))}

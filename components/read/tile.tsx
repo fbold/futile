@@ -83,7 +83,7 @@ const TilePreview = memo(({ tile }: Props) => {
       </div>
       {fadeText ? (
         <>
-          <span className="absolute rounded-b-lg -ml-2 w-full h-32 pointer-events-none bottom-0 bg-gradient-to-t from-pri from-5% dark:from-pri-d"></span>
+          <span className="absolute rounded-b-lg -ml-2 w-full h-32 pointer-events-none bottom-0 bg-gradient-to-t from-sec from-5% to-transparent"></span>
           <Link
             href={`/read/${encodeURIComponent(tile.id ?? "")}`}
             className="absolute bottom-2 left-1/2 -translate-x-1/2"

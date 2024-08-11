@@ -1,4 +1,5 @@
 "use client"
+import { IconChevronUp } from "@tabler/icons-react"
 import clsx from "clsx"
 import Link from "next/link"
 import {
@@ -151,16 +152,24 @@ const OrbitalMenu = (
   const [activeOption, setActiveOption] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
+  // lkeeps track of which offscreen indicator (arrow) to show
+  // first one is start (direction of title option)
+  const [offscreenIndicator, setOffscreenIndicator] = useState([false, false])
 
   useImperativeHandle(
     ref,
     () => {
       return {
         home() {
+          // clear the indicator since can't be anything beyond
+          setOffscreenIndicator((curr) => [false, curr[1]])
           handleCategorySelect(0)
           setShown(false)
         },
         to(idx: number) {
+          // if not going to title option, add start indicator
+          if (idx > 0 || (titleOption && idx === 0))
+            setOffscreenIndicator((curr) => [true, curr[1]])
           handleCategorySelect(idx + 1)
         },
       }
@@ -243,9 +252,18 @@ const OrbitalMenu = (
     [options, onSettle]
   )
 
-  // useEffect(() => {
-  //   console.log("ON SETTLE CHANGING---------")
-  // }, [options])
+  const determineOffscreen = (angularOffset: number) => {
+    // if angular offset is (approx) 0, nothing is offscreen in start direction
+    // otherwise it is, as soon as there is angular offset, options start to go offscreen
+    if (Math.round(angularOffset * 100) == 0)
+      setOffscreenIndicator((curr) => [false, curr[1]])
+    else setOffscreenIndicator((curr) => [true, curr[1]])
+    // If the total angular range of options is bigger than 90 degrees,
+    // taking into account the angular offset, then options will be offscreen
+    if ((options.length - 1) * alpha - Math.abs(angularOffset) > 90)
+      setOffscreenIndicator((curr) => [curr[0], true])
+    else setOffscreenIndicator((curr) => [curr[0], false])
+  }
 
   const handleScroll = useCallback(
     (event: Event) => {
@@ -267,6 +285,9 @@ const OrbitalMenu = (
         SETTLE_DELAY,
         angularOffset_
       )
+
+      // show or hide offscreen indicators
+      determineOffscreen(angularOffset_)
     },
     [alpha, options.length, pos, settleScroll, shown, titleOption]
   )
@@ -283,6 +304,8 @@ const OrbitalMenu = (
     })
     const ref = scrollRef.current
     ref.addEventListener("scroll", handleScroll, { passive: true })
+    // show or hide offscreen indicators initially
+    determineOffscreen(angularOffset)
 
     return () => {
       ref?.removeEventListener("scroll", handleScroll)
@@ -305,6 +328,30 @@ const OrbitalMenu = (
   return (
     <>
       <div className="absolute h-full w-full pointer-events-none">
+        <IconChevronUp
+          className={clsx(
+            "absolute w-4 h-4 transition-opacity duration-200 text-text",
+            offscreenIndicator[0] && shown ? "opacity-100" : "opacity-0",
+            `${torb[pos]}-0`,
+            `${pormx[pos]}translate-x-full ${
+              torb[pos] === "bottom" ? "rotate-180" : ""
+            }`
+          )}
+          style={
+            rorl[pos] === "right" ? { right: `${rad}px` } : { left: `${rad}px` }
+          }
+        />
+        <IconChevronUp
+          className={clsx(
+            "absolute w-4 h-4 transition-opacity duration-200 text-text",
+            offscreenIndicator[1] && shown ? "opacity-100" : "opacity-0",
+            `${rorl[pos]}-0`,
+            `${pormy[pos]}translate-y-full ${pormx[pos]}rotate-90`
+          )}
+          style={
+            torb[pos] === "top" ? { top: `${rad}px` } : { bottom: `${rad}px` }
+          }
+        />
         <div
           className={`${torb[pos]}-3 ${rorl[pos]}-3 pointer-events-auto
           absolute transition-transform aspect-square origin-center`}
@@ -376,8 +423,13 @@ const OrbitalMenu = (
             )
           })}
         </div>
-        {pos === "tl" && !options[activeOption].isTitle ? (
-          <div className="absolute origin-left flex flex-col">
+        {pos === "tl" ? (
+          <div
+            className={clsx(
+              "absolute origin-left flex flex-col transition-opacity duration-300",
+              options[activeOption].isTitle ? "opacity-0" : "opacity-100"
+            )}
+          >
             <p
               className="transition-transform duration-1000 "
               style={{

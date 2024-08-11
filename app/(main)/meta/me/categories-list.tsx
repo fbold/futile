@@ -89,7 +89,7 @@ export default function CategoriesList({ categories }: CategoriesListProps) {
     <div className="flex flex-col items-center text-center w-full">
       <InformationPopup
         title={`Delete ${selected?.label}?`}
-        message="All fuTiles of this category will become uncategorized."
+        message="All documents of this category will become uncategorized."
         {...registerPopup}
       />
       <p className="underline text-rd">categories</p>

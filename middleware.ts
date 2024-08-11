@@ -13,7 +13,7 @@ const handleRefresh = async (req: NextRequest): Promise<NextResponse> => {
       {
         method: "POST",
         body: JSON.stringify({
-          refreshToken: cookies().get("futile-refresh-token")?.value,
+          refreshToken: cookies().get("futile-refresh-token")?.value || null,
         }),
       }
     )

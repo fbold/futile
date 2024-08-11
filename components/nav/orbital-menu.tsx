@@ -1,5 +1,7 @@
 "use client"
+import { IconChevronUp } from "@tabler/icons-react"
 import clsx from "clsx"
+import Link from "next/link"
 import {
   Fragment,
   Ref,
@@ -93,11 +95,16 @@ const torb = {
   bl: "bottom",
 }
 
-export type OrbitalMenuOption = {
-  value: string
+type MenuOptionCore = {
   label: string
+  id: string
   className?: string
+  isTitle?: boolean
+  action?: string
+  href?: string
 }
+
+export type OrbitalMenuOption = MenuOptionCore
 
 type OrbitalMenuProps = {
   titleOption?: string
@@ -134,29 +141,35 @@ const OrbitalMenu = (
   const options = useMemo(
     () =>
       titleOption
-        ? [{ label: titleOption, value: "__" }, ...options_]
+        ? [{ label: titleOption, id: "____", isTitle: true }, ...options_]
         : options_,
     []
   )
   const scrollRef = useRef<HTMLDivElement>(null)
-  const categoriesRefs = useRef(
-    options.map((c) => createRef<HTMLParagraphElement>())
-  )
+  const categoriesRefs = useRef(options.map((c) => createRef<HTMLDivElement>()))
   const hideTimeout = useRef<null | NodeJS.Timeout>()
   const settleTimeout = useRef<null | NodeJS.Timeout>()
   const [activeOption, setActiveOption] = useState(0)
   const [angularOffset, setAngularOffset] = useState(0)
   const [shown, setShown] = useState(false)
+  // lkeeps track of which offscreen indicator (arrow) to show
+  // first one is start (direction of title option)
+  const [offscreenIndicator, setOffscreenIndicator] = useState([false, false])
 
   useImperativeHandle(
     ref,
     () => {
       return {
         home() {
+          // clear the indicator since can't be anything beyond
+          setOffscreenIndicator((curr) => [false, curr[1]])
           handleCategorySelect(0)
           setShown(false)
         },
         to(idx: number) {
+          // if not going to title option, add start indicator
+          if (idx > 0 || (titleOption && idx === 0))
+            setOffscreenIndicator((curr) => [true, curr[1]])
           handleCategorySelect(idx + 1)
         },
       }
@@ -201,7 +214,8 @@ const OrbitalMenu = (
     // setActiveCategory(tileIdx)
     // console.log(titleOption, "Calling categorySelect from handleTileClick()")
     handleCategorySelect(optnIdx)
-    if (options[optnIdx].value !== "__")
+    // make sure it isnt the title and it is an action option (not href)
+    if (!options[optnIdx].isTitle && options[optnIdx].action)
       // skip setting if home option
       onSettle(options[optnIdx])
 
@@ -221,7 +235,7 @@ const OrbitalMenu = (
           // setAngularOffset(-i * alpha)
           // console.log(titleOption, "Calling categorySelect from settleScroll 1")
           handleCategorySelect(i)
-          if (options[i].value !== "__")
+          if (!options[i].isTitle)
             // skip setting if home option
             onSettle(options[i])
           return
@@ -238,9 +252,18 @@ const OrbitalMenu = (
     [options, onSettle]
   )
 
-  // useEffect(() => {
-  //   console.log("ON SETTLE CHANGING---------")
-  // }, [options])
+  const determineOffscreen = (angularOffset: number) => {
+    // if angular offset is (approx) 0, nothing is offscreen in start direction
+    // otherwise it is, as soon as there is angular offset, options start to go offscreen
+    if (Math.round(angularOffset * 100) == 0)
+      setOffscreenIndicator((curr) => [false, curr[1]])
+    else setOffscreenIndicator((curr) => [true, curr[1]])
+    // If the total angular range of options is bigger than 90 degrees,
+    // taking into account the angular offset, then options will be offscreen
+    if ((options.length - 1) * alpha - Math.abs(angularOffset) > 90)
+      setOffscreenIndicator((curr) => [curr[0], true])
+    else setOffscreenIndicator((curr) => [curr[0], false])
+  }
 
   const handleScroll = useCallback(
     (event: Event) => {
@@ -262,6 +285,9 @@ const OrbitalMenu = (
         SETTLE_DELAY,
         angularOffset_
       )
+
+      // show or hide offscreen indicators
+      determineOffscreen(angularOffset_)
     },
     [alpha, options.length, pos, settleScroll, shown, titleOption]
   )
@@ -278,6 +304,8 @@ const OrbitalMenu = (
     })
     const ref = scrollRef.current
     ref.addEventListener("scroll", handleScroll, { passive: true })
+    // show or hide offscreen indicators initially
+    determineOffscreen(angularOffset)
 
     return () => {
       ref?.removeEventListener("scroll", handleScroll)
@@ -300,9 +328,33 @@ const OrbitalMenu = (
   return (
     <>
       <div className="absolute h-full w-full pointer-events-none">
+        <IconChevronUp
+          className={clsx(
+            "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
+            offscreenIndicator[0] && shown ? "opacity-100" : "opacity-0",
+            `${torb[pos]}-0`,
+            `${pormx[pos]}translate-x-full ${
+              torb[pos] === "bottom" ? "rotate-180" : ""
+            }`
+          )}
+          style={
+            rorl[pos] === "right" ? { right: `${rad}px` } : { left: `${rad}px` }
+          }
+        />
+        <IconChevronUp
+          className={clsx(
+            "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
+            offscreenIndicator[1] && shown ? "opacity-100" : "opacity-0",
+            `${rorl[pos]}-0`,
+            `${pormy[pos]}translate-y-full ${pormx[pos]}rotate-90`
+          )}
+          style={
+            torb[pos] === "top" ? { top: `${rad}px` } : { bottom: `${rad}px` }
+          }
+        />
         <div
           className={`${torb[pos]}-3 ${rorl[pos]}-3 pointer-events-auto
-          absolute transition-transform aspect-square origin-center`}
+          absolute transition-transform aspect-square origin-center z-10`}
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
           }}
@@ -317,13 +369,11 @@ const OrbitalMenu = (
             //   activeCategory === i ? { ref: activeCategoryRef } : {}
             return (
               <div
-                key={option.value}
+                key={option.id}
                 className={clsx(
                   `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
                   "absolute h-0 cursor-pointer transition-opacity duration-700",
-                  shown || i === activeOption
-                    ? "opacity-100"
-                    : "opacity-0 delay-200",
+                  shown || i === activeOption ? "opacity-100" : "opacity-0",
                   activeOption === i && `text-${colour}`
                 )}
                 style={{
@@ -333,27 +383,51 @@ const OrbitalMenu = (
                 }}
                 ref={categoriesRefs.current[i]}
               >
-                <p
-                  className={clsx(
-                    "-translate-y-1/2 whitespace-nowrap",
-                    shown && option.value !== "__"
-                      ? "pointer-events-auto"
-                      : "pointer-events-none",
-                    activeOption === i && `text-${colour}`,
-                    option.className || ""
-                    // category.value === "__" && "text-dim"
-                  )}
-                  onClick={(e) => handleTileClick(i)}
-                  ref={categoriesRefs.current[i]}
-                >
-                  {option.label}
-                </p>
+                {option.href ? (
+                  <Link
+                    href={option.href}
+                    className={clsx(
+                      "-translate-y-1/2 whitespace-nowrap block",
+                      shown && !option.isTitle
+                        ? "pointer-events-auto"
+                        : "pointer-events-none",
+                      activeOption === i && `text-${colour}`,
+                      option.className || ""
+                      // category.value === "__" && "text-dim"
+                    )}
+                    onClick={(e) => handleTileClick(i)}
+                    ref={categoriesRefs.current[i] as any}
+                  >
+                    {option.label}
+                  </Link>
+                ) : (
+                  <p
+                    className={clsx(
+                      "-translate-y-1/2 whitespace-nowrap",
+                      shown && !option.isTitle
+                        ? "pointer-events-auto"
+                        : "pointer-events-none",
+                      activeOption === i && `text-${colour}`,
+                      option.className || ""
+                      // category.value === "__" && "text-dim"
+                    )}
+                    onClick={(e) => handleTileClick(i)}
+                    ref={categoriesRefs.current[i]}
+                  >
+                    {option.label}
+                  </p>
+                )}
               </div>
             )
           })}
         </div>
-        {pos === "tl" && options[activeOption].value !== "__" ? (
-          <div className="absolute origin-left flex flex-col">
+        {pos === "tl" ? (
+          <div
+            className={clsx(
+              "absolute origin-left flex flex-col transition-opacity duration-300",
+              options[activeOption].isTitle ? "opacity-0" : "opacity-100"
+            )}
+          >
             <p
               className="transition-transform duration-1000 "
               style={{
@@ -387,6 +461,19 @@ const OrbitalMenu = (
         ${pormx[pos]}translate-x-1/2 ${pormy[pos]}translate-y-1/2
         pointer-events-auto`}
       >
+        {/* This is the backdrop to increase visibility of menu options when drawn over text */}
+        <div
+          className={clsx(
+            `absolute ${pormy[pos]}${torb[pos]}-0 ${pormx[pos]}${rorl[pos]}-0 ${pormx[pos]}translate-x-1/4 ${pormy[pos]}translate-y-1/4 pointer-events-none`,
+            "-z-10 aspect-square rounded-full scale-0 transition-transform duration-300",
+            "bg-gradient-radial from-sec via-sec via-50% to-transparent",
+            shown ? "scale-100" : ""
+          )}
+          style={{
+            width: `${5 * rad - 10}px`,
+            outlineWidth: thickness + "px",
+          }}
+        ></div>
         <div
           className={clsx(
             `relative ${torb[pos]}-0 ${rorl[pos]}-0`,
@@ -396,6 +483,7 @@ const OrbitalMenu = (
           )}
           style={{ width: `${2 * rad - 10}px`, outlineWidth: thickness + "px" }}
         >
+          {/* This is what allows natural scrolling, amount of scroll is proportional to options length */}
           <div
             className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"
             ref={scrollRef}
@@ -403,10 +491,10 @@ const OrbitalMenu = (
             onMouseLeave={hideCategories}
           >
             <div className="h-full" />
-            {options.map((cat) => (
-              <Fragment key={cat.value}>
-                <div key={cat + "a"} className="h-full" />
-                <div key={cat + "b"} className="h-full" />
+            {options.map((opt) => (
+              <Fragment key={opt.id}>
+                <div key={opt + "a"} className="h-full" />
+                <div key={opt + "b"} className="h-full" />
               </Fragment>
             ))}
           </div>

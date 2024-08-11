@@ -354,7 +354,7 @@ const OrbitalMenu = (
         />
         <div
           className={`${torb[pos]}-3 ${rorl[pos]}-3 pointer-events-auto
-          absolute transition-transform aspect-square origin-center`}
+          absolute transition-transform aspect-square origin-center z-10`}
           style={{
             transform: `rotateZ(${angularOffset}deg)`,
           }}
@@ -373,9 +373,7 @@ const OrbitalMenu = (
                 className={clsx(
                   `${torb[pos]}-0 ${rorl[pos]}-0 origin-${origin[pos]}`,
                   "absolute h-0 cursor-pointer transition-opacity duration-700",
-                  shown || i === activeOption
-                    ? "opacity-100"
-                    : "opacity-0 delay-200",
+                  shown || i === activeOption ? "opacity-100" : "opacity-0",
                   activeOption === i && `text-${colour}`
                 )}
                 style={{
@@ -463,6 +461,19 @@ const OrbitalMenu = (
         ${pormx[pos]}translate-x-1/2 ${pormy[pos]}translate-y-1/2
         pointer-events-auto`}
       >
+        {/* This is the backdrop to increase visibility of menu options when drawn over text */}
+        <div
+          className={clsx(
+            `absolute ${pormy[pos]}${torb[pos]}-0 ${pormx[pos]}${rorl[pos]}-0 ${pormx[pos]}translate-x-1/4 ${pormy[pos]}translate-y-1/4 pointer-events-none`,
+            "-z-10 aspect-square rounded-full scale-0 transition-transform duration-300",
+            "bg-gradient-radial from-sec via-sec via-50% to-transparent",
+            shown ? "scale-100" : ""
+          )}
+          style={{
+            width: `${5 * rad - 10}px`,
+            outlineWidth: thickness + "px",
+          }}
+        ></div>
         <div
           className={clsx(
             `relative ${torb[pos]}-0 ${rorl[pos]}-0`,
@@ -472,6 +483,7 @@ const OrbitalMenu = (
           )}
           style={{ width: `${2 * rad - 10}px`, outlineWidth: thickness + "px" }}
         >
+          {/* This is what allows natural scrolling, amount of scroll is proportional to options length */}
           <div
             className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"
             ref={scrollRef}

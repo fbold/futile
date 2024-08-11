@@ -116,6 +116,7 @@ type OrbitalMenuProps = {
   alpha?: number
   thickness?: number
   fill?: boolean
+  showOffscreenIndicators?: boolean
 }
 
 export type OrbitalMenuHandle = {
@@ -134,6 +135,7 @@ const OrbitalMenu = (
     alpha = ALPHA,
     thickness = 1,
     fill = false,
+    showOffscreenIndicators = true,
   }: OrbitalMenuProps,
   ref: Ref<OrbitalMenuHandle>
 ) => {
@@ -162,13 +164,17 @@ const OrbitalMenu = (
       return {
         home() {
           // clear the indicator since can't be anything beyond
-          setOffscreenIndicator((curr) => [false, curr[1]])
+          if (showOffscreenIndicators)
+            setOffscreenIndicator((curr) => [false, curr[1]])
           handleCategorySelect(0)
           setShown(false)
         },
         to(idx: number) {
           // if not going to title option, add start indicator
-          if (idx > 0 || (titleOption && idx === 0))
+          if (
+            showOffscreenIndicators &&
+            (idx > 0 || (titleOption && idx === 0))
+          )
             setOffscreenIndicator((curr) => [true, curr[1]])
           handleCategorySelect(idx + 1)
         },
@@ -253,6 +259,7 @@ const OrbitalMenu = (
   )
 
   const determineOffscreen = (angularOffset: number) => {
+    if (!showOffscreenIndicators) return
     // if angular offset is (approx) 0, nothing is offscreen in start direction
     // otherwise it is, as soon as there is angular offset, options start to go offscreen
     if (Math.round(angularOffset * 100) == 0)
@@ -328,30 +335,38 @@ const OrbitalMenu = (
   return (
     <>
       <div className="absolute h-full w-full pointer-events-none">
-        <IconChevronUp
-          className={clsx(
-            "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
-            offscreenIndicator[0] && shown ? "opacity-100" : "opacity-0",
-            `${torb[pos]}-0`,
-            `${pormx[pos]}translate-x-full ${
-              torb[pos] === "bottom" ? "rotate-180" : ""
-            }`
-          )}
-          style={
-            rorl[pos] === "right" ? { right: `${rad}px` } : { left: `${rad}px` }
-          }
-        />
-        <IconChevronUp
-          className={clsx(
-            "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
-            offscreenIndicator[1] && shown ? "opacity-100" : "opacity-0",
-            `${rorl[pos]}-0`,
-            `${pormy[pos]}translate-y-full ${pormx[pos]}rotate-90`
-          )}
-          style={
-            torb[pos] === "top" ? { top: `${rad}px` } : { bottom: `${rad}px` }
-          }
-        />
+        {showOffscreenIndicators ? (
+          <>
+            <IconChevronUp
+              className={clsx(
+                "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
+                offscreenIndicator[0] && shown ? "opacity-100" : "opacity-0",
+                `${torb[pos]}-0`,
+                `${pormx[pos]}translate-x-full ${
+                  torb[pos] === "bottom" ? "rotate-180" : ""
+                }`
+              )}
+              style={
+                rorl[pos] === "right"
+                  ? { right: `${rad}px` }
+                  : { left: `${rad}px` }
+              }
+            />
+            <IconChevronUp
+              className={clsx(
+                "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
+                offscreenIndicator[1] && shown ? "opacity-100" : "opacity-0",
+                `${rorl[pos]}-0`,
+                `${pormy[pos]}translate-y-full ${pormx[pos]}rotate-90`
+              )}
+              style={
+                torb[pos] === "top"
+                  ? { top: `${rad}px` }
+                  : { bottom: `${rad}px` }
+              }
+            />
+          </>
+        ) : null}
         <div
           className={`${torb[pos]}-3 ${rorl[pos]}-3 pointer-events-auto
           absolute transition-transform aspect-square origin-center z-10`}

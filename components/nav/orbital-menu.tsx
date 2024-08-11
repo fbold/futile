@@ -330,7 +330,7 @@ const OrbitalMenu = (
       <div className="absolute h-full w-full pointer-events-none">
         <IconChevronUp
           className={clsx(
-            "absolute w-4 h-4 transition-opacity duration-200 text-text",
+            "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
             offscreenIndicator[0] && shown ? "opacity-100" : "opacity-0",
             `${torb[pos]}-0`,
             `${pormx[pos]}translate-x-full ${
@@ -343,7 +343,7 @@ const OrbitalMenu = (
         />
         <IconChevronUp
           className={clsx(
-            "absolute w-4 h-4 transition-opacity duration-200 text-text",
+            "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
             offscreenIndicator[1] && shown ? "opacity-100" : "opacity-0",
             `${rorl[pos]}-0`,
             `${pormy[pos]}translate-y-full ${pormx[pos]}rotate-90`

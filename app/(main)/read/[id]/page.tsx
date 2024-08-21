@@ -1,4 +1,4 @@
-import { ReadOptions } from "./read-options"
+import { ReadOptions } from "@/components/read/read-options"
 import EditorRead from "@/components/editor/editor-read"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"

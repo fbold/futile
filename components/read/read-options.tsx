@@ -23,6 +23,8 @@ const menuOptions: OrbitalMenuOption[] = [
 export const ReadOptions = ({ tile }: { tile: Tile }) => {
   const [password, setPassword] = useState("")
 
+  console.log("READ OPTIONS", tile)
+
   // delete
   const {
     trigger: triggerDelete,

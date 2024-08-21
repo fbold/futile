@@ -7,7 +7,7 @@ import type { Tile } from "@prisma/client"
 import { useRef, useState } from "react"
 
 type VoidTileListProps = {
-  initialTiles: Tile[]
+  initialTiles: Omit<Tile, "user_id">[]
 }
 
 export default function VoidTileList({ initialTiles }: VoidTileListProps) {

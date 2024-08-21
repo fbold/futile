@@ -497,19 +497,23 @@ const OrbitalMenu = (
             activeOption && fill ? `bg-${colour}` : ""
           )}
           style={{ width: `${2 * rad - 10}px`, outlineWidth: thickness + "px" }}
+          onMouseEnter={showCategories}
+          onMouseLeave={hideCategories}
+          onClick={showCategories}
         >
           {/* This is what allows natural scrolling, amount of scroll is proportional to options length */}
           <div
-            className="absolute overflow-auto top-0 bottom-0 left-0 -right-32 h-full scroll-auto"
+            className={clsx(
+              "absolute overflow-auto w-full h-full scroll-auto outline-pink-600",
+              `${torb[pos]}-0 ${rorl[pos]}-0`
+            )}
             ref={scrollRef}
-            onMouseEnter={showCategories}
-            onMouseLeave={hideCategories}
           >
-            <div className="h-full" />
+            <div className="h-full w-full" />
             {options.map((opt) => (
               <Fragment key={opt.id}>
-                <div key={opt + "a"} className="h-full" />
-                <div key={opt + "b"} className="h-full" />
+                <div key={opt + "a"} className="h-full w-full" />
+                <div key={opt + "b"} className="h-0 sm:h-full w-full" />
               </Fragment>
             ))}
           </div>

@@ -23,8 +23,14 @@ const openSans = Open_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "futile",
-  description: "the home of personal textual futility",
+  title: "futile.me",
+  description:
+    "the home of many flavours of futile endeavours in the written medium",
+  openGraph: {
+    title: "futile.me",
+    description:
+      "the home of many flavours of futile endeavours in the written medium",
+  },
 }
 
 export default function RootLayout({
@@ -37,7 +43,7 @@ export default function RootLayout({
       lang="en"
       className={`${josefin.variable} ${workSans.variable} ${openSans.variable}`}
     >
-      <body className={" bg-pri h-screen block font-open-sans"}>
+      <body className={" bg-pri h-[100dvh] block font-open-sans"}>
         {children}
       </body>
     </html>

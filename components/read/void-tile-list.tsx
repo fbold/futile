@@ -7,7 +7,7 @@ import type { Tile } from "@prisma/client"
 import { useRef, useState } from "react"
 
 type VoidTileListProps = {
-  initialTiles: Tile[]
+  initialTiles: Omit<Tile, "user_id">[]
 }
 
 export default function VoidTileList({ initialTiles }: VoidTileListProps) {
@@ -40,7 +40,11 @@ export default function VoidTileList({ initialTiles }: VoidTileListProps) {
     <div className="relative w-full h-full gap-2 overflow-scroll">
       <div className="flex flex-col w-full gap-2 px-12 py-12">
         {tiles.map((tile) => (
-          <TilePreview key={tile.id} tile={tile}></TilePreview>
+          <TilePreview
+            key={tile.id}
+            tile={tile}
+            href={`/void/${tile.id}`}
+          ></TilePreview>
         ))}
       </div>
       {tiles.length === 10 ? (

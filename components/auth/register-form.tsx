@@ -14,7 +14,6 @@ export default function RegisterForm() {
     handleSubmit: handleLogin,
     formState: { errors },
   } = useForm<RegisterType>({
-    defaultValues: { username: "frodo" },
     resolver: zodResolver(RegisterSchema),
   })
 

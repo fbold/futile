@@ -7,9 +7,10 @@ import { memo, useEffect, useRef, useState } from "react"
 import type { Tile } from "@prisma/client"
 type Props = {
   tile: Partial<Tile>
+  href?: string
 }
 
-const TilePreview = memo(({ tile }: Props) => {
+const TilePreview = memo(({ tile, href }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const divRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -60,12 +61,15 @@ const TilePreview = memo(({ tile }: Props) => {
       )}
       ref={containerRef}
     >
-      <Link href={`/read/${encodeURIComponent(tile.id ?? "")}`}>
+      <Link href={href || `/read/${encodeURIComponent(tile.id ?? "")}`}>
         <h2 ref={titleRef} className="font-bold">
           {tile.title}
         </h2>
       </Link>
-      <p className="text-dim text-xs mb-2 whitespace-pre-wrap">
+      <p
+        className="text-dim text-xs mb-2 whitespace-pre-wrap"
+        suppressHydrationWarning
+      >
         {tile.createdAt
           ? `${tile.createdAt
               .toLocaleTimeString()

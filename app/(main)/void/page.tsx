@@ -15,6 +15,9 @@ export default async function Void({
     where: {
       inVoid: true,
     },
+    omit: {
+      user_id: true,
+    },
     orderBy: {
       updatedAt: "desc",
     },

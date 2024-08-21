@@ -38,6 +38,9 @@ export async function GET(request: NextRequest) {
       orderBy: {
         updatedAt: "desc",
       },
+      omit: {
+        user_id: true,
+      },
     })
 
     return NextResponse.json({ tiles: res }, { status: 200 })

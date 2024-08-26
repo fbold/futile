@@ -21,6 +21,11 @@ const generalOptions: OrbitalMenuOption[] = [
     href: "/meta/visit",
   },
   {
+    label: "man",
+    id: "man",
+    href: "meta/man",
+  },
+  {
     label: "logout",
     id: "logout",
     action: "logout",

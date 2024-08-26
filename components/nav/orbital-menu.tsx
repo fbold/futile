@@ -504,8 +504,8 @@ const OrbitalMenu = (
           {/* This is what allows natural scrolling, amount of scroll is proportional to options length */}
           <div
             className={clsx(
-              "absolute overflow-auto w-full h-full scroll-auto outline-pink-600",
-              `${torb[pos]}-0 ${rorl[pos]}-0`
+              "absolute overflow-auto h-full scroll-auto",
+              `${torb[pos]}-0 -right-32 left-0`
             )}
             ref={scrollRef}
           >

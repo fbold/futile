@@ -1,6 +1,6 @@
 export default function Man() {
   return (
-    <div className="w-full h-full flex items-center justify-center overflow-scroll">
+    <div className="w-full h-full flex items-start justify-center overflow-scroll">
       <div className="mx-6 sm:mx-0 sm:w-1/2 xl:w-1/3 whitespace-pre-wrap my-24">
         <h1>The Manual</h1>
         <br />

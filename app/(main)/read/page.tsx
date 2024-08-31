@@ -24,7 +24,7 @@ export default async function Read({
   return (
     <div className="w-full h-full gap-2 overflow-scroll">
       <div className="flex flex-col my-12 px-4 w-full md:w-2/3 lg:w-3/5 gap-4 relative left-1/2 -translate-x-1/2">
-        <TileList initialTiles={initialTiles} />
+        <TileList initialTiles={initialTiles} key={searchParams.c} />
       </div>
     </div>
   )

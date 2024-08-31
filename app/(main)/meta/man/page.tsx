@@ -45,6 +45,22 @@ export default function Man() {
           is no way to comment or otherwise interact with other posts. For the
           most part this will stay this way.
         </p>
+        <br />
+        <h2>Still in active development</h2>
+        <p>
+          futile.me is still very much in active development. If you spot any
+          issues or would like to suggest any features please send an email to
+          the following address:{" "}
+          <a
+            href="mailto:vurak.of.sulcan@gmail.com"
+            target="_blank"
+            className="underline"
+          >
+            vurak.of.suclan@gmail.com
+          </a>
+          . I will try to fix any bugs as quickly as I can be bothered and will,
+          at the least, briefly consider feature requests.
+        </p>
       </div>
     </div>
   )

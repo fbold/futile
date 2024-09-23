@@ -43,7 +43,7 @@ export default function RootLayout({
       lang="en"
       className={`${josefin.variable} ${workSans.variable} ${openSans.variable}`}
     >
-      <body className={" bg-pri h-[100dvh] block font-open-sans"}>
+      <body className={" bg-sec h-[100dvh] block font-open-sans"}>
         {children}
       </body>
     </html>

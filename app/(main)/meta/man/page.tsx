@@ -33,14 +33,20 @@ export default function Man() {
         <h2>What is the void?</h2>
         <p>
           The <span className="text-white">void</span> is where you can send
-          texts for them to be visible to other users of the site.{" "}
+          documents for them to be visible to other users of the site.{" "}
           <strong>By default all the documents you write are private</strong>{" "}
           unless you make them otherwise.
         </p>
         <br />
+        <p>
+          You can publish documents to the void by using the circular menu when
+          reading one of your documents.
+        </p>
+        <br />
         <h2>What is this (and what is it not)?</h2>
         <p>
-          futile.me is a written media platform for short texts.{" "}
+          futile.me is a written media platform for short texts, referred to as
+          documents.{" "}
           <strong>It is not a social platform for written media.</strong> There
           is no way to comment or otherwise interact with other posts. For the
           most part this will stay this way.

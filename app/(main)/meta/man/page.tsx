@@ -19,14 +19,15 @@ export default function Man() {
           <span className="text-gn">me</span> option reaches the bottom, as
           though you were operating an old turn-dial phone, or by simply
           clicking the <span className="text-gn">me</span> once it has been made
-          visible by the action of hovering over it.
+          visible by the action of hovering+scrolling over the circular menu
+          area.
         </p>
         <br />
         <p>
           This is the same way to navigate for all the circular menus on the
-          page. The top left one is for <span className="text-yw">reading</span>{" "}
+          page. The top left one is for <span className="text-rd">reading</span>{" "}
           your own writings and the top right is for{" "}
-          <span className="text-rd">writing</span> them. They will be populated
+          <span className="text-yw">writing</span> them. They will be populated
           with the categories you define.
         </p>
         <br />
@@ -35,12 +36,13 @@ export default function Man() {
           The <span className="text-white">void</span> is where you can send
           documents for them to be visible to other users of the site.{" "}
           <strong>By default all the documents you write are private</strong>{" "}
-          unless you make them otherwise.
+          unless you choose to publish them.
         </p>
         <br />
         <p>
-          You can publish documents to the void by using the circular menu when
-          reading one of your documents.
+          You can publish documents to the void by using the circular menu that
+          appears to the top-right of the text when reading one of your
+          documents.
         </p>
         <br />
         <h2>What is this (and what is it not)?</h2>
@@ -48,8 +50,8 @@ export default function Man() {
           futile.me is a written media platform for short texts, referred to as
           documents.{" "}
           <strong>It is not a social platform for written media.</strong> There
-          is no way to comment or otherwise interact with other posts. For the
-          most part this will stay this way.
+          is no way to comment on or otherwise interact with other users&apos;
+          posts. For the most part this will stay this way.
         </p>
         <br />
         <h2>Still in active development</h2>

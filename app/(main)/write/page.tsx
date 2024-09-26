@@ -4,10 +4,13 @@ import usePOST from "@/hooks/fetchers/usePOST"
 import { Tile } from "@prisma/client"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export default function Write() {
+export default function Write({
+  searchParams,
+}: {
+  searchParams: { c: string }
+}) {
   const router = useRouter()
-  const params = useSearchParams()
-  const category = params.get("c") || ""
+  const category = searchParams.c || ""
   const localStorageKey = category + "-write"
 
   const { trigger, loading, success, error } = usePOST<Partial<Tile>, any>(

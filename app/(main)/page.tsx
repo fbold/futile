@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export default function Home() {
   return (
-    <div className="w-full h-full flex items-start justify-center overflow-scroll">
+    <div className="w-full h-full flex items-start justify-center overflow-auto">
       <div className="mx-6 my-24 sm:mx-0 sm:w-1/2 2xl:w-1/3 text-center whitespace-pre-wrap">
         <div>
           <p>welcome to futile.me</p>

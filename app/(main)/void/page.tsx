@@ -24,8 +24,8 @@ export default async function Void({
   })
 
   return (
-    <div className="w-full h-full gap-2 overflow-scroll">
-      <div className="flex flex-col my-12 px-4 sm:mx-0 w-full md:w-2/3 xl:w-1/2 gap-4 relative left-1/2 -translate-x-1/2">
+    <div className="w-full h-full gap-2">
+      <div className="flex flex-col my-12 px-4 w-full md:w-2/3 lg:w-3/5 max-w-4xl gap-4 relative left-1/2 -translate-x-1/2">
         <VoidTileList initialTiles={initialTiles} />
       </div>
     </div>

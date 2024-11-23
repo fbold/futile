@@ -5,6 +5,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import { memo, useEffect, useRef, useState } from "react"
 import type { Tile } from "@prisma/client"
+import { VoidIcon } from "./void-icon"
 type Props = {
   tile: Partial<Tile>
   href?: string
@@ -47,8 +48,8 @@ const TilePreview = memo(({ tile, href }: Props) => {
     ) {
       setFadeText(
         divRef.current?.getBoundingClientRect().height +
-          titleRef.current?.getBoundingClientRect().height >=
-          containerRef.current?.getBoundingClientRect().height
+        titleRef.current?.getBoundingClientRect().height >=
+        containerRef.current?.getBoundingClientRect().height
       )
     }
   }, [])
@@ -56,11 +57,12 @@ const TilePreview = memo(({ tile, href }: Props) => {
   return (
     <div
       className={clsx(
-        "rounded-none block p-4 w-full flex-grow max-h-screen break-inside-avoid mb-1 relative overflow-hidden cursor-pointer"
+        "relative rounded-none block p-2 w-full flex-grow max-h-screen break-inside-avoid mb-1 overflow-y-clip cursor-pointer"
         // !fadeText && "py-14"
       )}
       ref={containerRef}
     >
+      {tile.inVoid ? <VoidIcon className="absolute rotate-90 md:rotate-0 -left-1 -translate-x-full" /> : null}
       <Link href={href || `/read/${encodeURIComponent(tile.id ?? "")}`}>
         <h2 ref={titleRef} className="font-bold">
           {tile.title}
@@ -72,15 +74,15 @@ const TilePreview = memo(({ tile, href }: Props) => {
       >
         {tile.createdAt
           ? `${tile.createdAt
-              .toLocaleTimeString()
-              .split(":")
-              .slice(0, 2)
-              .join(":")}  ${tile.createdAt.toLocaleDateString()}`
+            .toLocaleTimeString()
+            .split(":")
+            .slice(0, 2)
+            .join(":")}  ${tile.createdAt.toLocaleDateString()}`
           : null}
       </p>
       <div
         ref={divRef}
-        className="overflow-hidden whitespace-pre-wrap break-words text-base"
+        className="overflow-hidden whitespace-pre-line space-y-2"
         dangerouslySetInnerHTML={{ __html: tile.content! }}
       >
         {/* <EditorContent editor={editor} /> */}

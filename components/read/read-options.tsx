@@ -99,7 +99,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         alpha={30}
         onSettle={handleSettle}
         options={menuOptions}
-        titleOption="—"
+        titleOption="&#9655;"
         showOffscreenIndicators={false}
       />
       <RequestPopup

@@ -1,4 +1,6 @@
 import { cn } from "@/lib/cn"
+import clsx from "clsx"
+import { PropsWithChildren } from "react"
 
 const style = {
   fontSize: "14px"
@@ -6,13 +8,24 @@ const style = {
 
 const classNameLetter = "shrink text-center align-middle justify-center"
 
-export function VoidIcon({ className }: { className?: string }) {
+type Props = PropsWithChildren<{ inVoid: boolean | undefined, className?: string }>
+
+export function VoidIcon({ inVoid, className, children }: Props) {
   return (
-    <div className={cn("aspect-square bg-text leading-none outline-2 outline outline-text border-text w-8 h-8 grid grid-cols-4 font-extrabold font-mono text-sec", className)}>
-      <span className={classNameLetter} style={style}>v</span>
-      <span className={classNameLetter} style={style}>o</span>
-      <span className={classNameLetter} style={style}>i</span>
-      <span className={classNameLetter} style={style}>d</span>
-    </div>
+    <>
+      {inVoid ?
+        <div className={cn("leading-none px-0.5 py-[1px] bg-text outline outline-1 outline-text w-9 grid grid-cols-4 font-extrabold font-mono text-sec",
+          "-rotate-90 -translate-x-[calc(100%+7px)] origin-bottom-right",
+          //"md:rotate-0 md:-translate-x-2 md:-translate-y-0.5 ",
+          className)}>
+          <span className={classNameLetter} style={style}>v</span>
+          <span className={classNameLetter} style={style}>o</span>
+          <span className={classNameLetter} style={style}>i</span>
+          <span className={classNameLetter} style={style}>d</span>
+        </div>
+        : null}
+      <h2 className={clsx("w-min h-9 leading-none content-center", inVoid && "outline outline-1 outline-text -translate-x-2 px-2")}>{children}</h2>
+    </>
+
   )
 }

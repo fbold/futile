@@ -23,8 +23,9 @@ export default async function Read({ params }: { params: { id: string } }) {
             <ReadOptions tile={tile} />
           </div>
           <div className="my-2 flex flex-col relative">
-            {tile.inVoid ? <VoidIcon className="absolute -left-2 top-2 rotate-90 md:rotate-0 -translate-x-full" /> : null}
-            <h2 className="w-full">{tile.title}</h2>
+            <VoidIcon inVoid={tile.inVoid} >
+              {tile.title}
+            </VoidIcon>
             <p className="text-dim text-xs mb-2 ">
               {tile.createdAt
                 ? `${tile.createdAt

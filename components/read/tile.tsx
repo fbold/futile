@@ -62,11 +62,10 @@ const TilePreview = memo(({ tile, href }: Props) => {
       )}
       ref={containerRef}
     >
-      {tile.inVoid ? <VoidIcon className="absolute rotate-90 md:rotate-0 -left-1 -translate-x-full" /> : null}
       <Link href={href || `/read/${encodeURIComponent(tile.id ?? "")}`}>
-        <h2 ref={titleRef} className="font-bold">
+        <VoidIcon inVoid={tile.inVoid} >
           {tile.title}
-        </h2>
+        </VoidIcon>
       </Link>
       <p
         className="text-dim text-xs mb-2 whitespace-pre-wrap"

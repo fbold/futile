@@ -1,24 +1,25 @@
 import type { Metadata } from "next"
-import { Josefin_Sans, Open_Sans, Work_Sans } from "next/font/google"
+import { Open_Sans } from "next/font/google"
 import "./globals.css"
 
 // const inter = Inter({ subsets: ["latin"], display: "swap", preload: true })
-const josefin = Josefin_Sans({
-  subsets: ["latin"],
-  variable: "--font-josefin",
-  display: "swap",
-})
-const workSans = Work_Sans({
-  subsets: ["latin"],
-  variable: "--font-work-sans",
-  preload: true,
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
-})
+// const josefin = Josefin_Sans({
+//   subsets: ["latin"],
+//   variable: "--font-josefin",
+//   display: "swap",
+// })
+// const workSans = Work_Sans({
+//   subsets: ["latin"],
+//   variable: "--font-work-sans",
+//   preload: true,
+//   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+// })
 
 const openSans = Open_Sans({
   subsets: ["latin"],
   variable: "--font-open-sans",
   preload: true,
+  display: "swap",
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 })
 
@@ -41,9 +42,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${josefin.variable} ${workSans.variable} ${openSans.variable}`}
+      className={openSans.className}
     >
-      <body className={" bg-sec h-[100dvh] block font-open-sans"}>
+      <body className={" bg-sec h-[100dvh] block"}>
         {children}
       </body>
     </html>

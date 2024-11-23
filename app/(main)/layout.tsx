@@ -1,5 +1,6 @@
 import NavContainer from "@/components/nav/nav-container"
 import npmPackage from "@/package.json"
+
 type Props = {
   children?: JSX.Element
 }

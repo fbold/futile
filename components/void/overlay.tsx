@@ -14,8 +14,8 @@ export const VoidOverlay = () => {
   }, [])
 
   return (
-    <div className={clsx("z-50 transition-all duration-500 pointer-events-none fixed top-0 left-0 w-full h-full border border-text",
-      relax ? "backdrop-blur-0" : "backdrop-blur-sm")}>
+    <div className={clsx("z-50 transition-all duration-500 pointer-events-none fixed top-0 left-0 w-full h-full border-text",
+      relax ? "backdrop-invert-0" : "backdrop-invert")}>
     </div>
   )
 }

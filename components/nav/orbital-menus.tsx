@@ -142,7 +142,7 @@ export default function OrbitalMenus({
         ref={readMenuRef}
         options={categoryReadOptions}
         onSettle={handleReadSelect}
-        colour="rd"
+        colour={pathname.startsWith("/void") ? "white" : "rd"}
         pos="tl"
       />
       <OrbitalMenu
@@ -151,10 +151,10 @@ export default function OrbitalMenus({
         ref={writeMenuRef}
         options={categoryWriteOptions}
         onSettle={handleWriteSelect}
-        colour="yw"
+        colour={pathname.startsWith("/void") ? "white" : "yw"}
         pos="tr"
-        // rad={30}
-        // alpha={43}
+      // rad={30}
+      // alpha={43}
       />
       {/* {pathname.endsWith("/me") ? ( */}
       <OrbitalMenu
@@ -162,7 +162,7 @@ export default function OrbitalMenus({
         ref={metaMenuRef}
         options={generalOptions}
         onSettle={handleMetaSelect}
-        colour="gn"
+        colour={pathname.startsWith("/void") ? "white" : "gn"}
         pos="br"
         rad={40}
         alpha={20}
@@ -178,7 +178,7 @@ export default function OrbitalMenus({
         rad={25}
         alpha={35}
         thickness={1}
-        // fill
+      // fill
       />
     </>
   )

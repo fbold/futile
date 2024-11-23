@@ -342,8 +342,7 @@ const OrbitalMenu = (
                 "z-10 absolute w-4 h-4 transition-opacity duration-200 text-text",
                 offscreenIndicator[0] && shown ? "opacity-100" : "opacity-0",
                 `${torb[pos]}-0`,
-                `${pormx[pos]}translate-x-full ${
-                  torb[pos] === "bottom" ? "rotate-180" : ""
+                `${pormx[pos]}translate-x-full ${torb[pos] === "bottom" ? "rotate-180" : ""
                 }`
               )}
               style={
@@ -446,16 +445,15 @@ const OrbitalMenu = (
             <p
               className="transition-transform duration-1000 "
               style={{
-                transform: `translateX(${
-                  rad +
+                transform: `translateX(${rad +
                   (categoriesRefs.current[activeOption].current?.clientWidth ||
                     30) +
                   12 + // for the top-3 and left-3
                   4 // for the space
-                }px)`,
+                  }px)`,
               }}
             >
-              of a futile kind;
+              of a futile kind
             </p>
             <p
               className={clsx(
@@ -466,9 +464,10 @@ const OrbitalMenu = (
                 transform: `translateX(${rad + 12}px)`,
               }}
             >
-              hailing from a troubled mind
+              hailing from a human mind
             </p>
           </div>
+          // <span className="font-mono text-m">&#10190;</span>
         ) : null}
       </div>
       <div

@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from "react"
+import { RefObject, useCallback, useEffect, useState } from "react"
 
 export default function useOnScreen(
   ref: RefObject<HTMLElement>,
@@ -6,15 +6,22 @@ export default function useOnScreen(
 ) {
   const [isIntersecting, setIntersecting] = useState(false)
 
+  const memoizedCallback = useCallback(() => {
+    if (isIntersecting && callback) callback();
+  }, [isIntersecting, callback]);
+
   useEffect(() => {
     if (!ref.current) return
     const observer = new IntersectionObserver(([entry]) => {
       setIntersecting(entry.isIntersecting)
-      if (entry.isIntersecting && callback) callback()
     })
     observer.observe(ref.current)
     return () => observer.disconnect()
   }, [ref])
+
+  useEffect(() => {
+    memoizedCallback();
+  }, [memoizedCallback]);
 
   return isIntersecting
 }

@@ -1,22 +1,22 @@
-import { useCallback, useState } from "react"
+import { useEffect, useState } from "react"
 
-export default function (initialSkipTake: [number, number]) {
+export default function useSkipTake(initialSkipTake: [number, number]) {
   const [skipTake, setSkipTake] = useState<[number, number]>(initialSkipTake)
 
-  const takeMore = useCallback((amount: number) => {
-    let newSkip
-    let newTake
+  const takeMore = (amount: number) => {
     setSkipTake((curr) => {
-      newSkip = curr[0] + amount
-      newTake = curr[1] + amount
+      console.log("000: the new skip take", curr)
+      const newSkip = curr[0] + curr[1] // new skip is last skip plus last take
+      const newTake = amount
+      console.log("AAAA: the new skip take", newSkip, newTake)
       return [newSkip, newTake]
     })
+  }
 
-    return [newSkip, newTake]
-  }, [])
+  useEffect(() => { console.log("SKIPTAKE CHANGED", skipTake) }, [skipTake])
 
   return {
-    skipTake,
+    skipTake: [...skipTake],
     takeMore,
   }
 }

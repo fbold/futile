@@ -29,11 +29,6 @@ export default async function Read({ params }: { params: { id: string } }) {
     return (
       <>
         <div className="relative md:z-20 whitespace-pre-wrap overflow-x-visible w-full h-full pt-24 mx-6  sm:mx-20 md:mx-0 md:w-2/3 lg:w-1/2 max-w-4xl">
-          {editOptions ? (
-            <div className="fixed block top-24 right-8 sm:right-20 md:right-[16.7%]">
-              <ReadOptions tile={tile} />
-            </div>
-          ) : null}
           <div className="my-2 flex flex-col">
             <VoidIcon inVoid>{tile.title}</VoidIcon>
             <p className="text-dim text-xs mb-2 ">
@@ -46,6 +41,11 @@ export default async function Read({ params }: { params: { id: string } }) {
                 : null}
             </p>
           </div>
+          {editOptions ? (
+            <div className="fixed block top-24 right-8 sm:right-20 md:right-[16.7%]">
+              <ReadOptions tile={tile} />
+            </div>
+          ) : null}
           <EditorRead content={tile.content} />
         </div>
       </>

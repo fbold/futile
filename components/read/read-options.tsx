@@ -95,7 +95,7 @@ export const ReadOptions = ({ tile }: { tile: Tile }) => {
         ref={menuRef}
         colour="white"
         pos="tr"
-        rad={26}
+        rad={30}
         alpha={30}
         onSettle={handleSettle}
         options={menuOptions}

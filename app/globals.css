@@ -21,6 +21,10 @@
     @apply text-text;
   }
 
+  a {
+    @apply underline
+  }
+
   h1 {
     @apply text-4xl;
   }

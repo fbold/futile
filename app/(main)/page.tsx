@@ -5,13 +5,17 @@ export default function Home() {
     <div className="w-full h-full flex items-start justify-center overflow-auto">
       <div className="mx-6 my-24 sm:mx-0 sm:w-1/2 2xl:w-1/3 text-center whitespace-pre-wrap">
         <div>
-          <p>welcome to futile.me</p>
+          <p className="underline font-mono">welcome to futile.me</p>
+          <p className="font-mono">a digital home for written futility</p>
+          <br />
           <p className="text-rd">
-            if you&apos;re new here, please read the manual:
+            if you&apos;re new here, please read the manual (or don't if you'd
+            rather explore)
             <br />
             <Link href="/meta/man" className="underline">
               the manual
             </Link>
+            <br />
           </p>
 
           <div className="mt-10 text-left whitespace-pre-wrap border p-4 text-text font-mono">
@@ -36,18 +40,25 @@ export default function Home() {
                 <span className="text-gn">visit</span> option
               </li>
               <li className="pl-1.5">
-                a way to mention other documents in the void by their id
+                a way to mention other void documents by their id
                 (implementation would be something like a tabbable autocomplete
                 when typing a special character, ie &quot;@&quot;)
               </li>
               <li className="pl-1.5">
-                back ups (currenty none of the content here is backed up)
+                back ups (currenty none of the content here is backed up, but
+                don't tell anyone, but consider this a warning)
               </li>
               <li className="pl-1.5">
                 considering changing to a monospaced font site-wide
               </li>
               <li className="pl-1.5">
                 improving the navigation experience on mobile... /s
+              </li>
+              <li className="pl-1.5">
+                this one&apos;s just a good song{" "}
+                <a href="https://youtu.be/1VR0Wp1zO6Q">
+                  https://youtu.be/1VR0Wp1zO6Q
+                </a>
               </li>
               <li className="pl-1.5 line-through">
                 a better way to distinguish whether you&apos;re reading private

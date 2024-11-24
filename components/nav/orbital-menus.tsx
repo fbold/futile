@@ -26,6 +26,11 @@ const generalOptions: OrbitalMenuOption[] = [
     href: "/meta/man",
   },
   {
+    label: "home",
+    id: "home",
+    href: "/",
+  },
+  {
     label: "logout",
     id: "logout",
     action: "logout",
@@ -50,7 +55,7 @@ const voidOptions: OrbitalMenuOption[] = [
 const findInOptions = (
   id: string,
   options: OrbitalMenuOption[],
-  check?: "href" | "id"
+  check?: "href" | "id",
 ) => {
   if (check === "id") return options.findIndex((opt) => opt.id === id) || 0
   if (check === "href") return options.findIndex((opt) => opt.href === id) || 0
@@ -82,14 +87,14 @@ export default function OrbitalMenus({
     (category: OrbitalMenuOption) => {
       router.push(`/read?c=${category.id}`)
     },
-    [router]
+    [router],
   )
 
   const handleWriteSelect = useCallback(
     (option: OrbitalMenuOption) => {
       router.push(`/write?c=${option.id}`)
     },
-    [router]
+    [router],
   )
 
   const handleMetaSelect = useCallback(
@@ -99,7 +104,7 @@ export default function OrbitalMenus({
         return router.push("/login")
       } else router.push(option.href!)
     },
-    [router]
+    [router],
   )
 
   const handleVoidSelect = useCallback(
@@ -107,7 +112,7 @@ export default function OrbitalMenus({
       if (option.action) console.log("missing action definition")
       else router.push(option.href!)
     },
-    [router]
+    [router],
   )
 
   const readMenuRef = useRef<OrbitalMenuHandle>(null)
@@ -153,8 +158,8 @@ export default function OrbitalMenus({
         onSettle={handleWriteSelect}
         colour={pathname.startsWith("/void") ? "white" : "yw"}
         pos="tr"
-      // rad={30}
-      // alpha={43}
+        // rad={30}
+        // alpha={43}
       />
       {/* {pathname.endsWith("/me") ? ( */}
       <OrbitalMenu
@@ -178,7 +183,7 @@ export default function OrbitalMenus({
         rad={25}
         alpha={35}
         thickness={1}
-      // fill
+        // fill
       />
     </>
   )

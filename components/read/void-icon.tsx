@@ -24,7 +24,7 @@ export function VoidIcon({ inVoid, className, children }: Props) {
           <span className={classNameLetter} style={style}>d</span>
         </div>
         : null}
-      <h2 className={clsx("w-min h-9 leading-none content-center", inVoid && "outline outline-1 outline-text -translate-x-2 px-2")}>{children}</h2>
+      <h2 className={clsx("w-min h-9 leading-none content-center", inVoid && "outline outline-1 outline-text px-2 -translate-x-2")}>{children}</h2>
     </>
 
   )

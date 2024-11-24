@@ -18,7 +18,7 @@ export default async function Read({ params }: { params: { id: string } }) {
   if (tile)
     return (
       <>
-        <div className="relative md:z-20 whitespace-pre-wrap overflow-x-visible w-full h-full pt-24 mx-5 md:mx-0 md:w-2/3 lg:w-1/2 max-w-3xl">
+        <div className="relative md:z-20 whitespace-pre-wrap overflow-x-visible w-full h-full pt-24 mx-6 md:mx-0 md:w-2/3 lg:w-1/2 max-w-3xl">
           <div className="fixed md:absolute block top-24 right-8 sm:right-20 md:right-[16.7%]">
             <ReadOptions tile={tile} />
           </div>

@@ -56,7 +56,7 @@ export default function Home() {
               </li>
               <li className="pl-1.5">
                 this one&apos;s just a good song{" "}
-                <a href="https://youtu.be/1VR0Wp1zO6Q">
+                <a className="underline" href="https://youtu.be/1VR0Wp1zO6Q">
                   https://youtu.be/1VR0Wp1zO6Q
                 </a>
               </li>

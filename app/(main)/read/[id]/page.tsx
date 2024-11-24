@@ -18,18 +18,16 @@ export default async function Read({ params }: { params: { id: string } }) {
   if (tile)
     return (
       <>
-        <div className="relative md:z-20 whitespace-pre-wrap overflow-x-visible w-full h-full pt-24 mx-6 md:mx-0 md:w-2/3 lg:w-1/2 max-w-3xl">
+        <div className="relative md:z-20 whitespace-pre-wrap overflow-x-visible w-full h-full pt-24 px-6 md:w-2/3 lg:w-3/5 max-w-4xl">
           <div className="my-2 flex flex-col relative">
-            <VoidIcon inVoid={tile.inVoid} >
-              {tile.title}
-            </VoidIcon>
+            <VoidIcon inVoid={tile.inVoid}>{tile.title}</VoidIcon>
             <p className="text-dim text-xs mb-2 ">
               {tile.createdAt
                 ? `${tile.createdAt
-                  .toLocaleTimeString()
-                  .split(":")
-                  .slice(0, 2)
-                  .join(":")}  ${tile.createdAt.toLocaleDateString()}`
+                    .toLocaleTimeString()
+                    .split(":")
+                    .slice(0, 2)
+                    .join(":")}  ${tile.createdAt.toLocaleDateString()}`
                 : null}
             </p>
           </div>

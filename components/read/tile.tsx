@@ -48,8 +48,8 @@ const TilePreview = memo(({ tile, href }: Props) => {
     ) {
       setFadeText(
         divRef.current?.getBoundingClientRect().height +
-        titleRef.current?.getBoundingClientRect().height >=
-        containerRef.current?.getBoundingClientRect().height
+          titleRef.current?.getBoundingClientRect().height >=
+          containerRef.current?.getBoundingClientRect().height,
       )
     }
   }, [])
@@ -57,15 +57,13 @@ const TilePreview = memo(({ tile, href }: Props) => {
   return (
     <div
       className={clsx(
-        "relative rounded-none block p-2 w-full flex-grow max-h-screen break-inside-avoid mb-1 overflow-y-clip cursor-pointer"
+        "relative rounded-none block w-full flex-grow max-h-screen break-inside-avoid mb-1 cursor-pointer",
         // !fadeText && "py-14"
       )}
       ref={containerRef}
     >
       <Link href={href || `/read/${encodeURIComponent(tile.id ?? "")}`}>
-        <VoidIcon inVoid={tile.inVoid} >
-          {tile.title}
-        </VoidIcon>
+        <VoidIcon inVoid={tile.inVoid}>{tile.title}</VoidIcon>
       </Link>
       <p
         className="text-dim text-xs mb-2 whitespace-pre-wrap"
@@ -73,10 +71,10 @@ const TilePreview = memo(({ tile, href }: Props) => {
       >
         {tile.createdAt
           ? `${tile.createdAt
-            .toLocaleTimeString()
-            .split(":")
-            .slice(0, 2)
-            .join(":")}  ${tile.createdAt.toLocaleDateString()}`
+              .toLocaleTimeString()
+              .split(":")
+              .slice(0, 2)
+              .join(":")}  ${tile.createdAt.toLocaleDateString()}`
           : null}
       </p>
       <div

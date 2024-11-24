@@ -14,7 +14,7 @@ export default function Home() {
             </Link>
           </p>
 
-          <div className="mt-10 text-left whitespace-pre-wrap border p-5 text-text font-mono">
+          <div className="mt-10 text-left whitespace-pre-wrap border p-4 text-text font-mono">
             <p className="text-center">notice board</p>
             <br />
             <p>
@@ -30,10 +30,6 @@ export default function Home() {
                 also use to filter)
               </li>
               <li className="pl-1.5">
-                a better way to distinguish whether you&apos;re reading private
-                or void documents
-              </li>
-              <li className="pl-1.5">
                 a registry of public users which you can optionally add yourself
                 to. still not sure about surrounding functionaliy, would be
                 linked to as yet unimplemented{" "}
@@ -45,20 +41,34 @@ export default function Home() {
                 when typing a special character, ie &quot;@&quot;)
               </li>
               <li className="pl-1.5">
-                back ups. that&apos;s right, currenty none of the content here
-                is backed up
+                back ups (currenty none of the content here is backed up)
               </li>
               <li className="pl-1.5">
-                considering changing to a monospaced font
+                considering changing to a monospaced font site-wide
               </li>
               <li className="pl-1.5">
-                improving the navigation experience on mobile... jk
+                improving the navigation experience on mobile... /s
+              </li>
+              <li className="pl-1.5 line-through">
+                a better way to distinguish whether you&apos;re reading private
+                or void documents
               </li>
             </ul>
 
             <p>
-              You can also always send me suggestions or feedback via email:
-              vurak.of.suclan@gmail.com
+              Please send suggestions and bug reports via email:
+              <br />
+              <span className="underline">fbold.dev@gmail.com</span>
+            </p>
+            <p>
+              Or make an issue / pr on gh:
+              <br />
+              <Link
+                className="underline"
+                href="https://github.com/fbold/futile/"
+              >
+                github.com/fbold/futile
+              </Link>
             </p>
           </div>
         </div>

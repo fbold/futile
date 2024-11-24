@@ -9,8 +9,8 @@ export default function Home() {
           <p className="font-mono">a digital home for written futility</p>
           <br />
           <p className="text-rd">
-            if you&apos;re new here, please read the manual (or don&apos;apos;t
-            if you&apos;apos;d rather explore)
+            if you&apos;re new here, please read the manual (or don&apos;t if
+            you&apos;d rather explore)
             <br />
             <Link href="/meta/man" className="underline">
               the manual

@@ -9,8 +9,8 @@ export default function Home() {
           <p className="font-mono">a digital home for written futility</p>
           <br />
           <p className="text-rd">
-            if you&apos;re new here, please read the manual (or don't if you'd
-            rather explore)
+            if you&apos;re new here, please read the manual (or don&apos;apos;t
+            if you&apos;apos;d rather explore)
             <br />
             <Link href="/meta/man" className="underline">
               the manual
@@ -46,7 +46,7 @@ export default function Home() {
               </li>
               <li className="pl-1.5">
                 back ups (currenty none of the content here is backed up, but
-                don't tell anyone, but consider this a warning)
+                don&apos;t tell anyone, but consider this a warning)
               </li>
               <li className="pl-1.5">
                 considering changing to a monospaced font site-wide

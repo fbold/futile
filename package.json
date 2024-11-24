@@ -1,6 +1,6 @@
 {
   "name": "futile.me",
-  "version": "v0.8.0",
+  "version": "v0.8.1",
   "private": true,
   "scripts": {
     "dev": "next dev",

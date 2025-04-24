@@ -44,7 +44,7 @@ export default function RootLayout({
       lang="en"
       className={openSans.className}
     >
-      <body className={" bg-sec h-[100dvh] block"}>
+      <body className={"bg-sec h-[100dvh] block scroller"}>
         {children}
       </body>
     </html>

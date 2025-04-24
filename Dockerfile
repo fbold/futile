@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # 1. Install dependencies only when needed
 FROM base AS deps
@@ -26,6 +26,9 @@ RUN npm run build
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner
+# This fixed base image (alpine) moving openssl to where it can't be found by prisma
+RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
+
 WORKDIR /app
 
 ENV NODE_ENV=production

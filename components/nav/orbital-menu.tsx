@@ -464,7 +464,7 @@ const OrbitalMenu = (
                 transform: `translateX(${rad + 12}px)`,
               }}
             >
-              hailing from a human mind
+              hailing from a troubled mind
             </p>
           </div>
           // <span className="font-mono text-m">&#10190;</span>

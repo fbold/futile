@@ -8,7 +8,7 @@ const SectionTitle = ({
   children: JSX.Element | JSX.Element[]
 }) => (
   <div className="relative border border-text p-2">
-    <span className="absolute bg-text text-sec font-bold font-mono px-1 leading-none origin-top-left -translate-y-[9px] -translate-x-2 h-4 rotate-90">
+    <span className="absolute bg-text text-sec font-bold font-mono px-1 text-center align-middle leading-none origin-top-left -translate-y-[9px] -translate-x-[9px] h-4 rotate-90">
       {title}
     </span>
     {children}

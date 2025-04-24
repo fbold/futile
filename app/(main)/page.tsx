@@ -5,21 +5,23 @@ export default function Home() {
     <div className="w-full h-full flex items-start justify-center overflow-auto">
       <div className="mx-6 my-24 sm:mx-0 sm:w-1/2 2xl:w-1/3 text-center whitespace-pre-wrap">
         <div>
-          <p className="underline font-mono">welcome to futile.me</p>
-          <p className="font-mono">a digital home for written futility</p>
-          <br />
-          <p className="text-rd">
-            if you&apos;re new here, please read the manual (or don&apos;t if
-            you&apos;d rather explore)
-            <br />
-            <Link href="/meta/man" className="underline">
-              the manual
-            </Link>
-            <br />
-          </p>
+          <p className="text-lg">welcome to futile.me</p>
+          <p className="text-sm">the digital home of written futility</p>
 
-          <div className="mt-10 text-left whitespace-pre-wrap border p-4 text-text font-mono">
-            <p className="text-center">notice board</p>
+          <div className="relative mt-8 text-left whitespace-pre-wrap border p-5 text-text font-mono">
+            <span className="absolute bg-text text-sec font-bold font-mono px-1 leading-none origin-top-left -translate-y-[21px] -translate-x-[21px] h-4 rotate-90">
+              notice board
+            </span>
+            <p className="">
+              If you&apos;re new here, please read{" "}
+              <Link href="/meta/man" className="underline text-gn">
+                the manual
+              </Link>.
+            </p>
+            <br />
+            <p>
+              I am going to rewrite this in HTMX + Go, I should have done this from the start; NextJS is not suited to the ethos of this site.
+            </p>
             <br />
             <p>
               I work on this occasionally. These are some things I&apos;m
@@ -40,50 +42,33 @@ export default function Home() {
                 <span className="text-gn">visit</span> option
               </li>
               <li className="pl-1.5">
-                a way to mention other void documents by their id
+                a way to mention other documents in the void by their id
                 (implementation would be something like a tabbable autocomplete
                 when typing a special character, ie &quot;@&quot;)
               </li>
               <li className="pl-1.5">
-                back ups (currenty none of the content here is backed up, but
-                don&apos;t tell anyone, but consider this a warning)
+                considering changing to a monospaced font
               </li>
               <li className="pl-1.5">
-                considering changing to a monospaced font site-wide
-              </li>
-              <li className="pl-1.5">
-                improving the navigation experience on mobile... /s
-              </li>
-              <li className="pl-1.5">
-                this one&apos;s just a good song{" "}
-                <a className="underline" href="https://youtu.be/1VR0Wp1zO6Q">
-                  https://youtu.be/1VR0Wp1zO6Q
-                </a>
+                improving the navigation experience on mobile...
               </li>
               <li className="pl-1.5 line-through">
                 a better way to distinguish whether you&apos;re reading private
                 or void documents
               </li>
+              <li className="pl-1.5 line-through">
+                back ups. that&apos;s right, currenty none of the content here
+                is backed up
+              </li>
             </ul>
 
             <p>
-              Please send suggestions and bug reports via email:
-              <br />
-              <span className="underline">fbold.dev@gmail.com</span>
-            </p>
-            <p>
-              Or make an issue / pr on gh:
-              <br />
-              <Link
-                className="underline"
-                href="https://github.com/fbold/futile/"
-              >
-                github.com/fbold/futile
-              </Link>
+              You can also always send me suggestions or feedback via email:
+              fbold.dev@gmail.com
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
